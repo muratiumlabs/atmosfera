@@ -84,7 +84,7 @@
     background: var(--gold);
   }
 
-  .params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .params { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
   .controls {
     display: flex;
@@ -150,6 +150,7 @@
     <div class="label">Generation Parameters</div>
     <div class="params">
       <div class="cell"><div class="k">BPM</div><div class="v" id="p-bpm">—</div></div>
+      <div class="cell"><div class="k">Scale</div><div class="v" id="p-scale" style="font-size:14px">—</div></div>
       <div class="cell"><div class="k">Density</div><div class="v" id="p-density">—</div></div>
       <div class="cell"><div class="k">Brightness</div><div class="v" id="p-bright">—</div></div>
     </div>
@@ -193,7 +194,7 @@ const els = {
   noise: $('in-noise'), weather: $('in-weather'), weatherAge: $('in-weather-age'),
   temp: $('in-temp'), time: $('in-time'),
   reasoning: $('reasoning'), prompts: $('prompts'),
-  bpm: $('p-bpm'), density: $('p-density'), bright: $('p-bright'),
+  bpm: $('p-bpm'), scale: $('p-scale'), density: $('p-density'), bright: $('p-bright'),
   play: $('btn-play'), analyze: $('btn-analyze'), status: $('status'), dot: $('dot'),
 };
 
@@ -333,12 +334,13 @@ Translate this atmosphere into instrumental music for the Lyria RealTime model.
 Respond with ONLY valid JSON, no markdown, matching exactly:
 {
   "bpm": <integer 60-200>,
+  "scale": "<one of: major, minor, dorian, phrygian, lydian, mixolydian, pentatonic, chromatic>",
   "density": <float 0.0-1.0>,
   "brightness": <float 0.0-1.0>,
   "prompts": [ {"text": "<genre/mood/instrument phrase>", "weight": <float 0.1-1.0>} ],
   "reasoning": "<one sentence explaining the vibe choice>"
 }
-Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases (e.g. "rainy lo-fi jazz", "warm analog pads", "minimal techno pulse"). Match energy to noise, mood to weather, tempo/color to time of day.`;
+Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases (e.g. "rainy lo-fi jazz", "warm analog pads", "minimal techno pulse"). Match energy to noise, mood to weather, tempo/color to time of day. Choose scale to complement the mood.`;
 
   const res = await state.ai.models.generateContent({
     model: GEMINI_MODEL,
@@ -353,6 +355,8 @@ Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases (e.g. "ra
 
   // sanitize
   data.bpm = Math.max(60, Math.min(200, Math.round(data.bpm)));
+  const VALID_SCALES = ['major','minor','dorian','phrygian','lydian','mixolydian','pentatonic','chromatic'];
+  data.scale = VALID_SCALES.includes(data.scale) ? data.scale : 'major';
   data.density = Math.max(0, Math.min(1, Number(data.density)));
   data.brightness = Math.max(0, Math.min(1, Number(data.brightness)));
   data.prompts = (data.prompts || []).slice(0, 3).map(p => ({
@@ -368,6 +372,7 @@ function renderParams(p) {
   els.reasoning.textContent = p.reasoning || '—';
   els.reasoning.classList.remove('empty');
   els.bpm.textContent = p.bpm;
+  els.scale.textContent = p.scale || '—';
   els.density.textContent = p.density.toFixed(2);
   els.bright.textContent = p.brightness.toFixed(2);
 
@@ -467,29 +472,33 @@ async function applyParams(p) {
 
 // ---- Orchestration ----
 let analyzing = false;
-async function analyze(restartContext = false) {
+async function analyze() {
   if (analyzing) return;
   analyzing = true;
   els.analyze.disabled = true;
   try {
     setStatus('Reading environment…');
-    const inputs = await gatherInputs();
+    const inputs = gatherInputs();
     setStatus('Gemini interpreting the atmosphere…');
     const params = await askGemini(inputs);
     renderParams(params);
-    state.lastParams = params;
 
     if (state.playing) {
-      // tempo/bpm changes require reset of context for Lyria
-      const bpmChanged = restartContext;
-      await applyParams(params);
-      if (bpmChanged && state.session.resetContext) {
-        try { await state.session.resetContext(); } catch(e){}
+      const prev = state.lastParams;
+      const needsReset = !prev
+        || params.bpm !== prev.bpm
+        || params.scale !== prev.scale;
+
+      if (needsReset && state.session?.resetContext) {
+        try { await state.session.resetContext(); } catch(e) {}
       }
-      setStatus('Live — generating from current atmosphere.', 'ok');
+      await applyParams(params);
+      setStatus(`Live${needsReset ? ' · context reset' : ' · smooth update'} ↺`, 'ok');
     } else {
       setStatus('Analysis ready. Press PLAY to begin.', 'ok');
     }
+
+    state.lastParams = params;
   } catch (e) {
     console.error(e);
     setStatus('Analysis failed: ' + (e?.message || e), 'error');
@@ -514,7 +523,7 @@ async function startPlayback() {
 
     // auto re-analyze loop
     if (state.reanalyzeTimer) clearInterval(state.reanalyzeTimer);
-    state.reanalyzeTimer = setInterval(() => analyze(true), REANALYZE_MS);
+    state.reanalyzeTimer = setInterval(() => analyze(), REANALYZE_MS);
   } catch (e) {
     console.error(e);
     setStatus('Playback failed: ' + (e?.message || e), 'error');
@@ -533,7 +542,7 @@ async function pausePlayback() {
 // ---- Init ----
 async function boot() {
   els.play.addEventListener('click', () => state.playing ? pausePlayback() : startPlayback());
-  els.analyze.addEventListener('click', () => analyze(true));
+  els.analyze.addEventListener('click', () => analyze());
 
   await initMic();
   if (!state.mic.ok) setStatus('Microphone denied — using 0 dB fallback.', '');
