@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ATMOSFERA</title>
+<style>
+  :root {
+    --gold: #C9A84C;
+    --white: #FFFFFF;
+    --dim: #6e6a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #000;
+    color: var(--white);
+    font-family: "SFMono-Regular", "Consolas", "Liberation Mono", Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  body {
+    padding: 32px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  h1 {
+    color: var(--gold);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 8px;
+    margin-bottom: 4px;
+  }
+  .sub {
+    color: var(--dim);
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+  }
+  .section {
+    border-top: 1px solid #1c1a14;
+    padding: 18px 0;
+  }
+  .label {
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .cell .k { color: var(--dim); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+  .cell .v { color: var(--white); font-size: 20px; margin-top: 2px; }
+  .cell .v small { font-size: 11px; color: var(--dim); }
+  .cell .v-sub { font-size: 10px; color: var(--dim); margin-top: 2px; }
+
+  #reasoning {
+    color: var(--white);
+    font-style: normal;
+    min-height: 1.6em;
+  }
+  #reasoning.empty { color: var(--dim); }
+
+  .prompt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+  }
+  .prompt-row .text { color: var(--white); }
+  .prompt-row .weight { color: var(--gold); }
+  .bar {
+    height: 2px;
+    background: #1c1a14;
+    margin-top: 3px;
+    position: relative;
+  }
+  .bar > span {
+    position: absolute; left: 0; top: 0; height: 100%;
+    background: var(--gold);
+  }
+
+  .params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  .controls {
+    display: flex;
+    gap: 14px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  button {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 12px 24px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+  }
+  button:hover:not(:disabled) { background: var(--gold); color: #000; }
+  button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  #status {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--dim);
+    margin-top: 14px;
+    min-height: 1.4em;
+  }
+  #status.error { color: #d6533a; }
+  #status.ok { color: var(--gold); }
+
+  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--dim); margin-right:8px; vertical-align: middle; }
+  .dot.live { background: var(--gold); animation: pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+</style>
+</head>
+<body>
+  <h1>ATMOSFERA</h1>
+  <div class="sub">AUTONOMOUS DJ AGENT · ISTANBUL</div>
+
+  <div class="section">
+    <div class="label">Environment Input</div>
+    <div class="grid">
+      <div class="cell"><div class="k">Noise</div><div class="v" id="in-noise">—<small> dB</small></div></div>
+      <div class="cell"><div class="k">Weather</div><div class="v" id="in-weather" style="font-size:15px">—</div><div class="v-sub" id="in-weather-age"></div></div>
+      <div class="cell"><div class="k">Temp</div><div class="v" id="in-temp">—<small> °C</small></div></div>
+<div class="cell"><div class="k">Time</div><div class="v" id="in-time">—</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Gemini Interpretation</div>
+    <div id="reasoning" class="empty">Awaiting analysis…</div>
+  </div>
+
+  <div class="section">
+    <div class="label">Active Lyria Prompts</div>
+    <div id="prompts"><span style="color:var(--dim)">—</span></div>
+  </div>
+
+  <div class="section">
+    <div class="label">Generation Parameters</div>
+    <div class="params">
+      <div class="cell"><div class="k">BPM</div><div class="v" id="p-bpm">—</div></div>
+      <div class="cell"><div class="k">Density</div><div class="v" id="p-density">—</div></div>
+      <div class="cell"><div class="k">Brightness</div><div class="v" id="p-bright">—</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="controls">
+      <button id="btn-play" disabled><span class="dot" id="dot"></span>PLAY</button>
+      <button id="btn-analyze" disabled>RE-ANALYZE</button>
+    </div>
+    <div id="status">Loading keys…</div>
+  </div>
+
+<script type="module">
+import { GoogleGenAI } from 'https://esm.run/@google/genai';
+
+const CITY = 'Istanbul';
+const GEMINI_MODEL = 'gemini-2.5-flash';
+const LYRIA_MODEL = 'models/lyria-realtime-exp';
+const REANALYZE_MS = 60000;
+const WEATHER_REFRESH_MS = 600000;
+
+// ---- State ----
+const state = {
+  keys: { gemini: null, weather: null },
+  ai: null,
+  lyriaAi: null,
+  session: null,
+  playing: false,
+  reanalyzeTimer: null,
+  weatherTimer: null,
+  audio: { ctx: null, nextTime: 0, sources: new Set() },
+  mic: { analyser: null, data: null, ok: false },
+  lastParams: null,
+  weatherCache: { data: null, fetchedAt: null },
+};
+
+// ---- DOM ----
+const $ = id => document.getElementById(id);
+const els = {
+  noise: $('in-noise'), weather: $('in-weather'), weatherAge: $('in-weather-age'),
+  temp: $('in-temp'), time: $('in-time'),
+  reasoning: $('reasoning'), prompts: $('prompts'),
+  bpm: $('p-bpm'), density: $('p-density'), bright: $('p-bright'),
+  play: $('btn-play'), analyze: $('btn-analyze'), status: $('status'), dot: $('dot'),
+};
+
+function setStatus(msg, kind = '') {
+  els.status.textContent = msg;
+  els.status.className = kind;
+}
+
+// ---- Key loading ----
+async function loadKeys() {
+  try {
+    const res = await fetch('./keys.txt', { cache: 'no-store' });
+    if (!res.ok) throw new Error('no file');
+    const txt = await res.text();
+    const map = {};
+    txt.split(/\r?\n/).forEach(line => {
+      const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.+?)\s*$/);
+      if (m) map[m[1]] = m[2];
+    });
+    if (map.GEMINI_API_KEY) {
+      state.keys.gemini = map.GEMINI_API_KEY;
+      state.keys.weather = map.OPENWEATHER_API_KEY || null;
+      return true;
+    }
+    throw new Error('GEMINI_API_KEY missing');
+  } catch (e) {
+    return false;
+  }
+}
+
+
+// ---- Microphone ----
+async function initMic() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: {
+      echoCancellation: false, noiseSuppression: false, autoGainControl: false
+    }});
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = ctx.createMediaStreamSource(stream);
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 2048;
+    src.connect(analyser);
+    state.mic.analyser = analyser;
+    state.mic.data = new Float32Array(analyser.fftSize);
+    state.mic.ok = true;
+  } catch (e) {
+    state.mic.ok = false;
+  }
+}
+
+// Returns dB SPL-ish value (relative, ~30-90 range), or 0 if no mic
+function readNoise() {
+  if (!state.mic.ok) return 0;
+  const a = state.mic.analyser;
+  a.getFloatTimeDomainData(state.mic.data);
+  let sum = 0;
+  for (let i = 0; i < state.mic.data.length; i++) {
+    const v = state.mic.data[i];
+    sum += v * v;
+  }
+  const rms = Math.sqrt(sum / state.mic.data.length);
+  // map RMS to a friendly dB-ish scale
+  const db = 20 * Math.log10(rms || 1e-7); // negative dBFS
+  const friendly = Math.max(0, Math.min(100, Math.round(db + 90))); // shift to ~0-100
+  return friendly;
+}
+
+// ---- Weather ----
+async function fetchWeather() {
+  if (!state.keys.weather) {
+    state.weatherCache.data = { condition: 'unknown', description: '', temp: null, humidity: null, ok: false };
+    state.weatherCache.fetchedAt = Date.now();
+    updateWeatherUI();
+    return;
+  }
+  try {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(CITY)}&units=metric&appid=${state.keys.weather}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('weather ' + res.status);
+    const d = await res.json();
+    state.weatherCache.data = {
+      condition: d.weather?.[0]?.main || 'unknown',
+      description: d.weather?.[0]?.description || '',
+      temp: typeof d.main?.temp === 'number' ? Math.round(d.main.temp) : null,
+      humidity: typeof d.main?.humidity === 'number' ? d.main.humidity : null,
+      ok: true,
+    };
+    state.weatherCache.fetchedAt = Date.now();
+    updateWeatherUI();
+  } catch (e) {
+    if (!state.weatherCache.data) {
+      state.weatherCache.data = { condition: 'unavailable', description: '', temp: null, humidity: null, ok: false };
+      state.weatherCache.fetchedAt = Date.now();
+    }
+    updateWeatherUI();
+  }
+}
+
+function getCachedWeather() {
+  return state.weatherCache.data || { condition: 'unknown', description: '', temp: null, humidity: null, ok: false };
+}
+
+function updateWeatherUI() {
+  const w = getCachedWeather();
+  els.weather.textContent = w.description || w.condition;
+  els.temp.innerHTML = w.temp === null ? '—<small> °C</small>' : `${w.temp}<small> °C</small>`;
+}
+
+// ---- Gather inputs ----
+function gatherInputs() {
+  const noise = readNoise();
+  const weather = getCachedWeather();
+  const now = new Date();
+  const hour = now.getHours();
+
+  els.noise.innerHTML = `${noise}<small> dB</small>`;
+  els.time.textContent = String(hour).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+  return { noise, weather, hour };
+}
+
+// ---- Gemini interpretation ----
+async function askGemini(inputs) {
+  const noiseDesc = inputs.noise < 25 ? 'very quiet' : inputs.noise < 45 ? 'calm' : inputs.noise < 65 ? 'moderate / busy' : 'loud / energetic';
+  const timeDesc = inputs.hour < 5 ? 'deep night' : inputs.hour < 9 ? 'early morning' : inputs.hour < 12 ? 'morning' : inputs.hour < 17 ? 'afternoon' : inputs.hour < 21 ? 'evening' : 'night';
+
+  const prompt = `You are the creative core of an autonomous DJ. Read the environment and decide the music to generate RIGHT NOW.
+
+Environment:
+- Ambient noise level: ${inputs.noise} (0=silent, 100=very loud) — feels ${noiseDesc}
+- Weather in ${CITY}: ${inputs.weather.description || inputs.weather.condition}
+- Temperature: ${inputs.weather.temp === null ? 'unknown' : inputs.weather.temp + '°C'}
+- Humidity: ${inputs.weather.humidity === null ? 'unknown' : inputs.weather.humidity + '%'}
+- Local time: ${String(inputs.hour).padStart(2,'0')}:00 (${timeDesc})
+
+Translate this atmosphere into instrumental music for the Lyria RealTime model.
+Respond with ONLY valid JSON, no markdown, matching exactly:
+{
+  "bpm": <integer 60-200>,
+  "density": <float 0.0-1.0>,
+  "brightness": <float 0.0-1.0>,
+  "prompts": [ {"text": "<genre/mood/instrument phrase>", "weight": <float 0.1-1.0>} ],
+  "reasoning": "<one sentence explaining the vibe choice>"
+}
+Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases (e.g. "rainy lo-fi jazz", "warm analog pads", "minimal techno pulse"). Match energy to noise, mood to weather, tempo/color to time of day.`;
+
+  const res = await state.ai.models.generateContent({
+    model: GEMINI_MODEL,
+    contents: prompt,
+    config: { responseMimeType: 'application/json', temperature: 1.0 },
+  });
+
+  let text = res.text.trim();
+  // strip code fences if present
+  text = text.replace(/^```(?:json)?/i, '').replace(/```$/,'').trim();
+  const data = JSON.parse(text);
+
+  // sanitize
+  data.bpm = Math.max(60, Math.min(200, Math.round(data.bpm)));
+  data.density = Math.max(0, Math.min(1, Number(data.density)));
+  data.brightness = Math.max(0, Math.min(1, Number(data.brightness)));
+  data.prompts = (data.prompts || []).slice(0, 3).map(p => ({
+    text: String(p.text).slice(0, 120),
+    weight: Math.max(0.1, Math.min(1, Number(p.weight) || 1)),
+  }));
+  if (!data.prompts.length) data.prompts = [{ text: 'ambient texture', weight: 1.0 }];
+  return data;
+}
+
+// ---- Render interpretation ----
+function renderParams(p) {
+  els.reasoning.textContent = p.reasoning || '—';
+  els.reasoning.classList.remove('empty');
+  els.bpm.textContent = p.bpm;
+  els.density.textContent = p.density.toFixed(2);
+  els.bright.textContent = p.brightness.toFixed(2);
+
+  els.prompts.innerHTML = '';
+  p.prompts.forEach(pr => {
+    const row = document.createElement('div');
+    row.className = 'prompt-row';
+    row.innerHTML = `<span class="text">${escapeHtml(pr.text)}</span><span class="weight">${pr.weight.toFixed(2)}</span>`;
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.innerHTML = `<span style="width:${Math.round(pr.weight*100)}%"></span>`;
+    const wrap = document.createElement('div');
+    wrap.appendChild(row);
+    wrap.appendChild(bar);
+    els.prompts.appendChild(wrap);
+  });
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ---- Lyria audio playback ----
+function ensureAudioCtx() {
+  if (!state.audio.ctx) {
+    state.audio.ctx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 48000 });
+    state.audio.nextTime = 0;
+  }
+  return state.audio.ctx;
+}
+
+function playChunk(base64) {
+  const ctx = ensureAudioCtx();
+  // decode base64 -> bytes
+  const bin = atob(base64);
+  const len = bin.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+
+  // interpret as int16 stereo interleaved
+  const int16 = new Int16Array(bytes.buffer);
+  const frames = int16.length / 2;
+  if (frames < 1) return;
+  const buffer = ctx.createBuffer(2, frames, 48000);
+  const left = buffer.getChannelData(0);
+  const right = buffer.getChannelData(1);
+  for (let i = 0; i < frames; i++) {
+    left[i] = int16[i * 2] / 32768;
+    right[i] = int16[i * 2 + 1] / 32768;
+  }
+
+  const node = ctx.createBufferSource();
+  node.buffer = buffer;
+  node.connect(ctx.destination);
+
+  const now = ctx.currentTime;
+  if (state.audio.nextTime < now) state.audio.nextTime = now + 0.08; // small lead-in
+  node.start(state.audio.nextTime);
+  state.audio.nextTime += buffer.duration;
+
+  state.audio.sources.add(node);
+  node.onended = () => state.audio.sources.delete(node);
+}
+
+function stopAudio() {
+  state.audio.sources.forEach(n => { try { n.stop(); } catch(e){} });
+  state.audio.sources.clear();
+  state.audio.nextTime = 0;
+}
+
+// ---- Lyria session ----
+async function connectLyria() {
+  if (state.session) return state.session;
+  setStatus('Connecting to Lyria RealTime…');
+  const session = await state.lyriaAi.live.music.connect({
+    model: LYRIA_MODEL,
+    callbacks: {
+      onmessage: (msg) => {
+        const chunks = msg.serverContent?.audioChunks;
+        if (chunks) chunks.forEach(c => playChunk(c.data));
+      },
+      onerror: (e) => { setStatus('Lyria error: ' + (e?.message || e), 'error'); },
+      onclose: () => { /* session closed */ },
+    },
+  });
+  state.session = session;
+  return session;
+}
+
+async function applyParams(p) {
+  const session = await connectLyria();
+  await session.setWeightedPrompts({ weightedPrompts: p.prompts });
+  await session.setMusicGenerationConfig({
+    musicGenerationConfig: { bpm: p.bpm, density: p.density, brightness: p.brightness },
+  });
+}
+
+// ---- Orchestration ----
+let analyzing = false;
+async function analyze(restartContext = false) {
+  if (analyzing) return;
+  analyzing = true;
+  els.analyze.disabled = true;
+  try {
+    setStatus('Reading environment…');
+    const inputs = await gatherInputs();
+    setStatus('Gemini interpreting the atmosphere…');
+    const params = await askGemini(inputs);
+    renderParams(params);
+    state.lastParams = params;
+
+    if (state.playing) {
+      // tempo/bpm changes require reset of context for Lyria
+      const bpmChanged = restartContext;
+      await applyParams(params);
+      if (bpmChanged && state.session.resetContext) {
+        try { await state.session.resetContext(); } catch(e){}
+      }
+      setStatus('Live — generating from current atmosphere.', 'ok');
+    } else {
+      setStatus('Analysis ready. Press PLAY to begin.', 'ok');
+    }
+  } catch (e) {
+    console.error(e);
+    setStatus('Analysis failed: ' + (e?.message || e), 'error');
+  } finally {
+    analyzing = false;
+    els.analyze.disabled = false;
+  }
+}
+
+async function startPlayback() {
+  try {
+    ensureAudioCtx();
+    if (state.audio.ctx.state === 'suspended') await state.audio.ctx.resume();
+    if (!state.lastParams) await analyze();
+    if (!state.lastParams) return;
+
+    await applyParams(state.lastParams);
+    await state.session.play();
+    state.playing = true;
+    els.play.innerHTML = '<span class="dot live" id="dot"></span>PAUSE';
+    setStatus('Live — generating from current atmosphere.', 'ok');
+
+    // auto re-analyze loop
+    if (state.reanalyzeTimer) clearInterval(state.reanalyzeTimer);
+    state.reanalyzeTimer = setInterval(() => analyze(true), REANALYZE_MS);
+  } catch (e) {
+    console.error(e);
+    setStatus('Playback failed: ' + (e?.message || e), 'error');
+  }
+}
+
+async function pausePlayback() {
+  state.playing = false;
+  if (state.reanalyzeTimer) { clearInterval(state.reanalyzeTimer); state.reanalyzeTimer = null; }
+  try { if (state.session) await state.session.pause(); } catch(e){}
+  stopAudio();
+  els.play.innerHTML = '<span class="dot" id="dot"></span>PLAY';
+  setStatus('Paused.', '');
+}
+
+// ---- Init ----
+async function boot() {
+  els.play.addEventListener('click', () => state.playing ? pausePlayback() : startPlayback());
+  els.analyze.addEventListener('click', () => analyze(true));
+
+  await initMic();
+  if (!state.mic.ok) setStatus('Microphone denied — using 0 dB fallback.', '');
+
+  const ok = await loadKeys();
+  if (ok) {
+    finishInit();
+  } else {
+    setStatus('keys.txt okunamadı — aynı klasöre koy ve sayfayı yenile.', 'error');
+  }
+}
+
+async function finishInit() {
+  try {
+    state.ai = new GoogleGenAI({ apiKey: state.keys.gemini });
+    state.lyriaAi = new GoogleGenAI({ apiKey: state.keys.gemini, apiVersion: 'v1alpha' });
+    els.play.disabled = false;
+    els.analyze.disabled = false;
+    setStatus('Fetching weather…', 'ok');
+    await fetchWeather();
+    if (state.weatherTimer) clearInterval(state.weatherTimer);
+    state.weatherTimer = setInterval(fetchWeather, WEATHER_REFRESH_MS);
+    setStatus(state.mic.ok ? 'Ready. Running first analysis…' : 'Ready (no mic). Running first analysis…', 'ok');
+    await analyze();
+  } catch (e) {
+    setStatus('Init error: ' + (e?.message || e), 'error');
+  }
+}
+
+// keep input display ticking even when idle
+setInterval(() => {
+  if (!analyzing) {
+    const n = readNoise();
+    els.noise.innerHTML = `${n}<small> dB</small>`;
+    const d = new Date();
+    els.time.textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  }
+  if (state.weatherCache.fetchedAt) {
+    const mins = Math.floor((Date.now() - state.weatherCache.fetchedAt) / 60000);
+    els.weatherAge.textContent = mins < 1 ? 'just now' : `${mins}m ago`;
+  }
+}, 1000);
+
+boot();
+</script>
+</body>
+</html>
