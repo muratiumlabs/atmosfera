@@ -769,8 +769,8 @@
 
   .char-wrap {
     position: absolute;
-    bottom: 64px;
-    width: 64px;
+    bottom: 60px;
+    width: 72px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -810,13 +810,13 @@
   @keyframes arm-fwd { from { transform: rotate(-18deg); } to { transform: rotate( 18deg); } }
   @keyframes arm-bwd { from { transform: rotate( 18deg); } to { transform: rotate(-18deg); } }
 
-  /* SVG-space pivot anchors */
-  .male-leg-l  { transform-origin: 26px 65px; }
-  .male-leg-r  { transform-origin: 26px 65px; }
-  .male-arm-l  { transform-origin: 26px 38px; }
-  .male-arm-r  { transform-origin: 26px 38px; }
-  .female-arm-l { transform-origin: 26px 36px; }
-  .female-arm-r { transform-origin: 26px 36px; }
+  /* SVG-space pivot anchors — top-center of each limb rect */
+  .male-leg-l  { transform-origin: 23px 64px; }
+  .male-leg-r  { transform-origin: 37px 64px; }
+  .male-arm-l  { transform-origin: 20px 36px; }
+  .male-arm-r  { transform-origin: 40px 36px; }
+  .female-arm-l { transform-origin: 21px 36px; }
+  .female-arm-r { transform-origin: 39px 36px; }
 
   .char-walking .male-leg-l { animation: leg-fwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
   .char-walking .male-leg-r { animation: leg-bwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
@@ -890,65 +890,107 @@
     <!-- Male — left side, near input panel -->
     <div class="char-wrap" id="char-male-wrap">
       <div class="emotion-bubble" id="male-bubble">🤔</div>
-      <svg class="char-figure" id="char-male" width="52" height="108"
-           viewBox="0 0 52 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- head -->
-        <circle cx="26" cy="14" r="11"
-                stroke="#C9A84C" stroke-width="2.2" fill="rgba(201,168,76,0.08)"/>
-        <!-- body -->
-        <line x1="26" y1="25" x2="26" y2="65"
-              stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round"/>
-        <!-- left arm -->
+      <svg class="char-figure" id="char-male" width="60" height="108"
+           viewBox="0 0 60 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- ── LEFT ARM (behind body, pivot top-center 20,36) ── -->
         <g class="male-arm-l">
-          <line x1="26" y1="38" x2="8" y2="55"
-                stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="14" y="36" width="12" height="24" rx="6" fill="#B89040"/>
+          <ellipse cx="20" cy="62" rx="6" ry="4.5" fill="#C9A84C"/>
         </g>
-        <!-- right arm -->
+        <!-- ── RIGHT ARM (behind body, pivot top-center 40,36) ── -->
         <g class="male-arm-r">
-          <line x1="26" y1="38" x2="44" y2="55"
-                stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="34" y="36" width="12" height="24" rx="6" fill="#B89040"/>
+          <ellipse cx="40" cy="62" rx="6" ry="4.5" fill="#C9A84C"/>
         </g>
-        <!-- left leg -->
+
+        <!-- ── TORSO (covers arm tops, drawn on top) ── -->
+        <rect x="17" y="32" width="26" height="34" rx="10" fill="#C9A84C"/>
+        <!-- shirt collar detail -->
+        <rect x="24" y="32" width="12" height="8" rx="4" fill="#D4B860"/>
+
+        <!-- ── LEFT LEG (pivot top-center 23,64) ── -->
         <g class="male-leg-l">
-          <line x1="26" y1="65" x2="14" y2="100"
-                stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="17" y="64" width="12" height="28" rx="6" fill="#B89040"/>
+          <ellipse cx="22" cy="94" rx="9" ry="5" fill="#8B6820"/>
         </g>
-        <!-- right leg -->
+        <!-- ── RIGHT LEG (pivot top-center 37,64) ── -->
         <g class="male-leg-r">
-          <line x1="26" y1="65" x2="38" y2="100"
-                stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="31" y="64" width="12" height="28" rx="6" fill="#B89040"/>
+          <ellipse cx="38" cy="94" rx="9" ry="5" fill="#8B6820"/>
         </g>
+
+        <!-- ── HEAD (drawn last, on top of everything) ── -->
+        <!-- ears -->
+        <circle cx="16" cy="15" r="5"  fill="#B89040"/>
+        <circle cx="44" cy="15" r="5"  fill="#B89040"/>
+        <!-- head -->
+        <circle cx="30" cy="14" r="14" fill="#C9A84C"/>
+        <!-- hair cap -->
+        <path d="M17 10 Q20 2 30 2 Q40 2 43 10 Q40 6 30 7 Q20 7 17 10Z"
+              fill="#8B6820"/>
+        <!-- eyes -->
+        <circle cx="25" cy="13" r="2.6" fill="#3D2200"/>
+        <circle cx="35" cy="13" r="2.6" fill="#3D2200"/>
+        <circle cx="25.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
+        <circle cx="35.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
+        <!-- smile -->
+        <path d="M24 18 Q30 24 36 18" stroke="#3D2200" stroke-width="1.8"
+              fill="none" stroke-linecap="round"/>
+
       </svg>
     </div>
 
     <!-- Female — right side, near music output panel -->
     <div class="char-wrap" id="char-female-wrap">
       <div class="emotion-bubble" id="female-bubble">🎵</div>
-      <svg class="char-figure" id="char-female" width="52" height="108"
-           viewBox="0 0 52 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- head -->
-        <circle cx="26" cy="14" r="11"
-                stroke="#C9A84C" stroke-width="2.2" fill="rgba(201,168,76,0.08)"/>
-        <!-- hair bun -->
-        <circle cx="34" cy="6" r="4.5"
-                stroke="#C9A84C" stroke-width="1.6" fill="rgba(201,168,76,0.14)"/>
-        <!-- body -->
-        <line x1="26" y1="25" x2="26" y2="62"
-              stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round"/>
-        <!-- left arm -->
+      <svg class="char-figure" id="char-female" width="60" height="108"
+           viewBox="0 0 60 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- ── LEFT ARM (behind body, pivot top-center 21,36) ── -->
         <g class="female-arm-l">
-          <line x1="26" y1="36" x2="6" y2="52"
-                stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="15" y="36" width="12" height="22" rx="6" fill="#B89040"/>
+          <ellipse cx="21" cy="60" rx="5.5" ry="4" fill="#C9A84C"/>
         </g>
-        <!-- right arm -->
+        <!-- ── RIGHT ARM (behind body, pivot top-center 39,36) ── -->
         <g class="female-arm-r">
-          <line x1="26" y1="36" x2="46" y2="52"
-                stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="33" y="36" width="12" height="22" rx="6" fill="#B89040"/>
+          <ellipse cx="39" cy="60" rx="5.5" ry="4" fill="#C9A84C"/>
         </g>
-        <!-- skirt -->
-        <path d="M18 62 L6 104 L46 104 L34 62 Z"
-              stroke="#C9A84C" stroke-width="2" stroke-linejoin="round"
-              fill="rgba(201,168,76,0.07)"/>
+
+        <!-- ── TORSO ── -->
+        <rect x="19" y="32" width="22" height="26" rx="9" fill="#C9A84C"/>
+
+        <!-- ── SKIRT (unified shape, no separate legs → distinct silhouette) ── -->
+        <path d="M16 56 C15 58 8 72 7 86 C7 92 12 97 21 98 L39 98 C48 97 53 92 53 86 C52 72 45 58 44 56 Z"
+              fill="#A87E30"/>
+        <!-- skirt hem highlight -->
+        <path d="M9 87 Q12 95 21 97 L39 97 Q48 95 51 87"
+              stroke="#C9A84C" stroke-width="1.4" fill="none"
+              stroke-linecap="round" opacity="0.35"/>
+
+        <!-- ── HEAD ── -->
+        <!-- ears -->
+        <circle cx="16" cy="15" r="4.5" fill="#B89040"/>
+        <circle cx="44" cy="15" r="4.5" fill="#B89040"/>
+        <!-- head -->
+        <circle cx="30" cy="14" r="14"  fill="#C9A84C"/>
+        <!-- hair bun (outer) -->
+        <circle cx="39" cy="4"  r="7"   fill="#8B6820"/>
+        <!-- hair bun (inner highlight) -->
+        <circle cx="39" cy="4"  r="4.5" fill="#A87E30"/>
+        <!-- hair across head -->
+        <path d="M18 10 Q22 2 30 2 Q36 2 41 7 Q38 4 30 6 Q22 7 19 11Z"
+              fill="#8B6820"/>
+        <!-- eyes -->
+        <circle cx="25" cy="13" r="2.6" fill="#3D2200"/>
+        <circle cx="35" cy="13" r="2.6" fill="#3D2200"/>
+        <circle cx="25.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
+        <circle cx="35.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
+        <!-- smile -->
+        <path d="M24 18 Q30 24 36 18" stroke="#3D2200" stroke-width="1.8"
+              fill="none" stroke-linecap="round"/>
+
       </svg>
     </div>
 
