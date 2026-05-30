@@ -963,6 +963,11 @@
         <input id="manual-hour" type="number" min="0" max="23" value="20" />
       </div>
 
+      <div class="manual-field">
+        <label for="manual-mood">Mood / Vibe <span style="opacity:.55;font-weight:400">(optional, overrides everything)</span></label>
+        <input id="manual-mood" type="text" placeholder="enerjik, hüzünlü, focus, romantic…" autocomplete="off" />
+      </div>
+
       <button id="btn-apply-manual">Apply Input</button>
     </div>
   </aside>
@@ -1127,6 +1132,7 @@ const state = {
     temp: 22,
     humidity: 60,
     hour: 20,
+    mood: '',
   },
 };
 
@@ -1160,6 +1166,7 @@ const els = {
   manualTemp: $('manual-temp'),
   manualHumidity: $('manual-humidity'),
   manualHour: $('manual-hour'),
+  manualMood: $('manual-mood'),
   applyManual: $('btn-apply-manual'),
   manualPanel: $('manual-panel'),
   manualBody: $('manual-body'),
@@ -1503,6 +1510,8 @@ function readManualInputs() {
   state.manual.temp = clampNumber(els.manualTemp.value, -20, 50, 22);
   state.manual.humidity = clampNumber(els.manualHumidity.value, 0, 100, 60);
   state.manual.hour = clampNumber(els.manualHour.value, 0, 23, 20);
+  // Mood is always read — active even without full manual mode
+  state.manual.mood = (els.manualMood?.value || '').trim();
 }
 
 function buildLogicText(inputs, source, shouldLog = true) {
@@ -1586,9 +1595,10 @@ function gatherInputs(shouldLog = true) {
     : `${weather.temp}<small> °C</small>`;
   els.time.textContent = String(hour).padStart(2, '0') + ':00';
 
+  const mood = state.manual.mood || '';
   buildLogicText({ noise, weather, hour }, source, shouldLog);
 
-  return { noise, weather, hour };
+  return { noise, weather, hour, mood };
 }
 
 // ---- Gemini interpretation ----
@@ -1608,64 +1618,91 @@ async function askGemini(inputs) {
     inputs.hour < 21 ? 'evening' :
     'night';
 
-  const prompt = `You are the creative core of an autonomous DJ. Read the environment and decide the music to generate RIGHT NOW.
+  const moodLine = inputs.mood
+    ? `- User mood / vibe: "${inputs.mood}"  ← HIGHEST PRIORITY — overrides time and weather completely`
+    : '- User mood: not specified (use environment signals below)';
 
-Environment:
-- Ambient noise level: ${inputs.noise} (0=silent, 100=very loud) — feels ${noiseDesc}
-- Weather location: ${inputs.weather.place || getWeatherPlaceName()}
+  // Random seed injected into prompt to prevent Gemini from caching the same genre answer
+  const seed = Math.floor(Math.random() * 99991) + 10;
+  const seedLine = inputs.mood ? '' : `\nVariation seed (ignore the number, but use it to make a fresh genre choice different from your last): #${seed}`;
+
+  const prompt = `You are the creative director of an autonomous DJ. Pick the most emotionally fitting music for RIGHT NOW. Be bold and diverse — do NOT default to ambient unless everything explicitly points that way.
+
+PRIORITY ORDER (strongest → weakest):
+1. USER MOOD — if provided, override everything else completely
+2. Ambient noise — high noise means high energy music
+3. Weather + temperature — shapes texture and emotional color
+4. Time of day — soft background influence only
+
+ENVIRONMENT:
+${moodLine}
+- Ambient noise: ${inputs.noise}/100 — ${noiseDesc}
+- Location: ${inputs.weather.place || getWeatherPlaceName()}
 - Weather: ${inputs.weather.description || inputs.weather.condition}
 - Temperature: ${inputs.weather.temp === null ? 'unknown' : inputs.weather.temp + '°C'}
-- Humidity: ${inputs.weather.humidity === null ? 'unknown' : inputs.weather.humidity + '%'}
-- Local time: ${String(inputs.hour).padStart(2,'0')}:00 (${timeDesc})
-Interpret this atmosphere through the theme of love:
-intimacy, distance, longing, presence, vulnerability.
+- Time: ${String(inputs.hour).padStart(2,'0')}:00 (${timeDesc})
 
-Do not create cliché romantic music.
-Treat love as a relation between human, machine, space and sound.
-Musical style constraint:
-Generate acoustic / semi-acoustic music rather than abstract ambient soundscapes.
-Prefer organic instruments such as acoustic guitar, piano, cello, violin, ney, oud, bağlama-like plucks, soft percussion and human-like breath textures.
-Avoid generic ambient pads, drone-only soundscapes, sci-fi textures, EDM, techno or aggressive club music.
-Allow subtle electronic textures especially in the evening, as long as the music remains intimate and emotionally grounded.
-The result should feel intimate, warm, tactile and performable by real instruments.
-Time-of-day musical guidance:
+FULL GENRE PALETTE — choose freely from all of these, be diverse:
+Pop · Rock · Hip-hop · Latin · Flamenco · Orchestral · Cinematic
+Funk · Reggae · Blues · Country · Folk · Acoustic · Jazz · Bossa Nova
+Soul · R&B · Indie · Electronic Dance · Deep House · Drum & Bass
+Ambient · Neo Classical · Trip Hop · Experimental · Dark Jazz · Lo-fi · World Music
 
-06:00–09:00 Morning:
-Prefer acoustic folk, soft jazz, fingerstyle guitar and warm morning energy.
+MOOD → MUSIC (when user mood is provided, this is absolute):
+• "enerjik" / "mutlu" / "happy" / "energetic" → pop, funk, dance, latin | 100–130 BPM | major or mixolydian | high density + brightness
+• "hüzünlü" / "sad" / "melancholic" / "üzgün" → slow ballad, neo soul, blues | 55–72 BPM | minor or dorian | low density
+• "odaklan" / "focus" / "çalış" / "study" → neo classical, lo-fi hip hop, minimal | 72–92 BPM | dorian or major | mid density
+• "romantik" / "romantic" / "aşk" → jazz, bossa nova, cinematic strings | 68–95 BPM | major or lydian
+• "öfke" / "angry" / "agresif" / "intense" → rock, drum & bass, dark electronic | 140–170 BPM | phrygian or minor
+• "sakin" / "calm" / "dinlen" / "relax" → acoustic folk, light jazz, ambient | 62–85 BPM
+• Any other mood → interpret creatively and pick the most fitting genre
 
-09:00–12:00 Late Morning:
-Prefer upbeat pop, bossa nova, bright acoustic textures and optimistic melodies.
+NOISE SIGNAL (when no user mood):
+• 0–30 silent → sparse, introspective, quiet genre
+• 30–55 calm → medium energy, wide genre range — be adventurous
+• 55–75 busy → upbeat, rhythmic, social
+• 75–100 loud → high energy: dance, rock, funk, party
 
-12:00–15:00 Noon:
-Prefer minimal, neo-classical, focus-oriented music with subtle rhythmic movement.
+TIME SIGNAL (soft influence, easily overridden by noise or mood):
+• 06–09 → acoustic, folk, light jazz
+• 09–12 → upbeat pop, bossa nova, world music
+• 12–15 → neo classical, lo-fi, focus
+• 15–18 → indie, soul, R&B, funk
+• 18–21 → deep house, jazz fusion, warm electronic
+• 21–00 → trip hop, dark electronic, ambient
+• 00–03 → dark jazz, experimental, drone
+• 03–06 → slow ambient, neo classical
 
-15:00–18:00 Afternoon:
-Prefer indie, soul, R&B grooves, warm bass and expressive melodies.
+AMBIENT RULE — only choose ambient/drone/minimal when ALL THREE are true:
+  hour is past midnight (00:00–06:00)  AND  noise < 10  AND  user has not provided a mood
+  Otherwise pick something with more movement and personality.
 
-18:00–21:00 Evening:
-Prefer deep house, jazz fusion, electronic grooves, piano and live-instrument textures.
+ADVENTUROUSNESS (automatic mode — no user mood):
+  Be deliberately unpredictable. Even with identical inputs, vary the genre every cycle.
+  The same morning can be flamenco, bossa nova, indie pop, blues, or cinematic — not always "light acoustic".
+  The same evening can be funk, latin jazz, afrobeat, or orchestral — not always "deep house".
+  Treat each analysis as a fresh creative decision. Surprise the listener.
+  Ask yourself: "what is an interesting genre that STILL fits this context?" — then pick it.
 
-21:00–00:00 Night:
-Prefer ambient, dark electronic and trip-hop influences.
+BPM RANGES BY ENERGY:
+• Slow ballads / ambient: 55–82
+• Acoustic / neo classical / lo-fi: 72–95
+• Pop / soul / jazz / indie: 85–118
+• Funk / house / electronic: 110–135
+• Drum & bass / rock / intense: 138–175
 
-00:00–03:00 Midnight:
-Prefer experimental, drone and dark jazz textures.
-
-03:00–06:00 Pre-dawn:
-Prefer slow ambient, neo-classical piano and reflective soundscapes.
-
-The selected time period should strongly influence genre selection and instrumentation.
-Energy and rhythm constraint:
-
-Avoid generating only piano, ambient pads or neo-classical music.
-Prioritize rhythm, groove, movement and memorable melodies.
-Favor indie pop, soul, R&B, jazz fusion, deep house, trip-hop and bossa nova when appropriate.
-Daytime music should generally feel more energetic than nighttime music.
-Priority rule:
-
-Time of day is the primary driver of genre selection.
-Weather and noise may adjust mood, brightness, density and instrumentation details, but they must not override the time-based genre category.
-Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases, for example "rainy lo-fi jazz", "warm analog pads", "minimal techno pulse". Match energy to noise, mood to weather, tempo/color to time of day. Choose scale to complement the mood.`;
+Respond with ONLY valid JSON, no markdown:
+{
+  "bpm": <integer 55-175>,
+  "scale": "<major|minor|dorian|phrygian|lydian|mixolydian|pentatonic|chromatic>",
+  "density": <float 0.0-1.0>,
+  "brightness": <float 0.0-1.0>,
+  "prompts": [{"text": "<evocative musical phrase>", "weight": <float 0.1-1.0>}],
+  "reasoning": "<one sentence explaining the choice>"
+}
+Rules: 1–3 prompts. Be SPECIFIC and VARIED — avoid vague generics like "ambient texture" or "warm pads".
+Good examples: "funky electric piano and horn stabs", "flamenco acoustic guitar with cajon percussion", "cinematic orchestral string swell", "upbeat bossa nova piano trio", "lo-fi hip hop with warm vinyl crackle", "dark jazz saxophone over brushed snare".
+Choose scale deliberately to match the genre mood.${seedLine}`;
 
   addLogicLog('Sending environment to Gemini for music interpretation...');
 
@@ -1689,7 +1726,7 @@ Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases, for exam
 
   addLogicLog('Gemini response received, validating output...', 'ok');
 
-  data.bpm = Math.max(60, Math.min(200, Math.round(data.bpm)));
+  data.bpm = Math.max(55, Math.min(175, Math.round(data.bpm)));
 
   const VALID_SCALES = [
     'major',
