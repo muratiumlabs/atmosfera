@@ -1622,6 +1622,10 @@ async function askGemini(inputs) {
     ? `- User mood / vibe: "${inputs.mood}"  ← HIGHEST PRIORITY — overrides time and weather completely`
     : '- User mood: not specified (use environment signals below)';
 
+  // Random seed injected into prompt to prevent Gemini from caching the same genre answer
+  const seed = Math.floor(Math.random() * 99991) + 10;
+  const seedLine = inputs.mood ? '' : `\nVariation seed (ignore the number, but use it to make a fresh genre choice different from your last): #${seed}`;
+
   const prompt = `You are the creative director of an autonomous DJ. Pick the most emotionally fitting music for RIGHT NOW. Be bold and diverse — do NOT default to ambient unless everything explicitly points that way.
 
 PRIORITY ORDER (strongest → weakest):
@@ -1670,8 +1674,15 @@ TIME SIGNAL (soft influence, easily overridden by noise or mood):
 • 03–06 → slow ambient, neo classical
 
 AMBIENT RULE — only choose ambient/drone/minimal when ALL THREE are true:
-  hour is between 22:00–06:00  AND  noise < 25  AND  weather is cold/rainy/foggy
+  hour is past midnight (00:00–06:00)  AND  noise < 10  AND  user has not provided a mood
   Otherwise pick something with more movement and personality.
+
+ADVENTUROUSNESS (automatic mode — no user mood):
+  Be deliberately unpredictable. Even with identical inputs, vary the genre every cycle.
+  The same morning can be flamenco, bossa nova, indie pop, blues, or cinematic — not always "light acoustic".
+  The same evening can be funk, latin jazz, afrobeat, or orchestral — not always "deep house".
+  Treat each analysis as a fresh creative decision. Surprise the listener.
+  Ask yourself: "what is an interesting genre that STILL fits this context?" — then pick it.
 
 BPM RANGES BY ENERGY:
 • Slow ballads / ambient: 55–82
@@ -1691,7 +1702,7 @@ Respond with ONLY valid JSON, no markdown:
 }
 Rules: 1–3 prompts. Be SPECIFIC and VARIED — avoid vague generics like "ambient texture" or "warm pads".
 Good examples: "funky electric piano and horn stabs", "flamenco acoustic guitar with cajon percussion", "cinematic orchestral string swell", "upbeat bossa nova piano trio", "lo-fi hip hop with warm vinyl crackle", "dark jazz saxophone over brushed snare".
-Choose scale deliberately to match the genre mood.`;
+Choose scale deliberately to match the genre mood.${seedLine}`;
 
   addLogicLog('Sending environment to Gemini for music interpretation...');
 
