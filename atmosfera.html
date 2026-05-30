@@ -795,57 +795,66 @@
     transform: translateY(0) scale(1);
   }
 
-  .char-figure { overflow: visible; }
+  /* ── Emoji character base ── */
+  .char-emoji {
+    font-size: 48px;
+    line-height: 1;
+    display: block;
+    text-align: center;
+    user-select: none;
+    filter: drop-shadow(0 4px 10px rgba(201,168,76,0.25));
+    transition: filter 0.3s ease;
+  }
 
-  /* ── Idle breathe ── */
-  @keyframes char-breathe {
+  /* ── Idle float ── */
+  @keyframes char-float {
     0%, 100% { transform: translateY(0);    }
-    50%      { transform: translateY(-2px); }
+    50%      { transform: translateY(-7px); }
   }
-  .char-idle { animation: char-breathe 3.2s ease-in-out infinite; }
+  .char-idle { animation: char-float 3s ease-in-out infinite; }
 
-  /* ── Walk cycle ── */
-  @keyframes leg-fwd { from { transform: rotate(-22deg); } to { transform: rotate( 22deg); } }
-  @keyframes leg-bwd { from { transform: rotate( 22deg); } to { transform: rotate(-22deg); } }
-  @keyframes arm-fwd { from { transform: rotate(-18deg); } to { transform: rotate( 18deg); } }
-  @keyframes arm-bwd { from { transform: rotate( 18deg); } to { transform: rotate(-18deg); } }
-
-  /* SVG-space pivot anchors — top-center of each limb rect */
-  .male-leg-l  { transform-origin: 23px 64px; }
-  .male-leg-r  { transform-origin: 37px 64px; }
-  .male-arm-l  { transform-origin: 20px 36px; }
-  .male-arm-r  { transform-origin: 40px 36px; }
-  .female-arm-l { transform-origin: 21px 36px; }
-  .female-arm-r { transform-origin: 39px 36px; }
-
-  .char-walking .male-leg-l { animation: leg-fwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
-  .char-walking .male-leg-r { animation: leg-bwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
-  .char-walking .male-arm-l { animation: arm-bwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
-  .char-walking .male-arm-r { animation: arm-fwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
-
-  /* ── Female sway (music on) ── */
-  @keyframes char-sway {
-    0%, 100% { transform: rotate(-2.5deg) translateY(0);    }
-    50%      { transform: rotate( 2.5deg) translateY(-3px); }
+  /* ── Analyzing bounce (male thinking) ── */
+  @keyframes char-bounce {
+    0%, 100% { transform: translateY(0)     scale(1);    }
+    25%      { transform: translateY(-13px) scale(1.08); }
+    55%      { transform: translateY(-4px)  scale(0.96); }
+    78%      { transform: translateY(-9px)  scale(1.04); }
   }
-  .char-sway { animation: char-sway var(--sway-dur, 2s) ease-in-out infinite; }
+  .char-bounce { animation: char-bounce 0.72s ease-in-out infinite; }
 
-  /* ── Female dance (after catch) ── */
-  @keyframes char-dance {
-    0%   { transform: translateY(0)    rotate( 0.0deg) scaleX(1.00); }
-    18%  { transform: translateY(-8px) rotate( 5.0deg) scaleX(1.04); }
-    36%  { transform: translateY(-2px) rotate(-4.0deg) scaleX(0.97); }
-    54%  { transform: translateY(-6px) rotate( 4.0deg) scaleX(1.03); }
-    72%  { transform: translateY(-1px) rotate(-2.5deg) scaleX(0.99); }
-    100% { transform: translateY(0)    rotate( 0.0deg) scaleX(1.00); }
+  /* ── Walk bob (emoji rocks while wrapper slides) ── */
+  @keyframes char-walk-bob {
+    0%, 100% { transform: translateY(0)     rotate(-6deg) scale(1.00); }
+    50%      { transform: translateY(-11px) rotate( 6deg) scale(1.05); }
   }
-  .char-dance { animation: char-dance var(--dance-dur, 0.55s) ease-in-out infinite; }
+  .char-walking { animation: char-walk-bob var(--step-dur, 0.38s) ease-in-out infinite; }
 
-  /* ── Female arms open on catch ── */
-  @keyframes arm-open-l { to { transform: rotate(-34deg); } }
-  @keyframes arm-open-r { to { transform: rotate( 34deg); } }
-  .char-arms-open .female-arm-l { animation: arm-open-l 0.34s ease-out forwards; }
-  .char-arms-open .female-arm-r { animation: arm-open-r 0.34s ease-out forwards; }
+  /* ── Female pulse glow (music on) ── */
+  @keyframes char-pulse {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 4px 10px rgba(201,168,76,0.25)); }
+    50%      { transform: scale(1.12); filter: drop-shadow(0 6px 22px rgba(201,168,76,0.70)); }
+  }
+  .char-sway { animation: char-pulse var(--sway-dur, 1.2s) ease-in-out infinite; }
+
+  /* ── Female joyful dance (after orb catch) ── */
+  @keyframes char-pop-dance {
+    0%   { transform: scale(1)    rotate(  0deg); }
+    18%  { transform: scale(1.40) rotate(-11deg); }
+    36%  { transform: scale(0.93) rotate(  7deg); }
+    54%  { transform: scale(1.25) rotate( -6deg); }
+    78%  { transform: scale(0.98) rotate(  3deg); }
+    100% { transform: scale(1)    rotate(  0deg); }
+  }
+  .char-dance { animation: char-pop-dance var(--dance-dur, 0.55s) ease-in-out infinite; }
+
+  /* ── Female catch pop (replaces arms-open) ── */
+  @keyframes char-catch {
+    0%   { transform: scale(1)    rotate( 0deg); }
+    35%  { transform: scale(1.50) rotate(-9deg); }
+    65%  { transform: scale(0.91) rotate( 6deg); }
+    100% { transform: scale(1.06) rotate( 0deg); }
+  }
+  .char-arms-open { animation: char-catch 0.44s ease-out forwards; }
 
   /* ── Traveling orb ── */
   #char-orb {
@@ -889,109 +898,14 @@
 
     <!-- Male — left side, near input panel -->
     <div class="char-wrap" id="char-male-wrap">
-      <div class="emotion-bubble" id="male-bubble">🤔</div>
-      <svg class="char-figure" id="char-male" width="60" height="108"
-           viewBox="0 0 60 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-        <!-- ── LEFT ARM (behind body, pivot top-center 20,36) ── -->
-        <g class="male-arm-l">
-          <rect x="14" y="36" width="12" height="24" rx="6" fill="#B89040"/>
-          <ellipse cx="20" cy="62" rx="6" ry="4.5" fill="#C9A84C"/>
-        </g>
-        <!-- ── RIGHT ARM (behind body, pivot top-center 40,36) ── -->
-        <g class="male-arm-r">
-          <rect x="34" y="36" width="12" height="24" rx="6" fill="#B89040"/>
-          <ellipse cx="40" cy="62" rx="6" ry="4.5" fill="#C9A84C"/>
-        </g>
-
-        <!-- ── TORSO (covers arm tops, drawn on top) ── -->
-        <rect x="17" y="32" width="26" height="34" rx="10" fill="#C9A84C"/>
-        <!-- shirt collar detail -->
-        <rect x="24" y="32" width="12" height="8" rx="4" fill="#D4B860"/>
-
-        <!-- ── LEFT LEG (pivot top-center 23,64) ── -->
-        <g class="male-leg-l">
-          <rect x="17" y="64" width="12" height="28" rx="6" fill="#B89040"/>
-          <ellipse cx="22" cy="94" rx="9" ry="5" fill="#8B6820"/>
-        </g>
-        <!-- ── RIGHT LEG (pivot top-center 37,64) ── -->
-        <g class="male-leg-r">
-          <rect x="31" y="64" width="12" height="28" rx="6" fill="#B89040"/>
-          <ellipse cx="38" cy="94" rx="9" ry="5" fill="#8B6820"/>
-        </g>
-
-        <!-- ── HEAD (drawn last, on top of everything) ── -->
-        <!-- ears -->
-        <circle cx="16" cy="15" r="5"  fill="#B89040"/>
-        <circle cx="44" cy="15" r="5"  fill="#B89040"/>
-        <!-- head -->
-        <circle cx="30" cy="14" r="14" fill="#C9A84C"/>
-        <!-- hair cap -->
-        <path d="M17 10 Q20 2 30 2 Q40 2 43 10 Q40 6 30 7 Q20 7 17 10Z"
-              fill="#8B6820"/>
-        <!-- eyes -->
-        <circle cx="25" cy="13" r="2.6" fill="#3D2200"/>
-        <circle cx="35" cy="13" r="2.6" fill="#3D2200"/>
-        <circle cx="25.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
-        <circle cx="35.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
-        <!-- smile -->
-        <path d="M24 18 Q30 24 36 18" stroke="#3D2200" stroke-width="1.8"
-              fill="none" stroke-linecap="round"/>
-
-      </svg>
+      <div class="emotion-bubble" id="male-bubble"></div>
+      <div class="char-emoji" id="char-male">🧑‍💻</div>
     </div>
 
     <!-- Female — right side, near music output panel -->
     <div class="char-wrap" id="char-female-wrap">
-      <div class="emotion-bubble" id="female-bubble">🎵</div>
-      <svg class="char-figure" id="char-female" width="60" height="108"
-           viewBox="0 0 60 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-        <!-- ── LEFT ARM (behind body, pivot top-center 21,36) ── -->
-        <g class="female-arm-l">
-          <rect x="15" y="36" width="12" height="22" rx="6" fill="#B89040"/>
-          <ellipse cx="21" cy="60" rx="5.5" ry="4" fill="#C9A84C"/>
-        </g>
-        <!-- ── RIGHT ARM (behind body, pivot top-center 39,36) ── -->
-        <g class="female-arm-r">
-          <rect x="33" y="36" width="12" height="22" rx="6" fill="#B89040"/>
-          <ellipse cx="39" cy="60" rx="5.5" ry="4" fill="#C9A84C"/>
-        </g>
-
-        <!-- ── TORSO ── -->
-        <rect x="19" y="32" width="22" height="26" rx="9" fill="#C9A84C"/>
-
-        <!-- ── SKIRT (unified shape, no separate legs → distinct silhouette) ── -->
-        <path d="M16 56 C15 58 8 72 7 86 C7 92 12 97 21 98 L39 98 C48 97 53 92 53 86 C52 72 45 58 44 56 Z"
-              fill="#A87E30"/>
-        <!-- skirt hem highlight -->
-        <path d="M9 87 Q12 95 21 97 L39 97 Q48 95 51 87"
-              stroke="#C9A84C" stroke-width="1.4" fill="none"
-              stroke-linecap="round" opacity="0.35"/>
-
-        <!-- ── HEAD ── -->
-        <!-- ears -->
-        <circle cx="16" cy="15" r="4.5" fill="#B89040"/>
-        <circle cx="44" cy="15" r="4.5" fill="#B89040"/>
-        <!-- head -->
-        <circle cx="30" cy="14" r="14"  fill="#C9A84C"/>
-        <!-- hair bun (outer) -->
-        <circle cx="39" cy="4"  r="7"   fill="#8B6820"/>
-        <!-- hair bun (inner highlight) -->
-        <circle cx="39" cy="4"  r="4.5" fill="#A87E30"/>
-        <!-- hair across head -->
-        <path d="M18 10 Q22 2 30 2 Q36 2 41 7 Q38 4 30 6 Q22 7 19 11Z"
-              fill="#8B6820"/>
-        <!-- eyes -->
-        <circle cx="25" cy="13" r="2.6" fill="#3D2200"/>
-        <circle cx="35" cy="13" r="2.6" fill="#3D2200"/>
-        <circle cx="25.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
-        <circle cx="35.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
-        <!-- smile -->
-        <path d="M24 18 Q30 24 36 18" stroke="#3D2200" stroke-width="1.8"
-              fill="none" stroke-linecap="round"/>
-
-      </svg>
+      <div class="emotion-bubble" id="female-bubble"></div>
+      <div class="char-emoji" id="char-female">👩‍🎤</div>
     </div>
 
     <!-- Orb that travels from male to female on each delivery -->
@@ -2456,7 +2370,7 @@ boot();
 
     // Figure class helpers — clear all states then add requested
     function setMaleCls(...add) {
-      maleFig.classList.remove('char-idle', 'char-walking');
+      maleFig.classList.remove('char-idle', 'char-walking', 'char-bounce');
       if (add.length) maleFig.classList.add(...add);
     }
     function setFemaleCls(...add) {
@@ -2504,7 +2418,7 @@ boot();
       // Don't interrupt a delivery in progress
       if (charState === 'walking' || charState === 'receiving' || charState === 'returning') return;
       charState = 'analyzing';
-      setMaleCls('char-idle');
+      setMaleCls('char-bounce');
       bubble(maleBubble, '🤔', 0);
     }
 
@@ -2611,7 +2525,7 @@ boot();
     function onPaused() {
       if (charState === 'walking' || charState === 'receiving' || charState === 'returning') return;
       goIdle();
-      bubble(femaleBubble, '😴', 3200);
+      bubble(femaleBubble, '💤', 3200);
     }
 
     // Listen to module events
