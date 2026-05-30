@@ -1617,7 +1617,11 @@ Environment:
 - Temperature: ${inputs.weather.temp === null ? 'unknown' : inputs.weather.temp + '°C'}
 - Humidity: ${inputs.weather.humidity === null ? 'unknown' : inputs.weather.humidity + '%'}
 - Local time: ${String(inputs.hour).padStart(2,'0')}:00 (${timeDesc})
-
+Musical style constraint:
+Generate acoustic / semi-acoustic music rather than abstract ambient soundscapes.
+Prefer organic instruments such as acoustic guitar, piano, cello, violin, ney, oud, bağlama-like plucks, soft percussion and human-like breath textures.
+Avoid generic ambient pads, drone-only soundscapes, sci-fi textures, overly electronic synth music, EDM, techno or club music.
+The result should feel intimate, warm, tactile and performable by real instruments.
 Translate this atmosphere into instrumental music for the Lyria RealTime model.
 Respond with ONLY valid JSON, no markdown, matching exactly:
 {
