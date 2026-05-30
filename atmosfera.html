@@ -1652,6 +1652,17 @@ Respond with ONLY valid JSON, no markdown, matching exactly:
   "prompts": [ {"text": "<genre/mood/instrument phrase>", "weight": <float 0.1-1.0>} ],
   "reasoning": "<one sentence explaining the vibe choice>"
 }
+Also consider the time of day for genre selection:
+- 06:00-09:00: acoustic, folk, light jazz
+- 09:00-12:00: upbeat pop, bossa nova, world music
+- 12:00-15:00: neo classical, minimal, focus music
+- 15:00-18:00: indie, soul, R&B, funk
+- 18:00-21:00: deep house, jazz fusion, warm electronic
+- 21:00-00:00: ambient, dark electronic, trip hop
+- 00:00-03:00: drone, experimental, dark jazz
+- 03:00-06:00: slow ambient, neo classical, silence-inspired
+Use this as a base suggestion but override it if weather or noise level strongly suggests otherwise.
+
 Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases, for example "rainy lo-fi jazz", "warm analog pads", "minimal techno pulse". Match energy to noise, mood to weather, tempo/color to time of day. Choose scale to complement the mood.`;
 
   addLogicLog('Sending environment to Gemini for music interpretation...');
