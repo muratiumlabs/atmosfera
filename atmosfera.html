@@ -31,11 +31,11 @@
     font-family: var(--font-ui);
     font-size: 14px;
     line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
-    padding: 36px 16px 48px;
-    max-width: 900px;
-    margin: 0 auto;
+    height: 100vh;
+    overflow: hidden;
+    padding: 28px 28px 0;
+    display: flex;
+    flex-direction: column;
     position: relative;
     z-index: 1;
   }
@@ -105,8 +105,7 @@
     border: 1px solid rgba(154, 98, 0, 0.10);
     border-left: 3px solid var(--accent, var(--gold));
     border-radius: 14px;
-    padding: 24px 28px;
-    margin-bottom: 16px;
+    padding: 18px 20px;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     box-shadow:
@@ -377,216 +376,103 @@
     50% { opacity: 0.35; transform: scale(0.7); }
   }
 
-  /* ---------- SIDE PANELS ---------- */
-
-  .side-panel {
-    position: fixed;
-    top: 32px;
-    width: 270px;
-    max-height: calc(100vh - 64px);
-    overflow-y: auto;
-    border: 1px solid rgba(154, 98, 0, 0.12);
-    border-left: 3px solid var(--gold);
-    background: rgba(255, 255, 255, 0.86);
-    border-radius: 14px;
-    padding: 18px;
-    z-index: 10;
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-    transition: width 0.2s ease, max-height 0.2s ease, padding 0.2s ease, transform 0.2s ease;
+  /* ── 3-Column Layout ────────────────────────────────── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 20fr 45fr 35fr;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    margin-top: 8px;
   }
 
-  .side-panel.left  { left:  24px; }
-  .side-panel.right { right: 24px; }
+  /* Left: env data */
+  .col-env {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
 
-  .side-panel-title {
+  /* Center: Machine Thoughts hero */
+  .col-thoughts {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: rgba(5, 5, 5, 0.92);
+    border: 1px solid rgba(201, 168, 76, 0.20);
+    border-left: 3px solid #C9A84C;
+    border-radius: 14px;
+    padding: 22px 24px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  /* Right: sections stacked */
+  .col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+  }
+
+  /* Column title */
+  .col-title {
     color: var(--gold);
     font-family: var(--font-ui);
     font-size: 9px;
     font-weight: 700;
     letter-spacing: 3.5px;
     text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .panel-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .panel-collapse-btn {
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-color: rgba(154, 98, 0, 0.18);
-    color: var(--gold);
-    font-size: 13px;
-    line-height: 1;
-    letter-spacing: 0;
-    flex: 0 0 auto;
-  }
-
-  .panel-body { margin-top: 16px; }
-
-  .side-panel.panel-collapsed {
-    width: 48px;
-    padding: 12px 8px;
-    overflow: hidden;
-  }
-
-  .side-panel.panel-collapsed .panel-body { display: none; }
-
-  .side-panel.panel-collapsed .panel-head {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 12px;
-    min-height: 220px;
-  }
-
-  .side-panel.panel-collapsed .side-panel-title {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    letter-spacing: 2px;
-  }
-
-  /* ── Music Preference Panel ─────────────────────────── */
-  .pref-field { margin-bottom: 18px; }
-
-  .pref-label {
-    font-family: var(--font-ui);
-    color: var(--text-secondary);
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    opacity: 0.65;
-    margin-bottom: 9px;
-  }
-
-  .pref-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .pref-chip {
-    padding: 5px 12px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-    border-radius: 20px;
-    line-height: 1.4;
-    text-transform: none;
-  }
-
-  .pref-chip.active {
-    background: var(--gold);
-    color: #fff;
-    border-color: var(--gold);
-    box-shadow: 0 2px 10px rgba(154,98,0,0.30);
-    transform: none;
-  }
-
-  .pref-select {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.78);
-    border: 1px solid rgba(154, 98, 0, 0.12);
-    color: var(--text-primary);
-    font-family: var(--font-ui);
-    font-size: 12px;
-    padding: 9px;
-    border-radius: 5px;
-    cursor: pointer;
-    outline: none;
-    appearance: auto;
-  }
-
-  .pref-select:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(154,98,0,0.08);
-  }
-
-  .pref-tempo-group {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-  }
-
-  .pref-tempo-btn {
-    padding: 7px 4px;
-    font-size: 10px;
-    letter-spacing: 0.8px;
-    text-transform: none;
-  }
-
-  .pref-tempo-btn.active {
-    background: var(--gold);
-    color: #fff;
-    border-color: var(--gold);
-    box-shadow: 0 2px 10px rgba(154,98,0,0.30);
-    transform: none;
-  }
-
-  .pref-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid rgba(154, 98, 0, 0.10);
-  }
-
-  .pref-apply-btn { flex: 1; }
-
-  .pref-clear-btn {
-    flex: 0 0 auto;
-    padding: 11px 20px;
-    opacity: 0.60;
-  }
-
-  .pref-active-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--gold);
-    margin-left: 8px;
-    vertical-align: middle;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(154, 98, 0, 0.14);
     flex-shrink: 0;
-    animation: pulse 1.6s infinite;
-    box-shadow: 0 0 8px var(--gold), 0 0 14px rgba(154,98,0,0.30);
   }
 
-  html[data-theme="dark"] .pref-chip.active,
-  html[data-theme="dark"] .pref-tempo-btn.active { color: #050505; }
-
-  html[data-theme="dark"] .pref-select {
-    background: rgba(0, 0, 0, 0.58);
-    border-color: rgba(201, 168, 76, 0.14);
-    color: var(--text-primary);
+  .col-thoughts .col-title {
+    color: #C9A84C;
+    border-bottom-color: rgba(201, 168, 76, 0.20);
   }
 
-
-  /* ── Machine Thoughts Panel ─────────────────────────── */
-  .thoughts-panel {
-    background: rgba(5, 5, 5, 0.95) !important;
-    border-color: rgba(201, 168, 76, 0.22) !important;
-    border-left: 3px solid #C9A84C !important;
+  /* Env grid: 2×2 cells */
+  .env-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
   }
 
-  .thoughts-panel .side-panel-title { color: #C9A84C; }
-  .thoughts-panel .panel-collapse-btn { color: #C9A84C; border-color: rgba(201,168,76,0.25); }
+  .col-env .cell .v { font-size: 20px; }
 
+  /* ── Bottom Bar ─────────────────────────────────────── */
+  .bottom-bar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 8px 0 16px;
+    flex-shrink: 0;
+    gap: 16px;
+    border-top: 1px solid rgba(154, 98, 0, 0.10);
+    margin-top: 8px;
+  }
+
+  .bottom-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .snapshot-toggle { padding: 11px 20px; }
+
+
+  /* ── Machine Thoughts (center column hero) ─────────── */
   .thoughts-poem {
-    margin-top: 16px;
+    flex: 1;
     font-family: 'Space Mono', 'Courier New', monospace;
-    font-size: 12px;
-    line-height: 1.85;
+    font-size: 15px;
+    line-height: 2.1;
     color: #C9A84C;
     white-space: pre-wrap;
     word-break: break-word;
@@ -614,44 +500,6 @@
     50%       { opacity: 0; }
   }
 
-  @media (max-width: 1450px) {
-    .side-panel {
-      position: static;
-      width: 100%;
-      max-height: none;
-      margin: 18px 0;
-      transform: none;
-    }
-
-    .side-panel.panel-collapsed {
-      width: 100%;
-      padding: 12px 18px;
-      overflow: hidden;
-    }
-
-    .side-panel.panel-collapsed .panel-head {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      min-height: auto;
-    }
-
-    .side-panel.panel-collapsed .side-panel-title {
-      writing-mode: horizontal-tb;
-      transform: none;
-      letter-spacing: 3px;
-    }
-
-    .side-panel.panel-collapsed .panel-body { display: none; }
-  }
-
-  /* ── Bottom Tool Row ───────────────────────────────── */
-  .bottom-tool-row {
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(var(--accent-rgb, 154,98,0), 0.12);
-  }
 
   .snapshot-toggle {
     padding: 9px 16px;
@@ -828,26 +676,14 @@
   }
 
   /* ── ANIMATED CHARACTERS ─────────────────────────────── */
-  #character-stage {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    overflow: hidden;
-  }
-
   .char-wrap {
-    position: absolute;
-    bottom: 60px;
     width: 72px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-shrink: 0;
     transition: transform var(--char-walk-dur, 2s) cubic-bezier(0.42, 0, 0.38, 1);
   }
-
-  #char-male-wrap   { left:  302px; }
-  #char-female-wrap { right: 302px; }
 
   .emotion-bubble {
     font-size: 20px;
@@ -952,34 +788,14 @@
   }
   .orb-bursting { animation: orb-burst 0.44s ease-out forwards !important; }
 
-  /* hide on viewports where panels are not fixed */
-  @media (max-width: 1100px) {
-    #character-stage { display: none; }
-  }
 </style>
 </head>
 <body>
   <!-- Particle Canvas Background -->
   <canvas id="particle-canvas"></canvas>
 
-  <!-- ── ANIMATED CHARACTERS ────────────────────────────── -->
-  <div id="character-stage" aria-hidden="true">
-
-    <!-- Male — left side, near input panel -->
-    <div class="char-wrap" id="char-male-wrap">
-      <div class="emotion-bubble" id="male-bubble"></div>
-      <div class="char-emoji" id="char-male">🧑‍💻</div>
-    </div>
-
-    <!-- Female — right side, near music output panel -->
-    <div class="char-wrap" id="char-female-wrap">
-      <div class="emotion-bubble" id="female-bubble"></div>
-      <div class="char-emoji" id="char-female">👩‍🎤</div>
-    </div>
-
-    <!-- Orb that travels from male to female on each delivery -->
-    <div id="char-orb"></div>
-  </div>
+  <!-- Orb (fixed, position calculated from char bounding rects) -->
+  <div id="char-orb"></div>
 
   <div class="app-header">
     <div class="app-header-title">
@@ -992,162 +808,84 @@
     </div>
   </div>
 
-  <!-- LEFT PANEL: MUSIC PREFERENCE -->
-  <aside class="side-panel left" id="manual-panel">
-    <div class="panel-head">
-      <div class="side-panel-title">
-        <span data-i18n="panel-manual-title">Müzikal Tercih</span>
-        <span id="pref-dot" class="pref-active-dot" style="display:none" aria-hidden="true"></span>
-      </div>
-      <button id="btn-collapse-manual" class="panel-collapse-btn" type="button" title="Collapse" aria-label="Collapse music preference" aria-expanded="true">
-        <span id="manual-collapse-icon">^</span>
-      </button>
-    </div>
+  <!-- 3-COLUMN MAIN GRID -->
+  <div class="main-grid">
 
-    <div class="panel-body manual-body" id="manual-body">
-
-      <!-- MOOD -->
-      <div class="pref-field">
-        <div class="pref-label" data-i18n="label-mood">Ruh Hali</div>
-        <div class="pref-chips" id="mood-chips">
-          <button type="button" class="pref-chip" data-value="energetic"   data-i18n="mood-energetic">Enerjik</button>
-          <button type="button" class="pref-chip" data-value="melancholic" data-i18n="mood-melancholic">Hüzünlü</button>
-          <button type="button" class="pref-chip" data-value="romantic"    data-i18n="mood-romantic">Romantik</button>
-          <button type="button" class="pref-chip" data-value="focused"     data-i18n="mood-focused">Odaklı</button>
-          <button type="button" class="pref-chip" data-value="calm"        data-i18n="mood-calm">Sakin</button>
-          <button type="button" class="pref-chip" data-value="euphoric"    data-i18n="mood-euphoric">Coşkulu</button>
+    <!-- LEFT: Environment data -->
+    <div class="col-env">
+      <div class="col-title"><span class="icon">🌡</span> <span data-i18n="env-label">ORTAM GİRDİSİ</span></div>
+      <div class="env-grid">
+        <div class="cell">
+          <div class="k" data-i18n="k-noise">GÜRÜLTÜ</div>
+          <div class="v" id="in-noise">—<small> dB</small></div>
+        </div>
+        <div class="cell">
+          <div class="k" data-i18n="k-weather">HAVA</div>
+          <div class="v" id="in-weather" style="font-size:15px">—</div>
+          <div class="v-sub" id="in-weather-age"></div>
+        </div>
+        <div class="cell">
+          <div class="k" data-i18n="k-temp">SICAKLIK</div>
+          <div class="v" id="in-temp">—<small> °C</small></div>
+        </div>
+        <div class="cell">
+          <div class="k" data-i18n="k-time">SAAT</div>
+          <div class="v" id="in-time">—</div>
         </div>
       </div>
-
-      <!-- GENRE -->
-      <div class="pref-field">
-        <div class="pref-label" data-i18n="label-genre">Tür</div>
-        <select id="pref-genre" class="pref-select">
-          <option value=""           data-i18n="genre-any">Herhangi</option>
-          <option value="Jazz">Caz / Jazz</option>
-          <option value="Electronic">Elektronik / Electronic</option>
-          <option value="Classical">Klasik / Classical</option>
-          <option value="Pop">Pop</option>
-          <option value="Latin">Latin</option>
-          <option value="Folk">Folk</option>
-          <option value="Hip-Hop">Hip-Hop</option>
-          <option value="Rock">Rock</option>
-          <option value="Funk">Funk</option>
-          <option value="Ambient">Ambient</option>
-        </select>
-      </div>
-
-      <!-- TEMPO -->
-      <div class="pref-field">
-        <div class="pref-label" data-i18n="label-tempo">Tempo</div>
-        <div class="pref-tempo-group">
-          <button type="button" class="pref-tempo-btn" data-value="slow"   data-i18n="tempo-slow">Yavaş</button>
-          <button type="button" class="pref-tempo-btn" data-value="medium" data-i18n="tempo-medium">Orta</button>
-          <button type="button" class="pref-tempo-btn" data-value="fast"   data-i18n="tempo-fast">Hızlı</button>
-        </div>
-      </div>
-
-      <!-- ACTIONS -->
-      <div class="pref-actions">
-        <button id="btn-apply-manual" class="pref-apply-btn" data-i18n="btn-apply">Uygula</button>
-        <button id="btn-clear-pref"   class="pref-clear-btn" data-i18n="btn-clear">Temizle</button>
-      </div>
-
     </div>
-  </aside>
 
-  <!-- RIGHT PANEL: MACHINE THOUGHTS -->
-  <aside class="side-panel right thoughts-panel" id="thoughts-panel">
-    <div class="panel-head">
-      <div class="side-panel-title">
-        <span data-i18n="panel-thoughts-title">MAKİNENİN DÜŞÜNCELERİ</span>
-      </div>
-      <button id="btn-collapse-thoughts" class="panel-collapse-btn" type="button"
-              title="Collapse" aria-label="Collapse machine thoughts" aria-expanded="true">
-        <span id="thoughts-collapse-icon">&gt;</span>
-      </button>
-    </div>
-    <div class="panel-body" id="thoughts-body">
+    <!-- CENTER: Machine Thoughts (hero) -->
+    <div class="col-thoughts" id="thoughts-panel">
+      <div class="col-title" data-i18n="panel-thoughts-title">MAKİNENİN DÜŞÜNCELERİ</div>
       <div class="thoughts-poem">
         <span id="thoughts-text"></span><span class="thoughts-cursor" id="thoughts-cursor"></span>
       </div>
     </div>
-  </aside>
 
-
-  <div class="section section-env">
-    <div class="label"><span class="icon">🌡</span><span data-i18n="env-label">Environment Input</span></div>
-    <div class="grid">
-      <div class="cell">
-        <div class="k" data-i18n="k-noise">Noise</div>
-        <div class="v" id="in-noise">—<small> dB</small></div>
+    <!-- RIGHT: AI + Prompts + Params -->
+    <div class="col-right">
+      <div class="section section-ai">
+        <div class="label"><span class="icon">✦</span><span data-i18n="ai-label">GEMİNİ YORUMU</span></div>
+        <div id="reasoning" class="empty">Awaiting analysis…</div>
       </div>
-
-      <div class="cell">
-        <div class="k" data-i18n="k-weather">Weather</div>
-        <div class="v" id="in-weather" style="font-size:15px">—</div>
-        <div class="v-sub" id="in-weather-age"></div>
+      <div class="section section-prompts">
+        <div class="label"><span class="icon">♫</span><span data-i18n="prompts-label">AKTİF LYRİA PROMPTLARI</span></div>
+        <div id="prompts"><span style="color:var(--dim)">—</span></div>
       </div>
-
-      <div class="cell">
-        <div class="k" data-i18n="k-temp">Temp</div>
-        <div class="v" id="in-temp">—<small> °C</small></div>
-      </div>
-
-      <div class="cell">
-        <div class="k" data-i18n="k-time">Time</div>
-        <div class="v" id="in-time">—</div>
+      <div class="section section-params">
+        <div class="label"><span class="icon">⚙</span><span data-i18n="params-label">ÜRETİM PARAMETRELERİ</span></div>
+        <div class="params">
+          <div class="cell"><div class="k" data-i18n="k-bpm">BPM</div><div class="v" id="p-bpm">—</div></div>
+          <div class="cell"><div class="k" data-i18n="k-scale">SKALA</div><div class="v" id="p-scale" style="font-size:14px">—</div></div>
+          <div class="cell"><div class="k" data-i18n="k-density">YOĞUNLUK</div><div class="v" id="p-density">—</div></div>
+          <div class="cell"><div class="k" data-i18n="k-brightness">PARLAKLIK</div><div class="v" id="p-bright">—</div></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="section section-ai">
-    <div class="label"><span class="icon">✦</span><span data-i18n="ai-label">Gemini Interpretation</span></div>
-    <div id="reasoning" class="empty">Awaiting analysis…</div>
-  </div>
+  </div><!-- /main-grid -->
 
-  <div class="section section-prompts">
-    <div class="label"><span class="icon">♫</span><span data-i18n="prompts-label">Active Lyria Prompts</span></div>
-    <div id="prompts"><span style="color:var(--dim)">—</span></div>
-  </div>
-
-  <div class="section section-params">
-    <div class="label"><span class="icon">⚙</span><span data-i18n="params-label">Generation Parameters</span></div>
-    <div class="params">
-      <div class="cell">
-        <div class="k" data-i18n="k-bpm">BPM</div>
-        <div class="v" id="p-bpm">—</div>
-      </div>
-
-      <div class="cell">
-        <div class="k" data-i18n="k-scale">Scale</div>
-        <div class="v" id="p-scale" style="font-size:14px">—</div>
-      </div>
-
-      <div class="cell">
-        <div class="k" data-i18n="k-density">Density</div>
-        <div class="v" id="p-density">—</div>
-      </div>
-
-      <div class="cell">
-        <div class="k" data-i18n="k-brightness">Brightness</div>
-        <div class="v" id="p-bright">—</div>
-      </div>
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="char-wrap" id="char-male-wrap" aria-hidden="true">
+      <div class="emotion-bubble" id="male-bubble"></div>
+      <div class="char-emoji" id="char-male">🧑‍💻</div>
     </div>
-  </div>
 
-  <div class="section section-ctrl">
-    <div class="controls">
+    <div class="bottom-controls">
       <button id="btn-play" disabled><span class="dot" id="dot"></span>PLAY</button>
-      <button id="btn-analyze" disabled data-i18n="btn-reanalyze">RE-ANALYZE</button>
-    </div>
-
-    <div class="bottom-tool-row">
+      <button id="btn-analyze" disabled data-i18n="btn-reanalyze">YENİDEN ANALİZ ET</button>
       <button id="btn-snapshot" class="snapshot-toggle" type="button">📷 SAVE</button>
     </div>
 
-    <div id="status">Loading keys…</div>
+    <div class="char-wrap" id="char-female-wrap" aria-hidden="true">
+      <div class="emotion-bubble" id="female-bubble"></div>
+      <div class="char-emoji" id="char-female">👩‍🎤</div>
+    </div>
   </div>
+
+  <div id="status">Loading keys…</div>
 
   <div class="snapshot-modal" id="snapshot-modal" aria-hidden="true">
     <div class="snapshot-card">
@@ -1216,20 +954,8 @@ const els = {
   status: $('status'),
   dot: $('dot'),
 
-  prefGenre: $('pref-genre'),
-  prefDot: $('pref-dot'),
-  applyManual: $('btn-apply-manual'),
-  clearPref: $('btn-clear-pref'),
-  manualPanel: $('manual-panel'),
-  manualBody: $('manual-body'),
-  collapseManual: $('btn-collapse-manual'),
-  manualCollapseIcon: $('manual-collapse-icon'),
-
-  thoughtsPanel: $('thoughts-panel'),
   thoughtsText: $('thoughts-text'),
   thoughtsCursor: $('thoughts-cursor'),
-  collapseThoughts: $('btn-collapse-thoughts'),
-  thoughtsCollapseIcon: $('thoughts-collapse-icon'),
 
 };
 
@@ -1238,40 +964,6 @@ function setStatus(msg, kind = '') {
   els.status.className = kind;
 }
 
-function isCompactLayout() {
-  return window.matchMedia('(max-width: 1450px)').matches;
-}
-
-function setPanelCollapsed(panel, button, icon, collapsed, side) {
-  panel.classList.toggle('panel-collapsed', collapsed);
-
-  if (isCompactLayout()) {
-    icon.textContent = collapsed ? '⌄' : '^';
-  } else if (side === 'left') {
-    icon.textContent = collapsed ? '>' : '<';
-  } else {
-    icon.textContent = collapsed ? '<' : '>';
-  }
-
-  button.setAttribute('aria-expanded', String(!collapsed));
-}
-
-function syncPanelIcons() {
-  setPanelCollapsed(
-    els.manualPanel,
-    els.collapseManual,
-    els.manualCollapseIcon,
-    els.manualPanel.classList.contains('panel-collapsed'),
-    'left'
-  );
-  setPanelCollapsed(
-    els.thoughtsPanel,
-    els.collapseThoughts,
-    els.thoughtsCollapseIcon,
-    els.thoughtsPanel.classList.contains('panel-collapsed'),
-    'right'
-  );
-}
 
 
 // ---- Key loading ----
@@ -1523,38 +1215,6 @@ function clampNumber(value, min, max, fallback) {
   return Math.max(min, Math.min(max, n));
 }
 
-// ---- Music Preference helpers ----
-function syncPrefDot() {
-  if (els.prefDot) {
-    els.prefDot.style.display = state.pref.active ? 'inline-block' : 'none';
-  }
-}
-
-function applyPreference() {
-  const activeChip  = document.querySelector('.pref-chip.active');
-  const activeTempo = document.querySelector('.pref-tempo-btn.active');
-
-  state.pref.mood  = activeChip   ? activeChip.dataset.value   : '';
-  state.pref.genre = els.prefGenre ? els.prefGenre.value        : '';
-  state.pref.tempo = activeTempo  ? activeTempo.dataset.value   : '';
-  state.pref.active = !!(state.pref.mood || state.pref.genre || state.pref.tempo);
-
-  localStorage.setItem('atmosfera-pref', JSON.stringify(state.pref));
-  syncPrefDot();
-  analyze();
-}
-
-function clearPreference() {
-  state.pref = { mood: '', genre: '', tempo: '', active: false };
-  localStorage.removeItem('atmosfera-pref');
-
-  document.querySelectorAll('.pref-chip').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.pref-tempo-btn').forEach(b => b.classList.remove('active'));
-  if (els.prefGenre) els.prefGenre.value = '';
-
-  syncPrefDot();
-  analyze();
-}
 
 
 // ---- Gather inputs ----
@@ -2061,65 +1721,6 @@ async function boot() {
   });
 
   els.analyze.addEventListener('click', () => analyze());
-  els.applyManual.addEventListener('click', applyPreference);
-  els.clearPref.addEventListener('click', clearPreference);
-
-  // Mood chips — toggle: click same chip again to deselect
-  document.querySelectorAll('.pref-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const wasActive = chip.classList.contains('active');
-      document.querySelectorAll('.pref-chip').forEach(c => c.classList.remove('active'));
-      if (!wasActive) chip.classList.add('active');
-    });
-  });
-
-  // Tempo buttons — same toggle logic
-  document.querySelectorAll('.pref-tempo-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const wasActive = btn.classList.contains('active');
-      document.querySelectorAll('.pref-tempo-btn').forEach(b => b.classList.remove('active'));
-      if (!wasActive) btn.classList.add('active');
-    });
-  });
-
-  // Restore saved preference from previous session
-  try {
-    const savedPref = localStorage.getItem('atmosfera-pref');
-    if (savedPref) {
-      const p = JSON.parse(savedPref);
-      state.pref = {
-        mood:   p.mood   || '',
-        genre:  p.genre  || '',
-        tempo:  p.tempo  || '',
-        active: !!p.active,
-      };
-      if (state.pref.mood) {
-        const chip = document.querySelector(`.pref-chip[data-value="${state.pref.mood}"]`);
-        if (chip) chip.classList.add('active');
-      }
-      if (state.pref.genre && els.prefGenre) {
-        els.prefGenre.value = state.pref.genre;
-      }
-      if (state.pref.tempo) {
-        const btn = document.querySelector(`.pref-tempo-btn[data-value="${state.pref.tempo}"]`);
-        if (btn) btn.classList.add('active');
-      }
-      syncPrefDot();
-    }
-  } catch (e) {}
-
-  els.collapseManual.addEventListener('click', () => {
-    const collapsed = !els.manualPanel.classList.contains('panel-collapsed');
-    setPanelCollapsed(els.manualPanel, els.collapseManual, els.manualCollapseIcon, collapsed, 'left');
-  });
-
-  els.collapseThoughts.addEventListener('click', () => {
-    const collapsed = !els.thoughtsPanel.classList.contains('panel-collapsed');
-    setPanelCollapsed(els.thoughtsPanel, els.collapseThoughts, els.thoughtsCollapseIcon, collapsed, 'right');
-  });
-
-  window.addEventListener('resize', syncPanelIcons);
-  syncPanelIcons();
 
   await initMic();
 
