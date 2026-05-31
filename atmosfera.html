@@ -65,9 +65,9 @@
   h1 {
     font-family: var(--font-display);
     color: var(--gold);
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 800;
-    letter-spacing: 12px;
+    letter-spacing: 10px;
     margin-bottom: 2px;
     text-transform: uppercase;
     position: relative;
@@ -77,22 +77,22 @@
   h1::after {
     content: '';
     display: block;
-    width: 52px;
+    width: 40px;
     height: 2px;
     background: linear-gradient(90deg, var(--gold), transparent);
-    margin-top: 10px;
+    margin-top: 6px;
   }
 
   .sub {
     font-family: var(--font-ui);
     color: var(--text-secondary);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 500;
-    letter-spacing: 4px;
-    margin-bottom: 36px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
     text-transform: uppercase;
     opacity: 0.6;
-    margin-top: 8px;
+    margin-top: 4px;
   }
 
   @keyframes cardIn {
@@ -105,18 +105,15 @@
     border: 1px solid rgba(154, 98, 0, 0.10);
     border-left: 3px solid var(--accent, var(--gold));
     border-radius: 14px;
-    padding: 18px 20px;
+    padding: 12px 14px;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     box-shadow:
       0 1px 0 rgba(255,255,255,1) inset,
-      0 -1px 0 rgba(0,0,0,0.03) inset,
       0 4px 6px rgba(0, 0, 0, 0.03),
-      0 12px 40px rgba(0, 0, 0, 0.05);
-    transition: border-color 0.3s, box-shadow 0.35s, transform 0.25s;
+      0 8px 24px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
-    animation: cardIn 0.5s ease both;
   }
 
   .section::before {
@@ -167,15 +164,15 @@
     font-weight: 700;
     letter-spacing: 3.5px;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 
   .label .icon {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     border-radius: 6px;
     background: rgba(var(--accent-rgb, 154,98,0), 0.10);
     display: inline-flex;
@@ -214,9 +211,9 @@
   .cell .v {
     font-family: var(--font-mono);
     color: var(--text-primary);
-    font-size: 26px;
+    font-size: 22px;
     font-weight: bold;
-    margin-top: 8px;
+    margin-top: 5px;
     letter-spacing: -1px;
     word-break: break-word;
   }
@@ -240,10 +237,9 @@
   #reasoning {
     font-family: var(--font-ui);
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
-    min-height: 1.8em;
-    line-height: 1.75;
+    line-height: 1.55;
     font-style: italic;
     opacity: 0.82;
   }
@@ -258,15 +254,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 0;
-    gap: 12px;
+    padding: 3px 0;
+    gap: 8px;
   }
 
   .prompt-row .text {
     font-family: var(--font-ui);
     color: var(--text-primary);
     font-weight: 500;
-    font-size: 13px;
+    font-size: 11px;
   }
 
   .prompt-row .weight {
@@ -310,7 +306,7 @@
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 2.5px;
-    padding: 11px 28px;
+    padding: 9px 22px;
     cursor: pointer;
     text-transform: uppercase;
     border-radius: 5px;
@@ -391,41 +387,74 @@
   .col-env {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(252,249,244,0.90) 100%);
+    border: 1px solid rgba(154,98,0,0.10);
+    border-left: 3px solid var(--gold);
+    border-radius: 14px;
+    padding: 14px 14px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
   }
 
   /* Center: Machine Thoughts hero */
   .col-thoughts {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: hidden;
+    position: relative;
     background: rgba(5, 5, 5, 0.92);
     border: 1px solid rgba(201, 168, 76, 0.20);
     border-left: 3px solid #C9A84C;
     border-radius: 14px;
-    padding: 22px 24px;
+    padding: 18px 20px;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
+  }
+
+  /* Fade out at the bottom if poem overflows */
+  .col-thoughts::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 72px;
+    background: linear-gradient(transparent, rgba(5, 5, 5, 0.92));
+    pointer-events: none;
+    border-radius: 0 0 13px 13px;
   }
 
   /* Right: sections stacked */
   .col-right {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    overflow-y: auto;
+    gap: 8px;
+    overflow: hidden;
   }
+
+  .col-right .section {
+    flex-shrink: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Params: 2-column grid fits narrow column */
+  .section-params .params {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .section-params .cell .v { font-size: 20px; }
 
   /* Column title */
   .col-title {
     color: var(--gold);
     font-family: var(--font-ui);
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 700;
-    letter-spacing: 3.5px;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 18px;
-    padding-bottom: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
     border-bottom: 1px solid rgba(154, 98, 0, 0.14);
     flex-shrink: 0;
   }
@@ -439,21 +468,23 @@
   .env-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 12px;
   }
 
-  .col-env .cell .v { font-size: 20px; }
+  .col-env .cell .v      { font-size: 17px; margin-top: 4px; letter-spacing: 0; }
+  .col-env .cell .v small { font-size: 10px; }
+  .col-env .cell .k      { font-size: 8px; letter-spacing: 2px; }
 
   /* ── Bottom Bar ─────────────────────────────────────── */
   .bottom-bar {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    padding: 8px 0 16px;
+    padding: 6px 0 10px;
     flex-shrink: 0;
-    gap: 16px;
+    gap: 12px;
     border-top: 1px solid rgba(154, 98, 0, 0.10);
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
   .bottom-controls {
@@ -470,9 +501,10 @@
   /* ── Machine Thoughts (center column hero) ─────────── */
   .thoughts-poem {
     flex: 1;
+    overflow: hidden;
     font-family: 'Space Mono', 'Courier New', monospace;
-    font-size: 15px;
-    line-height: 2.1;
+    font-size: clamp(11px, 1.35vh, 14px);
+    line-height: 1.95;
     color: #C9A84C;
     white-space: pre-wrap;
     word-break: break-word;
@@ -576,8 +608,8 @@
     font-size: 10px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    margin-top: 12px;
-    min-height: 1.4em;
+    margin-top: 6px;
+    min-height: 1.2em;
   }
 
   html[data-theme="dark"] {
@@ -596,6 +628,11 @@
       radial-gradient(ellipse 70% 55% at 10% 8%, rgba(201, 168, 76, 0.08) 0%, transparent 70%),
       radial-gradient(ellipse 55% 50% at 88% 90%, rgba(60, 130, 120, 0.08) 0%, transparent 70%),
       radial-gradient(ellipse 60% 60% at 50% 50%, rgba(5, 5, 5, 0.0) 0%, #050505 100%);
+  }
+
+  html[data-theme="dark"] .col-env {
+    background: linear-gradient(160deg, rgba(12,12,12,0.92) 0%, rgba(4,4,4,0.88) 100%);
+    border-color: rgba(201, 168, 76, 0.14);
   }
 
   html[data-theme="dark"] .section {
@@ -702,7 +739,7 @@
 
   /* ── Emoji character base ── */
   .char-emoji {
-    font-size: 48px;
+    font-size: 36px;
     line-height: 1;
     display: block;
     text-align: center;
