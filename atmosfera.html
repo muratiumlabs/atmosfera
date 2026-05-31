@@ -1306,6 +1306,30 @@ function readNoise() {
 }
 
 // ---- Location + Weather ----
+
+// Reverse-geocode lat/lon → human city name via Nominatim (no key needed)
+async function reverseGeocode(lat, lon) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Atmosfera/1.0 autonomous-dj' },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (
+      data.address?.city     ||
+      data.address?.town     ||
+      data.address?.village  ||
+      data.address?.county   ||
+      data.address?.province ||
+      data.display_name?.split(',')[0]?.trim() ||
+      null
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
 async function getDeviceLocation() {
   if (!navigator.geolocation) return null;
 
@@ -1321,12 +1345,20 @@ async function getDeviceLocation() {
     const lat = Number(position.coords.latitude.toFixed(4));
     const lon = Number(position.coords.longitude.toFixed(4));
 
+    // Resolve city name immediately via Nominatim reverse geocoding
+    const cityName = (await reverseGeocode(lat, lon)) || FALLBACK_CITY;
+
     state.location = {
       lat,
       lon,
-      label: `device location (${lat}, ${lon})`,
+      label: cityName,
       source: 'device',
     };
+
+    // Show city name in header right away — don't wait for weather fetch
+    if (els.locationSub) {
+      els.locationSub.textContent = `AUTONOMOUS DJ AGENT · ${cityName.toUpperCase()}`;
+    }
 
     return state.location;
   } catch (e) {
@@ -1385,21 +1417,24 @@ async function fetchWeather() {
 
     const d = await res.json();
 
-    const apiPlace = d.name || placeLabel;
+    // Prefer Nominatim city name if already resolved; fall back to OWM's d.name
+    const resolvedPlace = state.location?.label && state.location.source === 'device'
+      ? state.location.label
+      : (d.name || placeLabel);
 
     state.weatherCache.data = {
       condition: d.weather?.[0]?.main || 'unknown',
       description: d.weather?.[0]?.description || '',
       temp: typeof d.main?.temp === 'number' ? Math.round(d.main.temp) : null,
       humidity: typeof d.main?.humidity === 'number' ? d.main.humidity : null,
-      place: apiPlace,
+      place: resolvedPlace,
       ok: true,
     };
 
-    state.location.label = apiPlace;
+    state.location.label = resolvedPlace;
 
     if (els.locationSub) {
-      els.locationSub.textContent = `AUTONOMOUS DJ AGENT · ${String(apiPlace).toUpperCase()}`;
+      els.locationSub.textContent = `AUTONOMOUS DJ AGENT · ${String(resolvedPlace).toUpperCase()}`;
     }
 
     state.weatherCache.fetchedAt = Date.now();
