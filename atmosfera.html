@@ -1541,11 +1541,11 @@ async function askGemini(inputs) {
     'loud / energetic';
 
   const timeDesc =
-    inputs.hour < 5 ? 'deep night' :
-    inputs.hour < 9 ? 'early morning' :
+    inputs.hour <  3 ? 'night' :
+    inputs.hour <  6 ? 'deep night' :
     inputs.hour < 12 ? 'morning' :
-    inputs.hour < 17 ? 'afternoon' :
-    inputs.hour < 21 ? 'evening' :
+    inputs.hour < 18 ? 'afternoon' :
+    inputs.hour < 23 ? 'evening' :
     'night';
 
   const pref     = inputs.pref || {};
@@ -1571,13 +1571,42 @@ async function askGemini(inputs) {
     ? 'Write the "reasoning" field in Turkish (Türkçe).'
     : 'Write the "reasoning" field in English.';
 
-  const prompt = `You are the creative director of an autonomous DJ. Pick the most emotionally fitting music for RIGHT NOW. Be bold and diverse — do NOT default to ambient unless everything explicitly points that way.
+  // Subtle location-based cultural color for instrument texture (does NOT override genre)
+  const cityLabel = (state.location?.label || '').toLowerCase();
+  const locationFlavor = (() => {
+    if (/istanbul|ankara|izmir|bursa|antalya/.test(cityLabel))
+      return 'Location flavor (instrument texture only): Istanbul/Turkey → consider oud, bağlama, darbuka, or Mediterranean rhythm accents.';
+    if (/london|manchester|bristol|edinburgh|glasgow|birmingham/.test(cityLabel))
+      return 'Location flavor (instrument texture only): UK → consider indie guitar, Brit-pop energy, or grime percussion accents.';
+    if (/paris|lyon|marseille|bordeaux/.test(cityLabel))
+      return 'Location flavor (instrument texture only): Paris → consider chanson, café jazz piano, or French electronic touches.';
+    if (/berlin|hamburg|munich|cologne|frankfurt/.test(cityLabel))
+      return 'Location flavor (instrument texture only): Berlin → consider pulsing techno kick, krautrock groove, or minimal synth texture.';
+    if (/new york|brooklyn|chicago|los angeles|atlanta|miami/.test(cityLabel))
+      return 'Location flavor (instrument texture only): USA → consider soul horn section, blues guitar, jazz piano, or hip-hop beat texture.';
+    if (/tokyo|osaka|kyoto|sapporo/.test(cityLabel))
+      return 'Location flavor (instrument texture only): Tokyo → consider koto melody, electronic J-pop synth, or taiko accent.';
+    if (/rio|são paulo|brazil|belo horizonte|recife/.test(cityLabel))
+      return 'Location flavor (instrument texture only): Brazil → consider samba percussion, bossa nova nylon guitar, or Brazilian cuíca.';
+    if (/madrid|barcelona|sevilla|valencia/.test(cityLabel))
+      return 'Location flavor (instrument texture only): Iberia → consider flamenco guitar, Spanish brass, or castanets.';
+    if (/mumbai|delhi|bangalore|kolkata|chennai/.test(cityLabel))
+      return 'Location flavor (instrument texture only): India → consider sitar melody, tabla percussion, or Bollywood strings.';
+    if (/lagos|nairobi|accra|johannesburg|cape town|dakar/.test(cityLabel))
+      return 'Location flavor (instrument texture only): Africa → consider afrobeat percussion, kora strings, or highlife guitar.';
+    if (/cairo|beirut|damascus|amman|riyadh|dubai/.test(cityLabel))
+      return 'Location flavor (instrument texture only): Middle East → consider oud, qanun, or Arabic maqam scale texture.';
+    return '';
+  })();
+
+  const prompt = `You are the creative director of an autonomous DJ. Pick the most emotionally fitting music for RIGHT NOW. Default to energetic, mainstream music with personality — ambient/minimal is the exception, not the rule.
 
 PRIORITY ORDER (strongest → weakest):
 1. USER PREFERENCE (mood + genre + tempo) — if set, this is absolute and overrides everything
 2. Ambient noise — high noise means high energy music
-3. Weather + temperature — shapes texture and emotional color
-4. Time of day — soft background influence only
+3. Time of day energy level — primary BPM and genre energy guide
+4. Weather + temperature — shapes texture and emotional color
+5. Location — subtle instrument texture accent only (never overrides genre)
 
 ENVIRONMENT:
 ${prefLines}
@@ -1586,12 +1615,13 @@ ${prefLines}
 - Weather: ${inputs.weather.description || inputs.weather.condition}
 - Temperature: ${inputs.weather.temp === null ? 'unknown' : inputs.weather.temp + '°C'}
 - Time: ${String(inputs.hour).padStart(2,'0')}:00 (${timeDesc})
+${locationFlavor ? `- ${locationFlavor}` : ''}
 
-FULL GENRE PALETTE — choose freely from all of these, be diverse:
-Pop · Rock · Hip-hop · Latin · Flamenco · Orchestral · Cinematic
-Funk · Reggae · Blues · Country · Folk · Acoustic · Jazz · Bossa Nova
-Soul · R&B · Indie · Electronic Dance · Deep House · Drum & Bass
-Ambient · Neo Classical · Trip Hop · Experimental · Dark Jazz · Lo-fi · World Music
+GENRE PALETTE — default to mainstream; ambient/minimal only in deep night + silence:
+DEFAULT: Pop · Hip-Hop · R&B · Rock · Latin · Electronic Dance · Funk · Soul
+SECONDARY: Jazz · Bossa Nova · Indie · Blues · Reggae · Drum & Bass · Folk · Acoustic · Afrobeat
+SPECIALTY: Flamenco · Orchestral · Cinematic · Country · Trip Hop · Dark Jazz · World Music
+DEEP NIGHT ONLY (03–06 + silence): Ambient · Neo Classical · Drone · Lo-fi · Experimental
 
 PREFERENCE → MUSIC (when user preference is set, follow it absolutely):
 • mood "energetic"   → pop, funk, dance, latin | 100–130 BPM | major or mixolydian | high density + brightness
@@ -1610,19 +1640,17 @@ NOISE SIGNAL (when no user mood):
 • 55–75 busy → upbeat, rhythmic, social
 • 75–100 loud → high energy: dance, rock, funk, party
 
-TIME SIGNAL (soft influence, easily overridden by noise or mood):
-• 06–09 → acoustic, folk, light jazz
-• 09–12 → upbeat pop, bossa nova, world music
-• 12–15 → neo classical, lo-fi, focus
-• 15–18 → indie, soul, R&B, funk
-• 18–21 → deep house, jazz fusion, warm electronic
-• 21–00 → trip hop, dark electronic, ambient
-• 00–03 → dark jazz, experimental, drone
-• 03–06 → slow ambient, neo classical
+TIME & ENERGY MAPPING (primary guide when no user tempo set):
+• Morning   (06–12): HIGH energy — 100–130 BPM — pop, hip-hop, upbeat latin, funk, afrobeat
+• Afternoon (12–18): VARIED energy — 90–120 BPM — wide genre range, soul, R&B, rock, indie
+• Evening   (18–23): WARM & GROOVY — 85–115 BPM — funk, jazz, latin, electronic dance, soul
+• Night     (23–03): DOWNTEMPO, not ambient — 70–95 BPM — trip hop, neo soul, dark jazz, lo-fi hip-hop
+• Deep night (03–06): ONLY window for ambient/minimal — 55–80 BPM — only if noise < 10
 
 AMBIENT RULE — only choose ambient/drone/minimal when ALL THREE are true:
-  hour is past midnight (00:00–06:00)  AND  noise < 10  AND  user has not provided a mood
-  Otherwise pick something with more movement and personality.
+  hour is between 03:00–06:00  AND  noise < 10  AND  user has not provided a mood
+  Night (23–03) is NOT ambient time — it is downtempo with personality (trip hop, neo soul, dark jazz).
+  Otherwise always pick something with movement, rhythm, and character.
 
 ADVENTUROUSNESS (automatic mode — no user preference active):
   Be deliberately unpredictable. Even with identical inputs, vary the genre every cycle.
@@ -1631,12 +1659,13 @@ ADVENTUROUSNESS (automatic mode — no user preference active):
   Treat each analysis as a fresh creative decision. Surprise the listener.
   Ask yourself: "what is an interesting genre that STILL fits this context?" — then pick it.
 
-BPM RANGES BY ENERGY:
-• Slow ballads / ambient: 55–82
-• Acoustic / neo classical / lo-fi: 72–95
-• Pop / soul / jazz / indie: 85–118
-• Funk / house / electronic: 110–135
-• Drum & bass / rock / intense: 138–175
+BPM RANGES BY GENRE ENERGY:
+• Deep night ambient / drone: 55–80  (only 03–06 + silence)
+• Trip hop / dark jazz / neo soul: 70–95
+• Acoustic / lo-fi / bossa nova: 75–100
+• Pop / soul / jazz / indie / R&B: 90–120
+• Funk / latin / house / electronic: 105–130
+• Drum & bass / rock / intense dance: 130–175
 
 Respond with ONLY valid JSON, no markdown:
 {
