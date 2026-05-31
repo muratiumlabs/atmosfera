@@ -7,13 +7,14 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23C9A84C' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><rect x='1' y='1' width='30' height='30' rx='7' fill='%230a0a0a' stroke='%23C9A84C' stroke-width='1' opacity='.9'/><path d='M9 24 L16 8 L23 24'/><path d='M12 18 H20'/><circle cx='12' cy='18' r='1.1' fill='%23C9A84C' stroke='none'/><circle cx='20' cy='18' r='1.1' fill='%23C9A84C' stroke='none'/><circle cx='9' cy='24' r='1.1' fill='%23C9A84C' stroke='none'/><circle cx='23' cy='24' r='1.1' fill='%23C9A84C' stroke='none'/><line x1='16' y1='8' x2='16' y2='4.5'/><circle cx='16' cy='3.4' r='1.7' fill='%23F0D27A' stroke='none'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --gold: #9A6200;
     --gold-light: #C4882A;
     --font-display: 'Outfit', system-ui, sans-serif;
     --font-ui: 'Space Grotesk', system-ui, sans-serif;
+    --font-romantic: 'Playfair Display', Georgia, serif;
     --font-mono: "SFMono-Regular", "Consolas", "Liberation Mono", Menlo, monospace;
     --gold-glow: rgba(154, 98, 0, 0.18);
     --text-primary: #1a1a2e;
@@ -379,7 +380,7 @@
   /* ── 3-Column Layout ────────────────────────────────── */
   .main-grid {
     display: grid;
-    grid-template-columns: 20fr 45fr 35fr;
+    grid-template-columns: minmax(230px, 1fr) minmax(460px, 1.85fr) minmax(230px, 1fr);
     gap: 20px;
     flex: 1;
     min-height: 0;
@@ -495,6 +496,268 @@
 
   .col-right .bar { background: rgba(201, 168, 76, 0.10); }
 
+
+
+  .col-music {
+    min-width: 0;
+  }
+
+  .prompt-mixer {
+    margin-top: 12px;
+    border-top: 1px solid rgba(201, 168, 76, 0.14);
+    padding-top: 8px;
+  }
+
+  .prompt-mixer summary {
+    cursor: pointer;
+    list-style: none;
+    color: #C9A84C;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    user-select: none;
+  }
+
+  .prompt-mixer summary::-webkit-details-marker { display: none; }
+
+  .prompt-mixer summary::before {
+    content: '▸';
+    display: inline-block;
+    margin-right: 5px;
+    transition: transform 0.2s ease;
+  }
+
+  .prompt-mixer[open] summary::before { transform: rotate(90deg); }
+
+  .prompt-mixer summary span {
+    color: rgba(201,168,76,0.50);
+    font-size: 8px;
+    letter-spacing: 1.4px;
+  }
+
+  .prompt-mixer-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .mixer-row {
+    display: grid;
+    grid-template-columns: 1fr 86px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .mixer-title {
+    color: #F4F0E4;
+    font-size: 10px;
+    line-height: 1.35;
+    opacity: 0.9;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mixer-row input[type=range] {
+    width: 100%;
+    accent-color: #C9A84C;
+  }
+
+  .mixer-value {
+    font-family: var(--font-mono);
+    color: #C9A84C;
+    font-size: 10px;
+    text-align: right;
+  }
+
+
+  .thoughts-save {
+    flex-shrink: 0;
+    border-top: 1px solid rgba(201, 168, 76, 0.16);
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .thoughts-save-note {
+    font-size: 9px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.56);
+    line-height: 1.45;
+  }
+
+  .thoughts-save .snapshot-toggle {
+    width: 100%;
+    justify-content: center;
+    border-color: rgba(201,168,76,0.58);
+    background: rgba(201,168,76,0.055);
+  }
+
+  html[data-theme="light"] .thoughts-save {
+    border-top-color: rgba(168, 134, 66, 0.16);
+  }
+
+  html[data-theme="light"] .thoughts-save-note {
+    color: rgba(111, 84, 35, 0.58);
+  }
+
+  html[data-theme="light"] .thoughts-save .snapshot-toggle {
+    color: #8F6B2B;
+    border-color: rgba(168, 134, 66, 0.46);
+    background: rgba(168, 134, 66, 0.055);
+  }
+
+  html[data-theme="light"] .thoughts-save .snapshot-toggle:hover:not(:disabled) {
+    background: #A88642;
+    color: #fffaf0;
+    border-color: #A88642;
+  }
+
+  .prompt-label-row {
+    gap: 8px;
+  }
+
+  .prompt-label-row::after {
+    display: none;
+  }
+
+  .prompt-edit-btn {
+    margin-left: auto;
+    padding: 5px 10px;
+    font-size: 8px;
+    letter-spacing: 1.7px;
+    border-radius: 999px;
+    opacity: 0.9;
+  }
+
+  .prompt-weight-slider {
+    display: none;
+    width: 100%;
+    margin-top: 7px;
+    accent-color: #C9A84C;
+    cursor: pointer;
+  }
+
+  #prompts.editing .prompt-weight-slider {
+    display: block;
+  }
+
+  #prompts.editing .bar {
+    display: none;
+  }
+
+  #prompts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  html[data-theme="light"] .prompt-edit-btn {
+    color: #8F6B2B;
+    border-color: rgba(168, 134, 66, 0.46);
+    background: rgba(168, 134, 66, 0.055);
+  }
+
+  html[data-theme="light"] .prompt-edit-btn:hover:not(:disabled) {
+    color: #fffaf0;
+    background: #A88642;
+    border-color: #A88642;
+  }
+
+  html[data-theme="light"] .prompt-weight-slider {
+    accent-color: #A88642;
+  }
+
+  @media (max-width: 1020px) {
+    .main-grid {
+      grid-template-columns: 1fr;
+      overflow-y: auto;
+      padding-bottom: 14px;
+    }
+    body { overflow: hidden; }
+    .col-env, .col-right, .col-thoughts { min-height: auto; }
+    .col-thoughts { min-height: 360px; }
+  }
+
+
+
+  .prompt-weight-slider {
+    --slider-fill: #C9A84C;
+    --slider-empty: rgba(201, 168, 76, 0.16);
+    --slider-percent: 0%;
+    appearance: none;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      var(--slider-fill) 0%,
+      var(--slider-fill) var(--slider-percent),
+      var(--slider-empty) var(--slider-percent),
+      var(--slider-empty) 100%
+    );
+    outline: none;
+  }
+
+  .prompt-weight-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: transparent;
+  }
+
+  .prompt-weight-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #E0C56A;
+    border: 2px solid #5F4516;
+    box-shadow: 0 0 12px rgba(201,168,76,0.38);
+    margin-top: -4.5px;
+    cursor: grab;
+  }
+
+  .prompt-weight-slider::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: transparent;
+  }
+
+  .prompt-weight-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #E0C56A;
+    border: 2px solid #5F4516;
+    box-shadow: 0 0 12px rgba(201,168,76,0.38);
+    cursor: grab;
+  }
+
+  html[data-theme="light"] .prompt-weight-slider {
+    --slider-fill: #A88642;
+    --slider-empty: rgba(168, 134, 66, 0.14);
+  }
+
+  html[data-theme="light"] .prompt-weight-slider::-webkit-slider-thumb {
+    background: #D2B36B;
+    border-color: #8F6B2B;
+  }
+
+  html[data-theme="light"] .prompt-weight-slider::-moz-range-thumb {
+    background: #D2B36B;
+    border-color: #8F6B2B;
+  }
+
+
   /* ── Bottom Bar ─────────────────────────────────────── */
   .bottom-bar {
     display: flex;
@@ -517,15 +780,19 @@
 
   .snapshot-toggle { padding: 11px 20px; }
 
+  #orb-group { display: none; }
 
-  /* ── Machine Thoughts (center column hero) ─────────── */
+  /* ── Machine Thoughts (center column hero) ──────────── */
   .thoughts-poem {
     flex: 1;
     overflow: hidden;
-    font-family: 'Space Mono', 'Courier New', monospace;
-    font-size: clamp(11px, 1.35vh, 14px);
-    line-height: 1.95;
-    color: #C9A84C;
+    font-family: var(--font-ui);
+    font-style: italic;
+    font-size: clamp(13px, 1.55vh, 17px);
+    font-weight: 400;
+    line-height: 1.9;
+    color: #E6D3AA;
+    letter-spacing: 0.4px;
     white-space: pre-wrap;
     word-break: break-word;
   }
@@ -632,6 +899,76 @@
     min-height: 1.2em;
   }
 
+
+  /* Light mode: all panels stay soft, airy, and readable */
+  html[data-theme="light"] .col-env,
+  html[data-theme="light"] .col-thoughts,
+  html[data-theme="light"] .col-right .section {
+    background: linear-gradient(160deg, rgba(255, 252, 246, 0.94) 0%, rgba(248, 242, 232, 0.88) 100%);
+    border-color: rgba(168, 134, 66, 0.18);
+    border-left-color: #A88642;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.96) inset,
+      0 10px 34px rgba(110, 82, 35, 0.08);
+  }
+
+  html[data-theme="light"] .col-thoughts::after {
+    background: linear-gradient(transparent, rgba(255, 252, 246, 0.94));
+  }
+
+  html[data-theme="light"] .col-title,
+  html[data-theme="light"] .label {
+    color: #8F6B2B;
+    border-bottom-color: rgba(168, 134, 66, 0.18);
+  }
+
+  html[data-theme="light"] .label .icon {
+    background: rgba(168, 134, 66, 0.10);
+  }
+
+  html[data-theme="light"] .label::after {
+    background: linear-gradient(90deg, rgba(168,134,66,0.18), transparent);
+  }
+
+  html[data-theme="light"] .col-env .cell .v,
+  html[data-theme="light"] .col-right .cell .v,
+  html[data-theme="light"] .col-right #reasoning,
+  html[data-theme="light"] .col-right .prompt-row .text {
+    color: #2A241B;
+  }
+
+  html[data-theme="light"] .col-env .cell .v small,
+  html[data-theme="light"] .col-right .cell .v small,
+  html[data-theme="light"] .col-env .cell .k,
+  html[data-theme="light"] .col-right .cell .k {
+    color: rgba(111, 84, 35, 0.58);
+  }
+
+  html[data-theme="light"] .thoughts-poem {
+    color: #8A6650;
+  }
+
+  html[data-theme="light"] .col-right .prompt-row .weight {
+    color: #6F5423;
+  }
+
+  html[data-theme="light"] .thoughts-cursor {
+    background: #8F6B2B;
+  }
+
+  html[data-theme="light"] .col-right .bar {
+    background: rgba(168, 134, 66, 0.10);
+  }
+
+  html[data-theme="light"] .bar > span {
+    background: linear-gradient(90deg, #A88642, #D2B36B);
+  }
+
+  html[data-theme="light"] .snapshot-saved {
+    color: #8F6B2B;
+  }
+
+
   html[data-theme="dark"] {
     --gold: #C9A84C;
     --gold-light: #E0C56A;
@@ -729,7 +1066,7 @@
 
   /* ── ANIMATED CHARACTERS ─────────────────────────────── */
   .char-wrap {
-    width: 80px;
+    width: 72px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -741,8 +1078,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 6px;
-    min-height: 28px;
+    width: 22px;
+    height: 22px;
+    margin-bottom: 4px;
     opacity: 0;
     transform: translateY(6px) scale(0.72);
     transition: opacity 0.22s ease, transform 0.22s ease;
@@ -752,6 +1090,31 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+  .emotion-bubble svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    stroke: #C9A84C;
+    overflow: visible;
+  }
+  .emotion-bubble svg path,
+  .emotion-bubble svg line,
+  .emotion-bubble svg circle,
+  .emotion-bubble svg rect,
+  .emotion-bubble svg polyline,
+  .emotion-bubble svg polygon { stroke: #C9A84C; }
+  .emotion-bubble svg [fill="var(--gold)"] { fill: #C9A84C; stroke: none; }
+  @keyframes emoBob  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+  @keyframes emoSpin { to{transform:rotate(360deg)} }
+  @keyframes emoBlip { 0%,100%{opacity:.4} 50%{opacity:1} }
+  @keyframes emoWave { 0%,100%{opacity:.35} 50%{opacity:1} }
+  .emotion-bubble .espin  { animation: emoSpin 4s linear infinite; transform-origin: 16px 16px; }
+  .emotion-bubble .ebob   { animation: emoBob  1s ease-in-out infinite; transform-origin: center; }
+  .emotion-bubble .eblip  { animation: emoBlip 2s ease-in-out infinite; }
+  .emotion-bubble .ew1    { animation: emoWave 1.6s ease-in-out infinite; }
+  .emotion-bubble .ew2    { animation: emoWave 1.6s ease-in-out infinite .25s; }
+  .emotion-bubble .ew3    { animation: emoWave 1.6s ease-in-out infinite .5s; }
+  .emotion-bubble .etick  { animation: emoSpin 8s linear infinite; transform-origin: 16px 16px; }
 
   /* ── Emoji character base ── */
   .char-emoji {
@@ -814,33 +1177,6 @@
   }
   .char-arms-open { animation: char-catch 0.44s ease-out forwards; }
 
-  /* ── Fixed panel characters (ELEGY, PULSE sit on top of panels) ── */
-  .char-fixed {
-    position: fixed;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: visible;
-    pointer-events: none;   /* don't block panel interactions */
-  }
-
-  /* Raise bottom-bar clusters above any overlapping z-index */
-  .char-cluster {
-    position: relative;
-    z-index: 10;
-    overflow: visible;
-  }
-  .char-wrap {
-    overflow: visible;
-  }
-
-  /* Spacer mirrors the left cluster width so bottom-bar controls stay centered */
-  .char-spacer {
-    width: 166px;   /* 2 × 80px char-wrap + 6px gap */
-    flex-shrink: 0;
-  }
-
   /* ── Traveling orb ── */
   #char-orb {
     position: fixed;
@@ -869,81 +1205,387 @@
   .orb-bursting { animation: orb-burst 0.44s ease-out forwards !important; }
 
   /* ═══════════════════════════════════════════════════
-     SVG ROBOT CHARACTER SYSTEM
-  ═══════════════════════════════════════════════════ */
+     ROBOT CHARACTER SYSTEM
+     ═══════════════════════════════════════════════════ */
 
-  /* Shared SVG stroke/fill helpers (scoped to .robot-svg) */
-  .robot-svg .ln      { fill: none; stroke: #C9A84C; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .robot-svg .ln-thin { fill: none; stroke: #C9A84C; stroke-width: 1; stroke-linecap: round; opacity: .7; }
-  .robot-svg .fillgold { fill: #C9A84C; }
-  .robot-svg .panel   { fill: #0b0a06; stroke: #C9A84C; stroke-width: 1.5; }
-  .robot-svg .eye     { fill: #F0D27A; filter: drop-shadow(0 0 4px #F0D27A); }
+  /* SVG robot renk tokens */
+  :root {
+    --robot-gold: #C9A84C;
+    --robot-gold-bright: #F0D27A;
+  }
 
-  .robot-svg {
-    height: 120px;
+  /* ── Fixed stage overlay ── */
+  #character-stage {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    overflow: visible;
+  }
+
+  /* ── Stage wrap: yürüme transform burada ── */
+  .char-stage-wrap {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform var(--char-walk-dur, 2s) cubic-bezier(0.42, 0, 0.38, 1);
+  }
+  #stage-vesper-wrap { left: 24px; }
+  #stage-seraph-wrap { right: 24px; left: auto; }
+
+  /* ── char-body: animasyon sınıfları + bubble burada ── */
+  .char-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: center bottom;
+  }
+
+  /* ── Robot SVG boyutu ── */
+  .char-body svg {
+    height: 95px;
     width: auto;
     overflow: visible;
-    display: block;
+    filter: drop-shadow(0 0 8px rgba(201,168,76,0.30));
   }
 
-  /* Robot keyframes */
-  @keyframes r-breathe   { 0%,100%{transform:translateY(0) scaleY(1)} 50%{transform:translateY(-2px) scaleY(1.012)} }
-  @keyframes r-blink     { 0%,92%,100%{transform:scaleY(1)} 96%{transform:scaleY(.06)} }
-  @keyframes r-blink-s   { 0%,88%,100%{transform:scaleY(1)} 94%{transform:scaleY(.08)} }
-  @keyframes r-lean      { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(2.4deg)} }
-  @keyframes r-orb-pulse { 0%,100%{r:9;opacity:1} 50%{r:11;opacity:.7} }
-  @keyframes r-orb-glow  { 0%,100%{filter:drop-shadow(0 0 4px #F0D27A)} 50%{filter:drop-shadow(0 0 12px #F0D27A)} }
-  @keyframes r-eye-scan  { 0%,100%{transform:translateX(-3px)} 50%{transform:translateX(3px)} }
-  @keyframes r-bob       { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-  @keyframes r-hand-l    { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-16deg)} }
-  @keyframes r-hand-r    { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(16deg)} }
-  @keyframes r-wave      { 0%{transform:scale(.6);opacity:.9} 100%{transform:scale(1.6);opacity:0} }
-  @keyframes r-flick     { 0%,100%{opacity:1} 45%{opacity:1} 47%{opacity:.3} 49%{opacity:1} }
-  @keyframes r-dash      { to{stroke-dashoffset:-40} }
-  @keyframes r-glow-p    { 0%,100%{opacity:.5} 50%{opacity:1} }
-  @keyframes r-holo      { 0%,100%{opacity:.55} 50%{opacity:.9} }
-  @keyframes r-write-dot { 0%,100%{transform:translate(0,0)} 25%{transform:translate(14px,0)} 50%{transform:translate(28px,3px)} 75%{transform:translate(10px,0)} }
+  /* ── Yüz çevirme ── */
+  .char-body.facing-left        { scale: -1 1; transition: scale 0.18s ease; }
+  .char-body.facing-left .emotion-bubble { scale: -1 1; }
 
-  /* Animation utility classes (SVG children) */
-  .r-breathe     { animation: r-breathe 4s ease-in-out infinite; transform-origin: center bottom; }
-  .r-lean        { animation: r-lean 4.5s ease-in-out infinite; transform-origin: center bottom; }
-  .r-bob-anim    { animation: r-bob 0.62s ease-in-out infinite; transform-origin: center bottom; }
-  .r-eye-blink   { animation: r-blink 5s infinite; transform-origin: center; transform-box: fill-box; }
-  .r-eye-blink-s { animation: r-blink-s 6.5s infinite; transform-origin: center; transform-box: fill-box; }
-  .r-eye-scan    { animation: r-eye-scan 2.6s ease-in-out infinite; transform-box: fill-box; }
-  .r-flick       { animation: r-flick 5s infinite; }
-  .r-glow-p      { animation: r-glow-p 2.4s ease-in-out infinite; }
-  .r-circuit     { stroke-dasharray: 4 6; animation: r-dash 3s linear infinite; }
-  .r-holo        { animation: r-holo 3s ease-in-out infinite; }
-  .r-orb-glow    { animation: r-orb-glow 2.4s ease-in-out infinite; }
-  .r-orb-pulse   { animation: r-orb-pulse 2.4s ease-in-out infinite; }
-  .r-hand-l      { animation: r-hand-l .42s ease-in-out infinite; }
-  .r-hand-r      { animation: r-hand-r .42s ease-in-out infinite; }
-  .r-wave-1      { animation: r-wave 1.6s ease-out infinite; }
-  .r-wave-2      { animation: r-wave 1.6s ease-out infinite .8s; }
-  .r-wave-3      { animation: r-wave 1.6s ease-out infinite .4s; }
-  .r-wave-4      { animation: r-wave 1.6s ease-out infinite 1.2s; }
-  .r-write-dot   { animation: r-write-dot 3.4s ease-in-out infinite; filter: drop-shadow(0 0 4px #F0D27A); }
-  .r-eq-1        { animation: r-bob .42s ease-in-out infinite; }
-  .r-eq-2        { animation: r-bob .42s ease-in-out infinite .1s; }
-  .r-eq-3        { animation: r-bob .42s ease-in-out infinite .2s; }
-  .r-eq-4        { animation: r-bob .42s ease-in-out infinite .15s; }
-
-  /* Character cluster layout */
-  .char-cluster {
-    display: flex;
-    align-items: flex-end;
-    flex-shrink: 0;
-    gap: 6px;
+  /* ─── Robot SVG animasyonları ─── */
+  @keyframes robot-breathe {
+    0%,100% { transform: translateY(0) scaleY(1); }
+    50%      { transform: translateY(-3px) scaleY(1.012); }
+  }
+  @keyframes robot-lean {
+    0%,100% { transform: rotate(0deg); }
+    50%      { transform: rotate(2.4deg); }
+  }
+  @keyframes robot-blink {
+    0%,90%,100% { transform: scaleY(1); }
+    95%         { transform: scaleY(0.06); }
+  }
+  @keyframes robot-blink-slow {
+    0%,86%,100% { transform: scaleY(1); }
+    93%         { transform: scaleY(0.08); }
+  }
+  @keyframes robot-orb-pulse {
+    0%,100% { opacity: 1; r: 9; }
+    50%      { opacity: .7; r: 11; }
+  }
+  @keyframes robot-orb-glow {
+    0%,100% { filter: drop-shadow(0 0 4px var(--robot-gold-bright)); }
+    50%      { filter: drop-shadow(0 0 14px var(--robot-gold-bright)); }
+  }
+  @keyframes robot-glow-pulse {
+    0%,100% { opacity: .5; }
+    50%      { opacity: 1; }
+  }
+  @keyframes robot-circuit-dash {
+    to { stroke-dashoffset: -40; }
+  }
+  @keyframes robot-wave {
+    0%   { transform: scale(.6); opacity: .9; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @keyframes robot-hand-l {
+    0%,100% { transform: rotate(0deg); }
+    50%      { transform: rotate(-16deg); }
+  }
+  @keyframes robot-hand-r {
+    0%,100% { transform: rotate(0deg); }
+    50%      { transform: rotate(16deg); }
+  }
+  @keyframes robot-write-dot {
+    0%,100% { transform: translate(0,0); }
+    25%     { transform: translate(14px,0); }
+    50%     { transform: translate(28px,3px); }
+    75%     { transform: translate(10px,0); }
+  }
+  @keyframes robot-flick {
+    0%,100% { opacity:1; } 45% { opacity:1; } 47% { opacity:.3; } 49% { opacity:1; }
   }
 
-  /* Robot figure container (replaces .char-emoji) */
-  .char-robot {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    filter: drop-shadow(0 0 6px rgba(201,168,76,.35));
-    transition: filter 0.3s ease;
+  /* Ortak SVG yardımcı sınıflar */
+  .rb-breathe  { animation: robot-breathe 4s ease-in-out infinite; transform-origin: center bottom; }
+  .rb-lean     { animation: robot-lean 4.5s ease-in-out infinite; transform-origin: center bottom; }
+  .rb-blink    { animation: robot-blink 5s infinite; transform-origin: center; transform-box: fill-box; }
+  .rb-blink-sl { animation: robot-blink-slow 6.5s infinite; transform-origin: center; transform-box: fill-box; }
+  .rb-gp       { animation: robot-glow-pulse 2.4s ease-in-out infinite; }
+  .rb-circuit  { stroke-dasharray: 4 6; animation: robot-circuit-dash 3s linear infinite; }
+  .rb-flick    { animation: robot-flick 5s infinite; }
+  .ln  { fill: none; stroke: #C9A84C; stroke-width: 2;   stroke-linecap: round; stroke-linejoin: round; }
+  .lnt { fill: none; stroke: #C9A84C; stroke-width: 1;   stroke-linecap: round; opacity: .7; }
+  .fg  { fill: #C9A84C; }
+  .pnl { fill: #0b0a06; stroke: #C9A84C; stroke-width: 1.5; }
+  .eye { fill: #F0D27A; filter: drop-shadow(0 0 4px #F0D27A); }
+
+  /* ── Karakter animasyonu: char-bounce → SVG'ye sallanma ── */
+  .char-bounce .rb-breathe,
+  .char-bounce .rb-lean {
+    animation: robot-breathe 0.36s ease-in-out infinite !important;
+  }
+
+  /* ── Karakter animasyonu: char-walking → SVG titremi ── */
+  .char-walking .rb-breathe,
+  .char-walking .rb-lean {
+    animation: robot-breathe 0.22s ease-in-out infinite !important;
+  }
+
+  /* ── Dans: erkek ── */
+  @keyframes char-dance-male {
+    0%,100% { transform: translateY(0)   rotate(-3deg) scale(1.00); }
+    25%      { transform: translateY(-8px) rotate( 4deg) scale(1.05); }
+    50%      { transform: translateY(-2px) rotate(-2deg) scale(0.97); }
+    75%      { transform: translateY(-7px) rotate( 3deg) scale(1.03); }
+  }
+  .char-dance-male { animation: char-dance-male var(--dance-dur, 0.6s) ease-in-out infinite; }
+
+  /* ── Dans: kadın (SERAPH) ── */
+  @keyframes char-dance-female {
+    0%,100% { transform: translateY(0)    rotate( 3deg) scale(1.00); }
+    25%      { transform: translateY(-9px) rotate(-4deg) scale(1.06); }
+    50%      { transform: translateY(-1px) rotate( 2deg) scale(0.96); }
+    75%      { transform: translateY(-6px) rotate(-3deg) scale(1.03); }
+  }
+  .char-dance-female { animation: char-dance-female var(--sway-dur, 0.65s) ease-in-out infinite; }
+
+  /* ── Thinking sallanma ── */
+  @keyframes char-think {
+    0%,100% { transform: rotate(-3deg) scale(1.0); }
+    50%      { transform: rotate( 3deg) scale(1.08); }
+  }
+  .char-thinking { animation: char-think 0.55s ease-in-out infinite; }
+
+  /* ── Fly orb (DOM-based) ── */
+  .fly-orb {
+    position: fixed;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 11;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px 3px rgba(201,168,76,0.9), 0 0 22px 7px rgba(201,168,76,0.4);
+    animation: orb-glow 0.9s ease-in-out infinite;
+    transition:
+      left  var(--orb-dur, 0.5s) cubic-bezier(0.42, 0, 0.58, 1),
+      top   var(--orb-dur, 0.5s) cubic-bezier(0.42, 0, 0.58, 1),
+      opacity 0.22s;
+  }
+
+  /* ── Cell reveal (blur yok, sadece opacity+slide) ── */
+  .cell-data-hidden {
+    opacity: 0 !important;   /* !important: #reasoning kuralının üzerine yazar */
+    transition: none;
+  }
+  @keyframes cell-reveal {
+    0%   { opacity:0; transform:translateY(4px) scale(0.92); }
+    60%  { opacity:1; transform:translateY(-1px) scale(1.02); }
+    100% { opacity:1; transform:translateY(0) scale(1); }
+  }
+  .cell-data-reveal { animation: cell-reveal 0.42s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  @keyframes cell-flash {
+    0%   { background: transparent; }
+    30%  { background: rgba(201,168,76,0.20); }
+    100% { background: transparent; }
+  }
+  .cell-data-flash  { animation: cell-flash 0.55s ease-out; border-radius: 6px; }
+
+
+
+  /* ─────────────────────────────────────────────
+     MOBILE RESPONSIVE PATCH
+     PC layout untouched, only mobile/tablet changes
+  ───────────────────────────────────────────── */
+
+  @media (max-width: 1020px) {
+    body {
+      height: auto;
+      min-height: 100dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px 16px 24px;
+    }
+
+    .main-grid {
+      grid-template-columns: 1fr;
+      overflow: visible;
+      min-height: auto;
+      gap: 14px;
+    }
+
+    .col-env,
+    .col-right,
+    .col-thoughts {
+      overflow: visible;
+      width: 100%;
+      min-height: auto;
+    }
+
+    .col-right .section {
+      overflow: visible;
+    }
+
+    .col-thoughts {
+      min-height: 300px;
+    }
+
+    .thoughts-poem {
+      overflow: visible;
+      min-height: 180px;
+    }
+
+    .bottom-bar {
+      position: relative;
+      margin-top: 12px;
+      padding-bottom: 80px;
+    }
+  }
+
+  @media (max-width: 720px) {
+    body {
+      padding: 18px 12px 20px;
+    }
+
+    .app-header {
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    h1 {
+      font-size: 22px;
+      letter-spacing: 6px;
+    }
+
+    .sub {
+      font-size: 8px;
+      letter-spacing: 2px;
+    }
+
+    .header-controls {
+      gap: 6px;
+    }
+
+    #btn-theme,
+    #btn-lang {
+      padding: 6px 10px;
+      font-size: 8px;
+      letter-spacing: 1.6px;
+    }
+
+    .env-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .section-params .params {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .col-env,
+    .col-thoughts,
+    .col-right .section {
+      padding: 14px 12px;
+      border-radius: 12px;
+    }
+
+    .col-title,
+    .label {
+      font-size: 7.5px;
+      letter-spacing: 2.2px;
+    }
+
+    .col-env .cell .v,
+    .col-right .cell .v {
+      font-size: 15px;
+    }
+
+    .thoughts-poem {
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .snapshot-toggle {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 9px;
+      letter-spacing: 1.8px;
+    }
+
+    .bottom-controls {
+      width: 100%;
+    }
+
+    .bottom-controls button {
+      flex: 1 1 auto;
+      min-width: 130px;
+      padding: 10px 12px;
+      font-size: 9px;
+      letter-spacing: 1.8px;
+    }
+
+    #stage-vesper-wrap {
+      left: 4px;
+      bottom: 4px;
+    }
+
+    #stage-seraph-wrap {
+      right: 4px;
+      bottom: 4px;
+    }
+
+    .char-body svg {
+      height: 68px;
+    }
+  }
+
+  @media (max-width: 430px) {
+    h1 {
+      font-size: 19px;
+      letter-spacing: 4px;
+    }
+
+    .app-header {
+      flex-direction: column;
+    }
+
+    .header-controls {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .env-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section-params .params {
+      grid-template-columns: 1fr;
+    }
+
+    .prompt-row {
+      align-items: flex-start;
+    }
+
+    .prompt-row .text {
+      font-size: 10px;
+    }
+
+    #stage-vesper-wrap,
+    #stage-seraph-wrap {
+      opacity: 0.75;
+    }
+
+    .char-body svg {
+      height: 58px;
+    }
+
+    .bottom-bar {
+      padding-bottom: 70px;
+    }
   }
 
 </style>
@@ -952,99 +1594,114 @@
   <!-- Particle Canvas Background -->
   <canvas id="particle-canvas"></canvas>
 
-  <!-- Orb (fixed, position calculated from char bounding rects) -->
+  <!-- Orb (original — kept for compatibility) -->
   <div id="char-orb"></div>
 
-  <!-- ELEGY · fixed on top-right corner of Machine Thoughts panel -->
-  <div class="char-fixed" id="char-elegy-fixed" aria-hidden="true">
-    <svg class="robot-svg" viewBox="0 0 120 200" overflow="visible" aria-label="ELEGY · The Poet">
-      <g>
-        <ellipse cx="58" cy="196" rx="34" ry="4" class="fillgold" opacity=".18"/>
-        <path class="ln-thin" d="M30 196 H86 M34 176 H82 L86 196 M34 176 L30 196"/>
-        <path class="ln-thin" d="M40 176 V196 M76 176 V196" opacity=".4"/>
-        <path class="ln" d="M46 150 Q40 160 44 168 L40 176 M70 150 Q78 160 74 168 L78 176"/>
-        <path class="ln" d="M36 178 H46 M74 178 H84"/>
-        <path class="ln" d="M46 148 H70"/>
-        <g transform="rotate(-4 58 120)">
-          <path class="ln" d="M48 96 Q44 122 50 150 H70 Q76 122 72 96 Q60 88 48 96 Z"/>
-          <circle cx="60" cy="116" r="4" class="panel"/>
-          <circle cx="60" cy="116" r="1.5" class="fillgold r-glow-p"/>
-          <path class="ln-thin r-circuit" d="M53 128 H67"/>
-          <path class="ln" d="M50 100 Q40 108 44 124 L56 132 M70 100 Q80 108 76 124 L64 132"/>
-          <path class="ln" d="M55 90 V86 M65 90 V86"/>
-          <path class="ln" d="M48 66 Q48 54 60 54 Q72 54 72 66 V76 Q72 86 60 88 Q48 86 48 76 Z"/>
-          <path class="ln-thin" d="M60 54 V47"/>
-          <circle cx="60" cy="45" r="2" class="fillgold r-glow-p"/>
-          <path class="ln-thin" d="M51 70 H69"/>
-          <g class="r-eye-scan">
-            <rect class="eye" x="54" y="66" width="5" height="4" rx="2"/>
-            <rect class="eye" x="61" y="66" width="5" height="4" rx="2"/>
-          </g>
-        </g>
-        <g class="r-holo">
-          <path d="M44 140 L78 132 L82 150 L48 158 Z" fill="rgba(201,168,76,.10)" stroke="#F0D27A" stroke-width="1.2" style="filter:drop-shadow(0 0 8px rgba(201,168,76,.6))"/>
-          <path class="ln-thin" d="M49 143 L70 138 M50 148 L73 142 M51 153 L68 149" opacity=".85"/>
-          <circle r="1.6" cx="50" cy="146" fill="#F0D27A" class="r-write-dot"/>
-          <path class="ln-thin" d="M56 132 L58 124 M70 130 L70 122" opacity=".4"/>
-        </g>
-      </g>
-    </svg>
-  </div>
+  <!-- Fixed Character Stage: VESPER (sol) + SERAPH (sag) -->
+  <div id="character-stage" aria-hidden="true">
 
-  <!-- PULSE · fixed on right edge of Generation Parameters panel -->
-  <div class="char-fixed" id="char-female-wrap" aria-hidden="true">
-    <div class="emotion-bubble" id="female-bubble"></div>
-    <div class="char-robot" id="char-female">
-      <svg class="robot-svg" viewBox="0 0 120 200" overflow="visible" aria-label="PULSE · The Musician">
-        <circle cx="30" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-1" style="transform-origin:30px 118px"/>
-        <circle cx="30" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-2" style="transform-origin:30px 118px"/>
-        <circle cx="90" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-3" style="transform-origin:90px 118px"/>
-        <circle cx="90" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-4" style="transform-origin:90px 118px"/>
-        <g class="r-bob-anim">
-          <ellipse cx="60" cy="194" rx="30" ry="4" class="fillgold" opacity=".18"/>
-          <path class="ln" d="M52 152 L50 188 M68 152 L70 188"/>
-          <path class="ln" d="M44 190 H56 M64 190 H76"/>
-          <path class="ln" d="M48 150 H72"/>
-          <path class="ln" d="M48 94 Q44 122 50 150 H70 Q76 122 72 94 Q60 86 48 94 Z"/>
-          <rect class="panel" x="51" y="106" width="18" height="14" rx="2"/>
-          <rect x="54" y="113" width="2.4" height="5" class="fillgold r-eq-1"/>
-          <rect x="58" y="110" width="2.4" height="8" class="fillgold r-eq-2"/>
-          <rect x="62" y="112" width="2.4" height="6" class="fillgold r-eq-3"/>
-          <rect x="66" y="109" width="2.4" height="9" class="fillgold r-eq-4"/>
-          <g style="transform-origin:48px 98px" class="r-hand-l">
-            <path class="ln" d="M48 98 Q36 104 34 120 L32 132"/>
-            <circle cx="32" cy="133" r="3" class="ln-thin"/>
+    <!-- VESPER — erkek robot, verileri toplar -->
+    <div class="char-stage-wrap" id="stage-vesper-wrap">
+      <div class="char-body" id="char-body-male">
+        <div class="emotion-bubble" id="male-bubble"></div>
+        <svg viewBox="0 0 120 200" aria-label="Vesper robot">
+          <g class="rb-lean">
+            <ellipse cx="58" cy="196" rx="32" ry="4" class="fg" opacity=".18"></ellipse>
+            <!-- legs -->
+            <path class="ln" d="M50 154 L48 190 M68 154 L70 190"></path>
+            <path class="ln" d="M42 192 H54 M64 192 H76"></path>
+            <path class="ln" d="M46 152 H72"></path>
+            <!-- torso -->
+            <path class="ln" d="M46 92 Q42 122 48 152 H72 Q78 122 74 92 Q60 84 46 92 Z"></path>
+            <!-- chest panel -->
+            <rect class="pnl" x="52" y="104" width="16" height="20" rx="3"></rect>
+            <path class="lnt rb-circuit" d="M55 110 H65 M55 116 H65"></path>
+            <circle cx="60" cy="100" r="2" class="fg rb-gp"></circle>
+            <!-- sol kol (aşağı) -->
+            <path class="ln" d="M48 96 Q38 102 36 126 L38 144"></path>
+            <circle cx="38" cy="145" r="3" class="lnt"></circle>
+            <!-- sag kol (orb tutan) -->
+            <path class="ln" d="M74 96 Q88 100 96 116 L100 130"></path>
+            <path class="lnt" d="M100 130 l5 -2 M100 130 l5 2 M100 130 l4 5"></path>
+            <!-- orb (sadece teslim safhasinda gorunur) -->
+            <g id="vesper-svg-orb" style="opacity:0;transition:opacity 0.4s ease">
+              <circle cx="103" cy="120" r="16" class="fg" opacity=".10"></circle>
+              <circle cx="103" cy="120" r="9" fill="none" stroke="#F0D27A" stroke-width="1.5" style="animation:robot-orb-glow 2.4s ease-in-out infinite"></circle>
+              <circle cx="103" cy="120" r="3.5" fill="#F0D27A" style="animation:robot-orb-pulse 2.4s ease-in-out infinite"></circle>
+              <path class="lnt rb-circuit" d="M94 120 H112 M103 111 V129" opacity=".6"></path>
+            </g>
+            <!-- boyun -->
+            <path class="ln" d="M55 86 V80 M65 86 V80"></path>
+            <!-- kafa -->
+            <path class="ln" d="M48 60 Q48 50 60 50 Q72 50 72 60 V74 Q72 84 60 84 Q48 84 48 74 Z"></path>
+            <!-- anten -->
+            <path class="lnt" d="M60 50 V42"></path>
+            <circle cx="60" cy="40" r="2.2" class="fg rb-gp"></circle>
+            <!-- visor -->
+            <path class="lnt" d="M51 66 H69"></path>
+            <g class="rb-blink-sl">
+              <rect class="eye" x="53" y="61" width="6" height="5" rx="2"></rect>
+              <rect class="eye" x="61" y="61" width="6" height="5" rx="2"></rect>
+            </g>
+            <path class="lnt" d="M55 78 H65"></path>
           </g>
-          <g style="transform-origin:72px 98px" class="r-hand-r">
-            <path class="ln" d="M72 98 Q84 104 86 120 L88 132"/>
-            <circle cx="88" cy="133" r="3" class="ln-thin"/>
-          </g>
-          <path class="ln" d="M56 88 V82 M64 88 V82"/>
-          <path class="ln" d="M48 64 Q48 52 60 52 Q72 52 72 64 V74 Q72 84 60 84 Q48 84 48 74 Z"/>
-          <path class="ln" d="M44 64 Q44 44 60 44 Q76 44 76 64" stroke-width="2.4"/>
-          <rect class="panel" x="40" y="60" width="9" height="16" rx="3"/>
-          <rect class="panel" x="71" y="60" width="9" height="16" rx="3"/>
-          <circle cx="44.5" cy="68" r="2" class="fillgold r-glow-p"/>
-          <circle cx="75.5" cy="68" r="2" class="fillgold r-glow-p"/>
-          <path class="ln-thin" d="M51 68 H69"/>
-          <g class="r-eye-blink">
-            <rect class="eye" x="53" y="63" width="6" height="5" rx="2"/>
-            <rect class="eye" x="61" y="63" width="6" height="5" rx="2"/>
-          </g>
-          <path class="ln-thin r-flick" d="M55 78 H65 M57 78 V81 M60 78 V81 M63 78 V81"/>
-        </g>
-      </svg>
+        </svg>
+      </div>
     </div>
-  </div>
+
+    <!-- SERAPH — kadın robot, verileri kutucuklara yerleştirir -->
+    <div class="char-stage-wrap" id="stage-seraph-wrap">
+      <div class="char-body" id="char-body-female">
+        <div class="emotion-bubble" id="female-bubble"></div>
+        <svg viewBox="0 0 120 200" aria-label="Seraph robot">
+          <g class="rb-breathe">
+            <ellipse cx="60" cy="194" rx="30" ry="4" class="fg" opacity=".18"></ellipse>
+            <!-- bacaklar -->
+            <path class="ln" d="M52 150 L50 188 M68 150 L70 188"></path>
+            <path class="ln" d="M44 190 H56 M64 190 H76"></path>
+            <!-- kalca -->
+            <path class="ln" d="M48 148 H72"></path>
+            <!-- ince govde -->
+            <path class="ln" d="M50 96 Q46 120 52 148 H68 Q74 120 70 96 Q60 90 50 96 Z"></path>
+            <!-- bel devresi -->
+            <path class="lnt rb-circuit" d="M53 122 H67 M55 130 H65"></path>
+            <circle cx="60" cy="116" r="4" class="pnl"></circle>
+            <circle cx="60" cy="116" r="1.6" class="fg rb-gp"></circle>
+            <!-- kollar -->
+            <path class="ln" d="M50 100 Q40 104 38 124 L40 142 M70 100 Q80 104 82 124 L80 142"></path>
+            <circle cx="40" cy="143" r="3" class="lnt"></circle>
+            <circle cx="80" cy="143" r="3" class="lnt"></circle>
+            <!-- boyun -->
+            <path class="ln" d="M56 90 V84 M64 90 V84"></path>
+            <!-- kafa (oval) -->
+            <path class="ln" d="M48 70 Q48 54 60 54 Q72 54 72 70 Q72 84 60 86 Q48 84 48 70 Z"></path>
+            <!-- çift anten -->
+            <path class="lnt" d="M54 55 Q50 44 46 40 M66 55 Q70 44 74 40"></path>
+            <circle cx="46" cy="40" r="2" class="fg rb-gp"></circle>
+            <circle cx="74" cy="40" r="2" class="fg rb-gp"></circle>
+            <!-- yüz plaka -->
+            <path class="lnt" d="M52 68 H68"></path>
+            <!-- gozler -->
+            <g class="rb-blink">
+              <rect class="eye" x="53" y="64" width="6" height="4" rx="2"></rect>
+              <rect class="eye" x="61" y="64" width="6" height="4" rx="2"></rect>
+            </g>
+            <!-- yanak devresi -->
+            <path class="lnt" d="M50 76 l4 0 M70 76 l-4 0"></path>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+  </div><!-- /character-stage -->
 
   <div class="app-header">
     <div class="app-header-title">
       <h1>ATMOSFERA</h1>
-      <div class="sub">AUTONOMOUS DJ AGENT</div>
+      <div class="sub" data-i18n="app-subtitle">AUTONOMOUS DJ AGENT</div>
     </div>
     <div class="header-controls">
-      <button id="btn-theme" type="button" aria-label="Switch to dark mode">DARK MODE</button>
-      <button id="btn-lang" type="button" aria-label="Dil değiştir / Change language">TR</button>
+      <button id="btn-theme" type="button" aria-label="Switch to dark mode">KOYU MOD</button>
     </div>
   </div>
 
@@ -1070,41 +1727,45 @@
         </div>
         <div class="cell">
           <div class="k" data-i18n="k-time">SAAT</div>
-          <div class="cell">
-  <div class="k">MOTION INDEX</div>
-  <div class="v" id="in-movement">—<small> %</small></div>
-</div>
           <div class="v" id="in-time">—</div>
+        </div>
+        <div class="cell">
+          <div class="k" data-i18n="k-motion">HAREKET</div>
+          <div class="v" id="in-movement">—<small> %</small></div>
         </div>
       </div>
     </div>
 
-    <!-- CENTER: Machine Thoughts (hero) -->
-    <div class="col-thoughts" id="thoughts-panel">
-      <div class="col-title" data-i18n="panel-thoughts-title">MAKİNENİN DÜŞÜNCELERİ</div>
-      <div class="thoughts-poem">
-        <span id="thoughts-text"></span><span class="thoughts-cursor" id="thoughts-cursor"></span>
-      </div>
-    </div>
-
-    <!-- RIGHT: AI + Prompts + Params -->
-    <div class="col-right">
+    <!-- CENTER: AI + Prompts + Params (music panel moved here) -->
+    <div class="col-right col-music">
       <div class="section section-ai">
         <div class="label"><span class="icon">✦</span><span data-i18n="ai-label">GEMİNİ YORUMU</span></div>
-        <div id="reasoning" class="empty">Awaiting analysis…</div>
+        <div id="reasoning" class="empty" data-i18n-empty="reasoning-empty">Analiz bekleniyor…</div>
       </div>
       <div class="section section-prompts">
-        <div class="label"><span class="icon">♫</span><span data-i18n="prompts-label">AKTİF LYRİA PROMPTLARI</span></div>
+        <div class="label prompt-label-row"><span class="icon">♫</span><span data-i18n="prompts-label">AKTİF LYRİA PROMPTLARI</span><button id="btn-prompt-edit" class="prompt-edit-btn" type="button">DEĞİŞTİR</button></div>
         <div id="prompts"><span style="color:var(--dim)">—</span></div>
       </div>
       <div class="section section-params">
         <div class="label"><span class="icon">⚙</span><span data-i18n="params-label">ÜRETİM PARAMETRELERİ</span></div>
         <div class="params">
           <div class="cell"><div class="k" data-i18n="k-bpm">BPM</div><div class="v" id="p-bpm">—</div></div>
-          <div class="cell"><div class="k" data-i18n="k-scale">SKALA</div><div class="v" id="p-scale" style="font-size:14px">—</div></div>
+          <div class="cell"><div class="k" data-i18n="k-scale">GAM</div><div class="v" id="p-scale" style="font-size:14px">—</div></div>
           <div class="cell"><div class="k" data-i18n="k-density">YOĞUNLUK</div><div class="v" id="p-density">—</div></div>
           <div class="cell"><div class="k" data-i18n="k-brightness">PARLAKLIK</div><div class="v" id="p-bright">—</div></div>
         </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Machine Thoughts (hero) -->
+    <div class="col-thoughts" id="thoughts-panel">
+      <div class="col-title" data-i18n="panel-thoughts-title">MAKİNENİN HİSLERİ</div>
+      <div class="thoughts-poem">
+        <span id="thoughts-text"></span><span class="thoughts-cursor" id="thoughts-cursor"></span>
+      </div>
+      <div class="thoughts-save">
+        <button id="btn-snapshot" class="snapshot-toggle" type="button" data-i18n="btn-snapshot">HİSSİ KAYDET</button>
+        <div class="snapshot-saved" id="snapshot-saved"></div>
       </div>
     </div>
 
@@ -1112,105 +1773,19 @@
 
   <!-- BOTTOM BAR -->
   <div class="bottom-bar">
+    <!-- sol boşluk dengeleme (stage karakterleri fixed) -->
+    <div style="width:72px;flex-shrink:0"></div>
 
-    <!-- Left cluster: SERAPH (static muse) + VESPER (active giver / walks to deliver orb) -->
-    <div class="char-cluster">
-
-      <!-- SERAPH · UNIT-01 · The Muse (static, gentle breathe) -->
-      <div class="char-wrap" aria-hidden="true">
-        <svg class="robot-svg" viewBox="0 0 120 200" overflow="visible" aria-label="SERAPH · The Muse">
-          <g class="r-breathe">
-            <ellipse cx="60" cy="194" rx="30" ry="4" class="fillgold" opacity=".18"/>
-            <path class="ln" d="M52 150 L50 188 M68 150 L70 188"/>
-            <path class="ln" d="M44 190 H56 M64 190 H76"/>
-            <path class="ln" d="M48 148 H72"/>
-            <path class="ln" d="M50 96 Q46 120 52 148 H68 Q74 120 70 96 Q60 90 50 96 Z"/>
-            <path class="ln-thin" d="M53 122 H67 M55 130 H65"/>
-            <circle cx="60" cy="116" r="4" class="panel"/>
-            <circle cx="60" cy="116" r="1.6" class="fillgold"/>
-            <path class="ln" d="M50 100 Q40 104 38 124 L40 142 M70 100 Q80 104 82 124 L80 142"/>
-            <circle cx="40" cy="143" r="3" class="ln-thin"/>
-            <circle cx="80" cy="143" r="3" class="ln-thin"/>
-            <path class="ln" d="M56 90 V84 M64 90 V84"/>
-            <path class="ln" d="M48 70 Q48 54 60 54 Q72 54 72 70 Q72 84 60 86 Q48 84 48 70 Z"/>
-            <path class="ln-thin" d="M54 55 Q50 44 46 40 M66 55 Q70 44 74 40"/>
-            <circle cx="46" cy="40" r="2" class="fillgold"/>
-            <circle cx="74" cy="40" r="2" class="fillgold"/>
-            <path class="ln-thin" d="M52 68 H68"/>
-            <g class="r-eye-blink">
-              <rect class="eye" x="53" y="64" width="6" height="4" rx="2"/>
-              <rect class="eye" x="61" y="64" width="6" height="4" rx="2"/>
-            </g>
-            <path class="ln-thin" d="M50 76 l4 0 M70 76 l-4 0"/>
-          </g>
-        </svg>
-      </div>
-
-      <!-- VESPER · UNIT-02 · The Giver (active: walks + delivers orb) -->
-      <div class="char-wrap" id="char-male-wrap" aria-hidden="true">
-        <div class="emotion-bubble" id="male-bubble"></div>
-        <div class="char-robot" id="char-male">
-          <svg class="robot-svg" viewBox="0 0 120 200" overflow="visible" aria-label="VESPER · The Giver">
-            <g class="r-lean">
-              <ellipse cx="58" cy="196" rx="32" ry="4" class="fillgold" opacity=".18"/>
-              <path class="ln" d="M50 154 L48 190 M68 154 L70 190"/>
-              <path class="ln" d="M42 192 H54 M64 192 H76"/>
-              <path class="ln" d="M46 152 H72"/>
-              <path class="ln" d="M46 92 Q42 122 48 152 H72 Q78 122 74 92 Q60 84 46 92 Z"/>
-              <rect class="panel" x="52" y="104" width="16" height="20" rx="3"/>
-              <path class="ln-thin r-circuit" d="M55 110 H65 M55 116 H65"/>
-              <circle cx="60" cy="100" r="2" class="fillgold r-glow-p"/>
-              <path class="ln" d="M48 96 Q38 102 36 126 L38 144"/>
-              <circle cx="38" cy="145" r="3" class="ln-thin"/>
-              <path class="ln" d="M74 96 Q88 100 96 116 L100 130"/>
-              <path class="ln-thin" d="M100 130 l5 -2 M100 130 l5 2 M100 130 l4 5"/>
-              <circle cx="103" cy="120" r="16" class="fillgold" opacity=".14"/>
-              <circle cx="103" cy="120" r="9" fill="none" stroke="#F0D27A" stroke-width="1.5" class="r-orb-glow"/>
-              <circle cx="103" cy="120" r="3.5" fill="#F0D27A" class="r-orb-pulse"/>
-              <path class="ln-thin r-circuit" d="M94 120 H112 M103 111 V129" opacity=".6"/>
-              <path class="ln" d="M55 86 V80 M65 86 V80"/>
-              <path class="ln" d="M48 60 Q48 50 60 50 Q72 50 72 60 V74 Q72 84 60 84 Q48 84 48 74 Z"/>
-              <path class="ln-thin" d="M60 50 V42"/>
-              <circle cx="60" cy="40" r="2.2" class="fillgold r-glow-p"/>
-              <path class="ln-thin" d="M51 66 H69"/>
-              <g class="r-eye-blink-s">
-                <rect class="eye" x="53" y="61" width="6" height="5" rx="2"/>
-                <rect class="eye" x="61" y="61" width="6" height="5" rx="2"/>
-              </g>
-              <path class="ln-thin" d="M55 78 H65"/>
-            </g>
-          </svg>
-        </div>
-      </div>
-
-    </div><!-- /char-cluster left -->
-
-    <!-- Center: playback controls -->
     <div class="bottom-controls">
       <button id="btn-play" disabled><span class="dot" id="dot"></span>PLAY</button>
       <button id="btn-analyze" disabled data-i18n="btn-reanalyze">YENİDEN ANALİZ ET</button>
-      <button id="btn-snapshot" class="snapshot-toggle" type="button">📷 SAVE</button>
     </div>
 
-    <!-- Spacer balances flex so controls stay centered (ELEGY + PULSE are now fixed on panels) -->
-    <div class="char-spacer" aria-hidden="true"></div>
-
+    <!-- sag boşluk dengeleme -->
+    <div style="width:72px;flex-shrink:0"></div>
   </div>
 
-  <div id="status">Loading keys…</div>
-
-  <div class="snapshot-modal" id="snapshot-modal" aria-hidden="true">
-    <div class="snapshot-card">
-      <h2>Night Map Note</h2>
-      <p>Write a short note for this atmosphere. It will be printed on the particle image.</p>
-      <textarea id="snapshot-note" maxlength="180" placeholder="Example: A warm, rainy night in the city..."></textarea>
-      <div class="snapshot-actions">
-        <button id="btn-snapshot-cancel" type="button">CANCEL</button>
-        <button id="btn-snapshot-save" type="button">SAVE IMAGE</button>
-      </div>
-      <div class="snapshot-saved" id="snapshot-saved"></div>
-    </div>
-  </div>
+  <div id="status">Başlatılıyor…</div>
 
 <script type="module">
 import { GoogleGenAI } from 'https://esm.run/@google/genai';
@@ -1223,8 +1798,6 @@ const WEATHER_REFRESH_MS = 600000;
 
 // ---- State ----
 const state = {
-  keys: { gemini: null, weather: null },
-  ai: null,
   lyriaAi: null,
   session: null,
   playing: false,
@@ -1233,16 +1806,18 @@ const state = {
   audio: { ctx: null, nextTime: 0, sources: new Set() },
   mic: { analyser: null, data: null, ok: false },
   lastParams: null,
+  promptOverrides: {},
   weatherCache: { data: null, fetchedAt: null },
   location: { lat: null, lon: null, label: FALLBACK_CITY, source: 'fallback' },
-vision: {
-  ok: false,
-  video: null,
-  canvas: null,
-  ctx: null,
-  prevFrame: null,
-  movement: 0,
-},
+  vision: {
+    ok: false,
+    video: null,
+    canvas: null,
+    ctx: null,
+    prevFrame: null,
+    movement: 0,
+  },
+
   pref: {
     mood: '',    // English value for Gemini: energetic|melancholic|romantic|focused|calm|euphoric
     genre: '',   // e.g. 'Jazz', 'Electronic', '' = any
@@ -1268,6 +1843,7 @@ const els = {
   scale: $('p-scale'),
   density: $('p-density'),
   bright: $('p-bright'),
+  promptEdit: $('btn-prompt-edit'),
 
   play: $('btn-play'),
   analyze: $('btn-analyze'),
@@ -1286,31 +1862,6 @@ function setStatus(msg, kind = '') {
 
 
 
-// ---- Key loading ----
-async function loadKeys() {
-  try {
-    const res = await fetch('./keys.txt', { cache: 'no-store' });
-    if (!res.ok) throw new Error('no file');
-
-    const txt = await res.text();
-    const map = {};
-
-    txt.split(/\r?\n/).forEach(line => {
-      const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.+?)\s*$/);
-      if (m) map[m[1]] = m[2];
-    });
-
-    if (map.GEMINI_API_KEY) {
-      state.keys.gemini = map.GEMINI_API_KEY;
-      state.keys.weather = map.OPENWEATHER_API_KEY || null;
-      return true;
-    }
-
-    throw new Error('GEMINI_API_KEY missing');
-  } catch (e) {
-    return false;
-  }
-}
 
 // ---- Microphone ----
 async function initMic() {
@@ -1358,6 +1909,7 @@ function readNoise() {
 
   return friendly;
 }
+
 async function initVision() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -1373,13 +1925,13 @@ async function initVision() {
 
     await video.play();
 
-    const canvas = document.createElement('canvas');
-    canvas.width = 160;
-    canvas.height = 120;
+    const vCanvas = document.createElement('canvas');
+    vCanvas.width = 160;
+    vCanvas.height = 120;
 
     state.vision.video = video;
-    state.vision.canvas = canvas;
-    state.vision.ctx = canvas.getContext('2d');
+    state.vision.canvas = vCanvas;
+    state.vision.ctx = vCanvas.getContext('2d');
     state.vision.ok = true;
   } catch (e) {
     state.vision.ok = false;
@@ -1389,10 +1941,9 @@ async function initVision() {
 function readMovement() {
   if (!state.vision.ok) return 0;
 
-  const { video, canvas, ctx } = state.vision;
-
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-  const frame = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  const { video, canvas: vCanvas, ctx } = state.vision;
+  ctx.drawImage(video, 0, 0, vCanvas.width, vCanvas.height);
+  const frame = ctx.getImageData(0, 0, vCanvas.width, vCanvas.height).data;
 
   if (!state.vision.prevFrame) {
     state.vision.prevFrame = new Uint8ClampedArray(frame);
@@ -1400,18 +1951,31 @@ function readMovement() {
   }
 
   let diff = 0;
-
   for (let i = 0; i < frame.length; i += 16) {
     diff += Math.abs(frame[i] - state.vision.prevFrame[i]);
   }
 
   state.vision.prevFrame = new Uint8ClampedArray(frame);
-
   const movement = Math.min(1, diff / 300000);
   state.vision.movement = movement;
-
   return movement;
 }
+
+async function ensureMicFromUserGesture() {
+  if (state.mic.ok) return;
+
+  setStatus('Mikrofon izni isteniyor…', '');
+
+  await initMic();
+
+  if (state.mic.ok) {
+    setStatus('Mikrofon aktif. Ortam sesi okunuyor.', 'ok');
+  } else {
+    setStatus('Mikrofon izni alınamadı — 0 dB fallback kullanılıyor.', '');
+  }
+}
+
+
 // ---- Location + Weather ----
 
 // Reverse-geocode lat/lon → human city name via Nominatim (no key needed)
@@ -1481,21 +2045,6 @@ function getWeatherPlaceName() {
 }
 
 async function fetchWeather() {
-  if (!state.keys.weather) {
-    state.weatherCache.data = {
-      condition: 'unknown',
-      description: '',
-      temp: null,
-      humidity: null,
-      place: getWeatherPlaceName(),
-      ok: false,
-    };
-
-    state.weatherCache.fetchedAt = Date.now();
-    updateWeatherUI();
-    return;
-  }
-
   try {
     let location = state.location;
 
@@ -1507,10 +2056,10 @@ async function fetchWeather() {
     let placeLabel;
 
     if (location && location.source === 'device') {
-      url = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&appid=${state.keys.weather}`;
+      url = `/api/weather?lat=${location.lat}&lon=${location.lon}`;
       placeLabel = location.label;
     } else {
-      url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(FALLBACK_CITY)}&units=metric&appid=${state.keys.weather}`;
+      url = `/api/weather?city=${encodeURIComponent(FALLBACK_CITY)}`;
       placeLabel = FALLBACK_CITY;
     }
 
@@ -1596,6 +2145,7 @@ function gatherInputs() {
   const weather = getCachedWeather();
   const hour    = new Date().getHours();
   const movement = readMovement();
+
   els.noise.innerHTML = `${noise}<small> dB</small>`;
   const weatherText  = weather.description || weather.condition;
   els.weather.textContent = weather.place
@@ -1605,7 +2155,8 @@ function gatherInputs() {
     ? '—<small> °C</small>'
     : `${weather.temp}<small> °C</small>`;
   els.time.textContent = String(hour).padStart(2, '0') + ':00';
-els.movement.innerHTML = `${Math.round(movement * 100)}<small> %</small>`;
+  if (els.movement) els.movement.innerHTML = `${Math.round(movement * 100)}<small> %</small>`;
+
   return { noise, weather, hour, movement, pref: { ...state.pref } };
 }
 
@@ -1643,15 +2194,16 @@ async function askGemini(inputs) {
   const seed = Math.floor(Math.random() * 99991) + 10;
   const seedLine = hasPref ? '' : `\nVariation seed (ignore the number, but use it to make a fresh genre choice different from your last): #${seed}`;
 
-  // Reasoning language based on UI language setting
-  const reasoningLang = (window.atmosferaLang || 'TR') === 'TR'
-    ? 'Write the "reasoning" field in Turkish (Türkçe).'
-    : 'Write the "reasoning" field in English.';
-// Location is used only for weather context.
-// We intentionally avoid strong local/cultural instrument bias
-// because it can dominate the generated music too much.
-const cityLabel = (state.location?.label || '').toLowerCase();
-const locationFlavor = '';
+  // Reasoning language: always Turkish
+  const reasoningLang = 'Write the "reasoning" field in Turkish (Türkçe).';
+  const promptTextLang = 'Write each prompt text in Turkish.';
+
+  // Subtle location-based cultural color for instrument texture (does NOT override genre)
+  // Location is used only for weather context.
+  // We intentionally avoid strong local/cultural instrument bias
+  // because it can dominate the generated music too much.
+  const cityLabel = (state.location?.label || '').toLowerCase();
+  const locationFlavor = '';
 
   const prompt = `You are ATMOSFERA, an autonomous AI DJ and sonic philosopher. Your overarching theme is "LOVE" (Aşk) in all its forms: passion, distance, intimacy, heartbreak, and unity. You interpret environmental data not just as numbers, but as the emotional heartbeat of the room.
 
@@ -1663,7 +2215,7 @@ PRIORITY ORDER:
 ENVIRONMENT:
 ${prefLines}
 - Ambient noise: ${inputs.noise}/100 — ${noiseDesc}
-- Visual movement intensity: ${inputs.movement.toFixed(2)}/1.00
+- Visual movement intensity: ${(inputs.movement || 0).toFixed(2)}/1.00
 - Location: ${inputs.weather.place || getWeatherPlaceName()}
 - Weather: ${inputs.weather.description || inputs.weather.condition}
 - Temperature: ${inputs.weather.temp === null ? 'unknown' : inputs.weather.temp + '°C'}
@@ -1676,6 +2228,7 @@ THEMATIC MAPPING (Love & Environment):
 • Evening (18–23): Passion, rhythmic tension, desire. (Funk, Electronic Dance, Deep House, Tango)
 • Night (23–03): Intimacy, nostalgia, unspoken words. (Deep House, Melodic Electronic, Neo-Soul, Trip-Hop)
 • Deep Night (03–06): Heartbreak, distance, solitary longing. (Downtempo Electronic, Minimal House, Organic Electronica)
+
 VISUAL MOVEMENT:
 • 0.00–0.20: Stillness, distance, private emotion.
 • 0.20–0.50: Gentle presence, small gestures, calm connection.
@@ -1724,19 +2277,22 @@ Avoid vague atmosphere words unless paired with a clear genre, groove and instru
 Prioritize rhythm, bassline, percussion and melodic hooks.
 
 Rules: 1–3 prompts. Be specific. Connect the weather/time to a state of love in the reasoning.
-${reasoningLang}${seedLine}`;
+${reasoningLang}
+${promptTextLang}${seedLine}`;
 
 
-  const res = await state.ai.models.generateContent({
-    model: GEMINI_MODEL,
-    contents: prompt,
-    config: {
-      responseMimeType: 'application/json',
-      temperature: 1.0,
-    },
+  const geminiRes = await fetch('/api/gemini', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: GEMINI_MODEL,
+      contents: prompt,
+      config: { responseMimeType: 'application/json', temperature: 1.0 },
+    }),
   });
-
-  let text = res.text.trim();
+  if (!geminiRes.ok) throw new Error('Gemini API hatası: ' + geminiRes.status);
+  const geminiData = await geminiRes.json();
+  let text = (geminiData.text || '').trim();
 
   text = text
     .replace(/^```(?:json)?/i, '')
@@ -1769,7 +2325,7 @@ ${reasoningLang}${seedLine}`;
   }));
 
   if (!data.prompts.length) {
-    data.prompts = [{ text: 'ambient texture', weight: 1.0 }];
+    data.prompts = [{ text: 'ritmik atmosfer dokusu', weight: 1.0 }];
   }
 
 
@@ -1777,7 +2333,51 @@ ${reasoningLang}${seedLine}`;
 }
 
 // ---- Render interpretation ----
-function renderParams(p) {
+
+function getPromptKey(pr, index) {
+  return `${index}:${pr.text}`;
+}
+
+function applyPromptOverrides(params) {
+  const copy = { ...params, prompts: params.prompts.map((pr, index) => {
+    const key = getPromptKey(pr, index);
+    const override = state.promptOverrides[key];
+    return {
+      ...pr,
+      weight: override === undefined ? pr.weight : clampNumber(override, 0.1, 1, pr.weight),
+    };
+  }) };
+  return copy;
+}
+
+async function updateLivePromptWeights() {
+  if (!state.lastParams) return;
+  const mixed = applyPromptOverrides(state.lastParams);
+  state.lastParams = mixed;
+  renderParams(mixed, { keepMixer: true });
+  if (state.playing) {
+    try {
+      await applyParams(mixed);
+      setStatus('Prompt ağırlığı canlı güncellendi.', 'ok');
+    } catch (e) {
+      setStatus('Prompt güncelleme başarısız: ' + (e?.message || e), 'error');
+    }
+  }
+}
+
+
+
+function updateSliderVisual(slider) {
+  if (!slider) return;
+  const min = Number(slider.min || 0);
+  const max = Number(slider.max || 1);
+  const val = Number(slider.value || 0);
+  const pct = ((val - min) / (max - min)) * 100;
+  slider.style.setProperty('--slider-percent', `${Math.max(0, Math.min(100, pct))}%`);
+}
+
+
+function renderParams(p, options = {}) {
   window.atmosferaParams = p;
   window.dispatchEvent(new CustomEvent('atmosfera-params-updated', { detail: p }));
 
@@ -1786,31 +2386,113 @@ function renderParams(p) {
 
   els.bpm.textContent = p.bpm;
   els.scale.textContent = p.scale || '—';
-  els.density.textContent = p.density.toFixed(2);
-  els.bright.textContent = p.brightness.toFixed(2);
+  els.density.textContent = Number(p.density).toFixed(2);
+  els.bright.textContent = Number(p.brightness).toFixed(2);
 
   els.prompts.innerHTML = '';
 
-  p.prompts.forEach(pr => {
+  const prompts = Array.isArray(p.prompts) ? p.prompts : [];
+
+  prompts.forEach((pr, index) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'prompt-item';
+
     const row = document.createElement('div');
     row.className = 'prompt-row';
-    row.innerHTML = `
-      <span class="text">${escapeHtml(pr.text)}</span>
-      <span class="weight">${pr.weight.toFixed(2)}</span>
-    `;
+
+    const textSpan = document.createElement('span');
+    textSpan.className = 'text';
+    textSpan.textContent = pr.text || `Prompt ${index + 1}`;
+
+    const weightSpan = document.createElement('span');
+    weightSpan.className = 'weight';
+    weightSpan.textContent = Number(pr.weight || 1).toFixed(2);
+
+    row.appendChild(textSpan);
+    row.appendChild(weightSpan);
 
     const bar = document.createElement('div');
     bar.className = 'bar';
-    bar.innerHTML = `<span style="width:${Math.round(pr.weight * 100)}%"></span>`;
 
-    const wrap = document.createElement('div');
+    const barFill = document.createElement('span');
+    barFill.style.width = `${Math.round((Number(pr.weight) || 1) * 100)}%`;
+    bar.appendChild(barFill);
+
+    const slider = document.createElement('input');
+    slider.className = 'prompt-weight-slider';
+    slider.type = 'range';
+    slider.min = '0.10';
+    slider.max = '1.00';
+    slider.step = '0.01';
+    slider.value = Number(pr.weight || 1).toFixed(2);
+    slider.setAttribute('aria-label', `${window.i18n ? window.i18n('prompt-weight') : 'Prompt weight'} ${index + 1}`);
+    updateSliderVisual(slider);
+
+    slider.addEventListener('input', () => {
+      updateSliderVisual(slider);
+      const nextWeight = Math.max(0.1, Math.min(1, Number(slider.value) || 1));
+
+      weightSpan.textContent = nextWeight.toFixed(2);
+      barFill.style.width = `${Math.round(nextWeight * 100)}%`;
+
+      if (state.lastParams?.prompts?.[index]) {
+        state.lastParams.prompts[index].weight = nextWeight;
+      }
+
+      pr.weight = nextWeight;
+      schedulePromptApply();
+    });
+
     wrap.appendChild(row);
     wrap.appendChild(bar);
-
+    wrap.appendChild(slider);
     els.prompts.appendChild(wrap);
   });
 
+  setPromptEditMode(promptEditMode);
 }
+
+
+
+let promptEditMode = false;
+let promptApplyTimer = null;
+
+function setPromptEditMode(on) {
+  promptEditMode = !!on;
+
+  if (els.prompts) {
+    els.prompts.classList.toggle('editing', promptEditMode);
+  }
+
+  if (els.promptEdit) {
+    els.promptEdit.textContent = promptEditMode
+      ? (window.i18n ? window.i18n('btn-close') : 'KAPAT')
+      : (window.i18n ? window.i18n('btn-change') : 'DEĞİŞTİR');
+  }
+}
+
+function schedulePromptApply() {
+  clearTimeout(promptApplyTimer);
+
+  promptApplyTimer = setTimeout(async () => {
+    if (!state.lastParams?.prompts) return;
+
+    if (!state.playing || !state.session) {
+      setStatus('Prompt ağırlığı güncellendi. PLAY açıksa müziğe canlı uygulanır.', 'ok');
+      return;
+    }
+
+    try {
+      await state.session.setWeightedPrompts({
+        weightedPrompts: state.lastParams.prompts,
+      });
+      setStatus('Prompt ağırlıkları müziğe canlı uygulandı.', 'ok');
+    } catch (e) {
+      setStatus('Prompt ağırlıkları uygulanamadı: ' + (e?.message || e), 'error');
+    }
+  }, 180);
+}
+
 
 function escapeHtml(s) {
   return s.replace(/[&<>"']/g, c => ({
@@ -1892,7 +2574,7 @@ function stopAudio() {
 async function connectLyria() {
   if (state.session) return state.session;
 
-  setStatus('Connecting to Lyria RealTime…');
+  setStatus('Lyria RealTime bağlanıyor…');
 
   const session = await state.lyriaAi.live.music.connect({
     model: LYRIA_MODEL,
@@ -1902,7 +2584,7 @@ async function connectLyria() {
         if (chunks) chunks.forEach(c => playChunk(c.data));
       },
       onerror: (e) => {
-        setStatus('Lyria error: ' + (e?.message || e), 'error');
+        setStatus('Lyria hatası: ' + (e?.message || e), 'error');
       },
       onclose: () => {},
     },
@@ -1927,7 +2609,7 @@ let thoughtsTypewriterTimer = null;
 async function generateMachineThoughts(params, inputs) {
   const textEl   = els.thoughtsText;
   const cursorEl = els.thoughtsCursor;
-  if (!textEl || !cursorEl || !state.ai) return;
+  if (!textEl || !cursorEl) return;
 
   // Cancel any running typewriter
   if (thoughtsTypewriterTimer) {
@@ -1939,7 +2621,7 @@ async function generateMachineThoughts(params, inputs) {
   textEl.textContent = '';
   cursorEl.classList.remove('visible');
 
-  const lang    = (window.atmosferaLang || 'TR') === 'TR' ? 'Turkish' : 'English';
+  const lang    = 'Turkish';
   const weather = inputs.weather?.description || inputs.weather?.condition || 'unknown';
   const temp    = inputs.weather?.temp != null ? `${inputs.weather.temp}°C` : 'unknown';
   const hour    = String(inputs.hour).padStart(2, '0') + ':00';
@@ -1973,13 +2655,18 @@ async function generateMachineThoughts(params, inputs) {
   ].join('\n');
 
   try {
-    const res = await state.ai.models.generateContent({
-      model: GEMINI_MODEL,
-      contents: thoughtPrompt,
-      config: { temperature: 1.3 },
+    const thoughtRes = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: GEMINI_MODEL,
+        contents: thoughtPrompt,
+        config: { temperature: 1.3 },
+      }),
     });
-
-    const text = (res.text || '').trim();
+    if (!thoughtRes.ok) return;
+    const thoughtData = await thoughtRes.json();
+    const text = (thoughtData.text || '').trim();
     if (!text) return;
 
     // Show cursor, then type character by character
@@ -2014,11 +2701,12 @@ async function analyze() {
   window.dispatchEvent(new CustomEvent('atmosfera-analyzing'));
 
   try {
-    setStatus('Reading environment…');
+    setStatus('Ortam okunuyor…');
     const inputs = gatherInputs();
 
-    setStatus('Gemini interpreting the atmosphere…');
-    const params = await askGemini(inputs);
+    setStatus('Gemini atmosferi yorumluyor…');
+    const aiParams = await askGemini(inputs);
+    const params = applyPromptOverrides(aiParams);
 
     renderParams(params);
 
@@ -2034,15 +2722,15 @@ async function analyze() {
       }
 
       await applyParams(params);
-      setStatus(`Live${needsReset ? ' · context reset' : ' · smooth update'} ↺`, 'ok');
+      setStatus(`Canlı${needsReset ? ' · bağlam sıfırlandı' : ' · güncellendi'} ↺`, 'ok');
     } else {
-      setStatus('Analysis ready. Press PLAY to begin.', 'ok');
+      setStatus('Analiz hazır. Başlamak için OYNAT\'a bas.', 'ok');
     }
 
     state.lastParams = params;
   } catch (e) {
     console.error(e);
-    setStatus('Analysis failed: ' + (e?.message || e), 'error');
+    setStatus('Analiz başarısız: ' + (e?.message || e), 'error');
   } finally {
     analyzing = false;
     els.analyze.disabled = false;
@@ -2051,6 +2739,7 @@ async function analyze() {
 
 async function startPlayback() {
   try {
+    await ensureMicFromUserGesture();
     ensureAudioCtx();
 
     if (state.audio.ctx.state === 'suspended') {
@@ -2067,13 +2756,13 @@ async function startPlayback() {
     document.documentElement.classList.add('is-playing');
     window.dispatchEvent(new CustomEvent('atmosfera-playing'));
     els.play.innerHTML = `<span class="dot live" id="dot"></span>${window.i18n ? window.i18n('btn-pause') : 'PAUSE'}`;
-    setStatus('Live — generating from current atmosphere.', 'ok');
+    setStatus('Canlı — mevcut atmosferden üretiliyor.', 'ok');
 
     if (state.reanalyzeTimer) clearInterval(state.reanalyzeTimer);
     state.reanalyzeTimer = setInterval(() => analyze(), REANALYZE_MS);
   } catch (e) {
     console.error(e);
-    setStatus('Playback failed: ' + (e?.message || e), 'error');
+    setStatus('Oynatma başarısız: ' + (e?.message || e), 'error');
   }
 }
 
@@ -2093,55 +2782,59 @@ async function pausePlayback() {
 
   stopAudio();
   els.play.innerHTML = `<span class="dot" id="dot"></span>${window.i18n ? window.i18n('btn-play') : 'PLAY'}`;
-  setStatus('Paused.', '');
+  setStatus('Duraklatıldı.', '');
 }
 
 // ---- Init ----
 async function boot() {
-  els.play.addEventListener('click', () => {
+  els.play.addEventListener('click', async () => {
+    await ensureMicFromUserGesture();
     state.playing ? pausePlayback() : startPlayback();
   });
 
-  els.analyze.addEventListener('click', () => analyze());
+  els.analyze.addEventListener('click', async () => {
+    await ensureMicFromUserGesture();
+    analyze();
+  });
+
+  if (els.promptEdit) {
+    els.promptEdit.addEventListener('click', () => setPromptEditMode(!promptEditMode));
+  }
 
   await initMic();
   await initVision();
 
   if (!state.mic.ok) {
-    setStatus('Microphone denied — using 0 dB fallback.', '');
+    setStatus('Mikrofon izni yok — 0 dB kullanılıyor.', '');
   }
 
-  const ok = await loadKeys();
-
-  if (ok) {
-    finishInit();
-  } else {
-    setStatus('keys.txt okunamadı — aynı klasöre koy ve sayfayı yenile.', 'error');
-  }
+  finishInit();
 }
 
 async function finishInit() {
   try {
-    state.ai = new GoogleGenAI({ apiKey: state.keys.gemini });
-    state.lyriaAi = new GoogleGenAI({ apiKey: state.keys.gemini, apiVersion: 'v1alpha' });
+    const cfgRes = await fetch('/api/config');
+    if (!cfgRes.ok) throw new Error('Yapılandırma alınamadı (/api/config)');
+    const cfg = await cfgRes.json();
+    state.lyriaAi = new GoogleGenAI({ apiKey: cfg.lyriaKey, apiVersion: 'v1alpha' });
 
     els.play.disabled = false;
     els.analyze.disabled = false;
 
-    setStatus('Fetching weather…', 'ok');
+    setStatus('Hava durumu alınıyor…', 'ok');
     await fetchWeather();
 
     if (state.weatherTimer) clearInterval(state.weatherTimer);
     state.weatherTimer = setInterval(fetchWeather, WEATHER_REFRESH_MS);
 
     setStatus(
-      state.mic.ok ? 'Ready. Running first analysis…' : 'Ready (no mic). Running first analysis…',
+      state.mic.ok ? 'Hazır. İlk analiz çalışıyor…' : 'Hazır (mikrofon yok). İlk analiz çalışıyor…',
       'ok'
     );
 
     await analyze();
   } catch (e) {
-    setStatus('Init error: ' + (e?.message || e), 'error');
+    setStatus('Başlatma hatası: ' + (e?.message || e), 'error');
   }
 }
 
@@ -2158,7 +2851,9 @@ setInterval(() => {
 
   if (state.weatherCache.fetchedAt) {
     const mins = Math.floor((Date.now() - state.weatherCache.fetchedAt) / 60000);
-    els.weatherAge.textContent = mins < 1 ? 'just now' : `${mins}m ago`;
+    els.weatherAge.textContent = mins < 1
+      ? (window.i18n ? window.i18n('weather-just-now') : 'just now')
+      : `${mins}${window.i18n ? window.i18n('weather-min-ago') : 'm ago'}`;
   }
 }, 1000);
 
@@ -2170,156 +2865,87 @@ boot();
 (function(){
   'use strict';
 
-  // ── i18n system ───────────────────────────────────────
-  const I18N = {
-    TR: {
-      // Section labels
-      'env-label':          'ORTAM GİRDİSİ',
-      'ai-label':           'GEMİNİ YORUMU',
-      'prompts-label':      'AKTİF LYRİA PROMPTLARI',
-      'params-label':       'ÜRETİM PARAMETRELERİ',
-      // Cell keys
-      'k-noise':            'GÜRÜLTÜ',
-      'k-weather':          'HAVA',
-      'k-temp':             'SICAKLIK',
-      'k-time':             'SAAT',
-      'k-bpm':              'BPM',
-      'k-scale':            'SKALA',
-      'k-density':          'YOĞUNLUK',
-      'k-brightness':       'PARLAKLIK',
-      // Panel titles
-      'panel-manual-title':   'Müzikal Tercih',
-      'panel-thoughts-title': 'MAKİNENİN DÜŞÜNCELERİ',
-      // Preference panel field labels
-      'label-mood':         'Ruh Hali',
-      'label-genre':        'Tür',
-      'label-tempo':        'Tempo',
-      // Mood chips
-      'mood-energetic':     'Enerjik',
-      'mood-melancholic':   'Hüzünlü',
-      'mood-romantic':      'Romantik',
-      'mood-focused':       'Odaklı',
-      'mood-calm':          'Sakin',
-      'mood-euphoric':      'Coşkulu',
-      // Tempo buttons
-      'tempo-slow':         'Yavaş',
-      'tempo-medium':       'Orta',
-      'tempo-fast':         'Hızlı',
-      // Genre dropdown first option
-      'genre-any':          'Herhangi',
-      // Buttons
-      'btn-apply':          'Uygula',
-      'btn-clear':          'Temizle',
-      'btn-play':           'OYNAT',
-      'btn-pause':          'DURAKLAT',
-      'btn-reanalyze':      'YENİDEN ANALİZ ET',
-    },
-    EN: {
-      // Section labels
-      'env-label':          'ENVIRONMENT INPUT',
-      'ai-label':           'GEMINI INTERPRETATION',
-      'prompts-label':      'ACTIVE LYRIA PROMPTS',
-      'params-label':       'GENERATION PARAMETERS',
-      // Cell keys
-      'k-noise':            'NOISE',
-      'k-weather':          'WEATHER',
-      'k-temp':             'TEMP',
-      'k-time':             'TIME',
-      'k-bpm':              'BPM',
-      'k-scale':            'SCALE',
-      'k-density':          'DENSITY',
-      'k-brightness':       'BRIGHTNESS',
-      // Panel titles
-      'panel-manual-title':   'Music Preference',
-      'panel-thoughts-title': 'MACHINE THOUGHTS',
-      // Preference panel field labels
-      'label-mood':         'Mood',
-      'label-genre':        'Genre',
-      'label-tempo':        'Tempo',
-      // Mood chips
-      'mood-energetic':     'Energetic',
-      'mood-melancholic':   'Melancholic',
-      'mood-romantic':      'Romantic',
-      'mood-focused':       'Focused',
-      'mood-calm':          'Calm',
-      'mood-euphoric':      'Euphoric',
-      // Tempo buttons
-      'tempo-slow':         'Slow',
-      'tempo-medium':       'Medium',
-      'tempo-fast':         'Fast',
-      // Genre dropdown first option
-      'genre-any':          'Any',
-      // Buttons
-      'btn-apply':          'Apply',
-      'btn-clear':          'Clear',
-      'btn-play':           'PLAY',
-      'btn-pause':          'PAUSE',
-      'btn-reanalyze':      'RE-ANALYZE',
-    },
+  // ── i18n system (sabit Türkçe) ───────────────────────
+  const I18N_TR = {
+    'app-subtitle':        'OTONOM DJ AJANI',
+    'env-label':           'ORTAM GİRDİSİ',
+    'ai-label':            'GEMİNİ YORUMU',
+    'prompts-label':       'AKTİF LYRİA PROMPTLARI',
+    'params-label':        'ÜRETİM PARAMETRELERİ',
+    'k-noise':             'GÜRÜLTÜ',
+    'k-weather':           'HAVA',
+    'k-temp':              'SICAKLIK',
+    'k-time':              'SAAT',
+    'k-motion':            'HAREKET',
+    'k-bpm':               'BPM',
+    'k-scale':             'GAM',
+    'k-density':           'YOĞUNLUK',
+    'k-brightness':        'PARLAKLIK',
+    'panel-manual-title':  'Müzikal Tercih',
+    'panel-thoughts-title':'MAKİNENİN HİSLERİ',
+    'label-mood':          'Ruh Hali',
+    'label-genre':         'Tür',
+    'label-tempo':         'Tempo',
+    'mood-energetic':      'Enerjik',
+    'mood-melancholic':    'Hüzünlü',
+    'mood-romantic':       'Romantik',
+    'mood-focused':        'Odaklı',
+    'mood-calm':           'Sakin',
+    'mood-euphoric':       'Coşkulu',
+    'tempo-slow':          'Yavaş',
+    'tempo-medium':        'Orta',
+    'tempo-fast':          'Hızlı',
+    'genre-any':           'Herhangi',
+    'btn-apply':           'Uygula',
+    'btn-clear':           'Temizle',
+    'btn-play':            'OYNAT',
+    'btn-pause':           'DURAKLAT',
+    'btn-reanalyze':       'YENİDEN ANALİZ ET',
+    'btn-snapshot':        'HİSSİ KAYDET',
+    'btn-change':          'DEĞİŞTİR',
+    'btn-close':           'KAPAT',
+    'prompt-weight':       'Prompt ağırlığı',
+    'weather-just-now':    'şimdi',
+    'weather-min-ago':     ' dk önce',
+    'snapshot-saved':      'Görsel hissiyle kaydedildi.',
+    'thoughts-empty':      'Makinenin hisleri henüz oluşmadı.',
+    'reasoning-empty':     'Analiz bekleniyor…',
   };
 
-  // Expose global i18n helper — used by module script too
-  window.i18n = function(key) {
-    const lang = window.atmosferaLang || 'TR';
-    return (I18N[lang] || I18N.TR)[key] || key;
-  };
+  window.atmosferaLang = 'TR';
+  window.i18n = key => I18N_TR[key] || key;
 
-  function applyLang(lang) {
-    window.atmosferaLang = lang;
-    localStorage.setItem('atmosfera-lang', lang);
-    const t = I18N[lang] || I18N.TR;
-
-    // Update all static data-i18n elements
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (t[key] !== undefined) el.textContent = t[key];
-    });
-
-    // Play button — preserve the dot span inside it
-    const playBtn = document.getElementById('btn-play');
-    if (playBtn) {
-      const dotEl = playBtn.querySelector('.dot');
-      const isLive = dotEl && dotEl.classList.contains('live');
-      const dotClass = isLive ? 'dot live' : 'dot';
-      const btnText = isLive ? t['btn-pause'] : t['btn-play'];
-      playBtn.innerHTML = `<span class="${dotClass}" id="dot"></span>${btnText}`;
+  // Tüm data-i18n elementlerini Türkçe yap
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N_TR[key]) el.textContent = I18N_TR[key];
+  });
+  document.querySelectorAll('[data-i18n-empty]').forEach(el => {
+    if (el.classList.contains('empty')) {
+      const key = el.getAttribute('data-i18n-empty');
+      if (I18N_TR[key]) el.textContent = I18N_TR[key];
     }
-
-    // Update lang toggle button label and html lang attribute
-    const langBtn = document.getElementById('btn-lang');
-    if (langBtn) langBtn.textContent = lang;
-    document.documentElement.lang = lang === 'TR' ? 'tr' : 'en';
-  }
-
-  // Restore saved language (default: TR)
-  const savedLang = localStorage.getItem('atmosfera-lang');
-  applyLang(savedLang === 'EN' ? 'EN' : 'TR');
-
-  // Lang toggle button
-  const langButton = document.getElementById('btn-lang');
-  if (langButton) {
-    langButton.addEventListener('click', () => {
-      applyLang(window.atmosferaLang === 'TR' ? 'EN' : 'TR');
-    });
-  }
-
+  });
+  document.documentElement.lang = 'tr';
   // ── end i18n ──────────────────────────────────────────
 
   const root = document.documentElement;
   const themeButton = document.getElementById('btn-theme');
   const snapshotButton = document.getElementById('btn-snapshot');
   const snapshotModal = document.getElementById('snapshot-modal');
-  const snapshotNote = document.getElementById('snapshot-note');
-  const snapshotCancel = document.getElementById('btn-snapshot-cancel');
-  const snapshotSave = document.getElementById('btn-snapshot-save');
+  const snapshotNote = null;
+  const snapshotCancel = null;
+  const snapshotSave = null;
   const snapshotSaved = document.getElementById('snapshot-saved');
   const canvas = document.getElementById('particle-canvas');
   const ctx = canvas.getContext('2d');
 
   const mouse = { x: null, y: null, radius: 140 };
   let particles = [];
-  let particleCount = 130;
-  const maxLinkDistance = 110;
+  let particleCount = 118;
+  const maxLinkDistance = 104;
+  const maxParticles = 220;
+  let lastSpawnTime = 0;
 
   function getTheme() {
     return root.getAttribute('data-theme') || 'light';
@@ -2328,7 +2954,7 @@ boot();
   function themeColors() {
     return getTheme() === 'dark'
       ? { bg: '#050505', dot: '#C9A84C', line: '201, 168, 76', info: 'DARK MODE' }
-      : { bg: '#f6f4f0', dot: '#111111', line: '0, 0, 0', info: 'LIGHT MODE' };
+      : { bg: '#f6f4f0', dot: '#8A6A21', line: '138, 106, 33', info: 'LIGHT MODE' };
   }
 
   function currentBpm() {
@@ -2352,7 +2978,12 @@ boot();
     root.setAttribute('data-theme', nextTheme);
     localStorage.setItem('atmosfera-theme', nextTheme);
     if (themeButton) {
-      themeButton.textContent = nextTheme === 'dark' ? 'LIGHT MODE' : 'DARK MODE';
+      const lang = window.atmosferaLang || 'TR';
+      if (lang === 'TR') {
+        themeButton.textContent = nextTheme === 'dark' ? 'AYDINLIK MOD' : 'KOYU MOD';
+      } else {
+        themeButton.textContent = nextTheme === 'dark' ? 'LIGHT MODE' : 'DARK MODE';
+      }
       themeButton.setAttribute('aria-label', nextTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
     }
   }
@@ -2376,21 +3007,35 @@ boot();
     ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 
     const area = window.innerWidth * window.innerHeight;
-    particleCount = Math.max(70, Math.min(180, Math.floor(area / 9000)));
+    particleCount = Math.max(80, Math.min(150, Math.floor(area / 9000)));
     createParticles();
+  }
+
+  function makeParticle(x = Math.random() * window.innerWidth, y = Math.random() * window.innerHeight, burst = 1) {
+    return {
+      x,
+      y,
+      vx: randomBetween(-0.55, 0.55) * burst,
+      vy: randomBetween(-0.55, 0.55) * burst,
+      size: randomBetween(1.15, 2.45),
+      hit: 0,
+    };
   }
 
   function createParticles() {
     particles = [];
     for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: randomBetween(-0.45, 0.45),
-        vy: randomBetween(-0.45, 0.45),
-        size: randomBetween(1.2, 2.2)
-      });
+      particles.push(makeParticle());
     }
+  }
+
+  function spawnParticle(x, y, burst = 1.6) {
+    if (particles.length >= maxParticles) return;
+    particles.push(makeParticle(
+      x + randomBetween(-8, 8),
+      y + randomBetween(-8, 8),
+      burst
+    ));
   }
 
   function drawParticle(p) {
@@ -2399,7 +3044,10 @@ boot();
     ctx.beginPath();
     ctx.arc(p.x, p.y, pulseSize, 0, Math.PI * 2);
     ctx.fillStyle = colors.dot;
+    ctx.shadowColor = colors.dot;
+    ctx.shadowBlur = p.hit > 0 ? 10 : 0;
     ctx.fill();
+    ctx.shadowBlur = 0;
   }
 
   function drawLink(a, b, alpha) {
@@ -2431,6 +3079,7 @@ boot();
 
     p.vx *= 0.992;
     p.vy *= 0.992;
+    p.hit *= 0.92;
 
     if (Math.abs(p.vx) < 0.08) p.vx += randomBetween(-0.03, 0.03);
     if (Math.abs(p.vy) < 0.08) p.vy += randomBetween(-0.03, 0.03);
@@ -2460,7 +3109,15 @@ boot();
 
         if (dist < maxLinkDistance) {
           const alpha = 1 - dist / maxLinkDistance;
-          drawLink(a, b, alpha * (0.28 + bpmFactor() * 0.14));
+          drawLink(a, b, alpha * (0.30 + bpmFactor() * 0.16));
+        }
+
+        if (dist < 7 && particles.length < maxParticles && performance.now() - lastSpawnTime > Math.max(40, 120 - currentBpm() * 0.35)) {
+          lastSpawnTime = performance.now();
+          a.hit = b.hit = 1;
+          a.vx *= -1.08; b.vx *= -1.08;
+          a.vy *= -1.08; b.vy *= -1.08;
+          spawnParticle((a.x + b.x) / 2, (a.y + b.y) / 2, 1.8 + bpmFactor() * 0.35);
         }
       }
     }
@@ -2504,7 +3161,9 @@ boot();
   function saveParticleSnapshot() {
     if (!canvas) return;
 
-    const note = snapshotNote?.value?.trim() || 'untitled atmosphere';
+    const note = document.getElementById('thoughts-text')?.textContent?.trim()
+      || document.getElementById('reasoning')?.textContent?.trim()
+      || (window.i18n ? window.i18n('thoughts-empty') : 'Makinenin düşünceleri henüz oluşmadı.');
     const colors = themeColors();
     const out = document.createElement('canvas');
     const outCtx = out.getContext('2d');
@@ -2519,40 +3178,37 @@ boot();
     outCtx.fillRect(0, 0, w, h);
     outCtx.drawImage(canvas, 0, 0, w, h);
 
-    const panelH = Math.min(190, Math.max(128, h * 0.22));
-    const panelY = h - panelH;
     const dark = getTheme() === 'dark';
-
-    const grd = outCtx.createLinearGradient(0, panelY, 0, h);
-    grd.addColorStop(0, dark ? 'rgba(5,5,5,0)' : 'rgba(246,244,240,0)');
-    grd.addColorStop(0.32, dark ? 'rgba(5,5,5,0.78)' : 'rgba(246,244,240,0.82)');
-    grd.addColorStop(1, dark ? 'rgba(5,5,5,0.94)' : 'rgba(246,244,240,0.96)');
-    outCtx.fillStyle = grd;
-    outCtx.fillRect(0, panelY, w, panelH);
-
-    const titleColor = dark ? '#C9A84C' : '#9A6200';
-    const textColor = dark ? '#F4F0E4' : '#1a1a2e';
-    const subColor = dark ? '#9E9786' : '#5a5a72';
-    const maxTextWidth = Math.min(760, w - 48);
+    const textColor = dark ? '#E6D3AA' : '#8A6650';
+    const shadowColor = dark ? 'rgba(0,0,0,0.72)' : 'rgba(255,252,246,0.90)';
+    const maxTextWidth = Math.min(880, w - 76);
     const centerX = w / 2;
+    const centerY = h / 2;
 
     outCtx.textAlign = 'center';
-    outCtx.fillStyle = titleColor;
-    outCtx.font = '700 12px Space Grotesk, Arial, sans-serif';
-    outCtx.letterSpacing = '3px';
-    outCtx.fillText('ATMOSFERA · NIGHT MAP', centerX, panelY + 34);
+    outCtx.textBaseline = 'middle';
+
+    const fontSize = Math.max(24, Math.min(34, Math.round(w / 46)));
+    outCtx.font = `600 ${fontSize}px Playfair Display, Georgia, serif`;
+
+    const lines = wrapText(outCtx, note, maxTextWidth).slice(0, 7);
+    const lineHeight = Math.round(fontSize * 1.38);
+    const blockH = lines.length * lineHeight;
+    const startY = centerY - blockH / 2 + lineHeight / 2;
+
+    // Soft readability only: no frame, no title.
+    outCtx.shadowColor = shadowColor;
+    outCtx.shadowBlur = 18;
+    outCtx.shadowOffsetX = 0;
+    outCtx.shadowOffsetY = 2;
 
     outCtx.fillStyle = textColor;
-    outCtx.font = '600 22px Outfit, Arial, sans-serif';
-    const lines = wrapText(outCtx, note, maxTextWidth);
     lines.forEach((line, i) => {
-      outCtx.fillText(line, centerX, panelY + 72 + i * 28);
+      outCtx.fillText(line, centerX, startY + i * lineHeight);
     });
 
-    outCtx.fillStyle = subColor;
-    outCtx.font = '500 11px Space Grotesk, Arial, sans-serif';
-    const metaY = Math.min(h - 24, panelY + 86 + lines.length * 28);
-    outCtx.fillText(currentAtmosphereLabel(), centerX, metaY);
+    outCtx.shadowBlur = 0;
+    outCtx.shadowOffsetY = 0;
 
     const link = document.createElement('a');
     const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
@@ -2562,11 +3218,11 @@ boot();
     link.click();
     link.remove();
 
-    if (snapshotSaved) snapshotSaved.textContent = 'Image saved.';
-    setTimeout(closeSnapshotModal, 650);
+    if (snapshotSaved) snapshotSaved.textContent = window.i18n ? window.i18n('snapshot-saved') : 'Görsel kaydedildi.';
+    
   }
 
-  if (snapshotButton) snapshotButton.addEventListener('click', openSnapshotModal);
+  if (snapshotButton) snapshotButton.addEventListener('click', saveParticleSnapshot);
   if (snapshotCancel) snapshotCancel.addEventListener('click', closeSnapshotModal);
   if (snapshotSave) snapshotSave.addEventListener('click', saveParticleSnapshot);
   if (snapshotModal) {
@@ -2586,6 +3242,14 @@ boot();
     mouse.y = e.clientY;
   });
 
+  window.addEventListener('click', (e) => {
+    if (e.target.closest('button, input, textarea, select, summary, details, .snapshot-modal')) return;
+    const burstCount = Math.min(14, Math.max(5, Math.round(currentBpm() / 18)));
+    for (let i = 0; i < burstCount; i++) {
+      spawnParticle(e.clientX, e.clientY, 2.1 + bpmFactor() * 0.45);
+    }
+  });
+
   window.addEventListener('mouseleave', () => {
     mouse.x = null;
     mouse.y = null;
@@ -2593,60 +3257,91 @@ boot();
 
   window.addEventListener('resize', resizeCanvas);
 
-  // ── CHARACTER CONTROLLER ───────────────────────────────
+  // ── CHARACTER CONTROLLER (VESPER + SERAPH SVG Robots) ──
   (function initCharacters() {
-    const maleWrap     = document.getElementById('char-male-wrap');
-    const femaleWrap   = document.getElementById('char-female-wrap');
-    const maleFig      = document.getElementById('char-male');
-    const femaleFig    = document.getElementById('char-female');
+    const maleWrap     = document.getElementById('stage-vesper-wrap');
+    const femaleWrap   = document.getElementById('stage-seraph-wrap');
+    const maleFig      = document.getElementById('char-body-male');
+    const femaleFig    = document.getElementById('char-body-female');
     const maleBubble   = document.getElementById('male-bubble');
     const femaleBubble = document.getElementById('female-bubble');
     const orbEl        = document.getElementById('char-orb');
+    const vesperOrb    = document.getElementById('vesper-svg-orb');
     if (!maleWrap || !femaleWrap || !maleFig || !femaleFig) return;
 
-    let charState  = 'idle';   // idle | analyzing | walking | receiving | returning | dancing
-    let walkTimer  = null;
+    let charState = 'idle';
+    let walkTimer = null;
+    let stateTimers = [];
 
     // Speed helpers — all BPM-reactive
     function bpm()      { return Math.max(60, Math.min(200, window.atmosferaParams?.bpm || 100)); }
-    function stepDur()  { return Math.max(0.24, 0.62 - ((bpm() - 60) / 140) * 0.30); } // step cycle seconds
-    function walkDur()  { return Math.max(1.2,  3.8  - ((bpm() - 60) / 140) * 2.1);  } // full journey seconds
+    function stepDur()  { return Math.max(0.24, 0.62 - ((bpm() - 60) / 140) * 0.30); }
+    function walkDur()  { return Math.max(1.2,  3.8  - ((bpm() - 60) / 140) * 2.1);  }
     function swayDur()  { return Math.max(0.55, 2.6  - ((bpm() - 60) / 140) * 1.5);  }
     function danceDur() { return Math.max(0.32, stepDur() * 2); }
 
-    // Hand-drawn SVG bubble symbols — gold #C9A84C, no emoji
-    const SYM = {
-      // three dots — thinking / processing
-      think: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 14" width="36" height="14"><circle cx="5" cy="7" r="3.5" fill="#C9A84C"/><circle cx="18" cy="7" r="3.5" fill="#C9A84C"/><circle cx="31" cy="7" r="3.5" fill="#C9A84C"/></svg>`,
-      // heart outline — delivering / offering
-      deliver: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 22" width="24" height="22"><path d="M12 20 C6 16 2 12 2 8 C2 4 5 2 8 2 C10 2 12 4 12 4 C12 4 14 2 16 2 C19 2 22 4 22 8 C22 12 18 16 12 20 Z" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
-      // 5-point star — complete / done
-      star: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 2 L13.2 9.5 L21 8 L15 13 L17.5 21 L12 16.5 L6.5 21 L9 13 L3 8 L10.8 9.5 Z" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
-      // double music note — music playing
-      note: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 26" width="22" height="26"><path d="M8 20 V5 L20 3 V18" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="20" r="3" fill="none" stroke="#C9A84C" stroke-width="1.8"/><circle cx="18" cy="18" r="3" fill="none" stroke="#C9A84C" stroke-width="1.8"/></svg>`,
-      // ascending ZZZ — waiting / sleeping
-      zzz: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 22" width="34" height="22"><path d="M2 4 H8 L2 10 H8" fill="none" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/><path d="M12 7 H19 L12 15 H19" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.78"/><path d="M23 9 H32 L23 19 H32" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      // 4-point sparkle — celebration / received
-      sparkle: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 2 L13 10 L21 12 L13 14 L12 22 L11 14 L3 12 L11 10 Z" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5" cy="5" r="1.2" fill="#C9A84C"/><circle cx="19" cy="5" r="1.2" fill="#C9A84C"/></svg>`,
+    // ── Icon SVGs (from ATMOSFERA Icon Set) ──────────────────────────
+    const BICONS = {
+      mic:    `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="13" y="5" width="6" height="13" rx="3"></rect><path d="M10 14a6 6 0 0 0 12 0"></path><line x1="16" y1="20" x2="16" y2="25"></line><line x1="12" y1="25" x2="20" y2="25"></line></svg>`,
+      cloud:  `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22a4.5 4.5 0 0 1 .6-9 6 6 0 0 1 11.5 1.2A4 4 0 0 1 22 22Z"></path></svg>`,
+      thermo: `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6a2 2 0 0 1 4 0v11a4 4 0 1 1-4 0Z"></path><line x1="16" y1="11" x2="16" y2="20"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="13" x2="22" y2="13"></line></svg>`,
+      pin:    `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 27c4-5 7-8.5 7-12a7 7 0 1 0-14 0c0 3.5 3 7 7 12Z"></path><circle cx="16" cy="15" r="2.6"></circle></svg>`,
+      clock:  `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="10"></circle><line x1="16" y1="16" x2="16" y2="10"></line><line class="etick" x1="16" y1="16" x2="20.5" y2="18.5"></line></svg>`,
+      neural: `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7v18"></path><path d="M16 9a4 4 0 0 0-6 3 3.5 3.5 0 0 0-1 5 3.5 3.5 0 0 0 2 4 3 3 0 0 0 5 1"></path><path d="M16 9a4 4 0 0 1 6 3 3.5 3.5 0 0 1 1 5 3.5 3.5 0 0 1-2 4 3 3 0 0 1-5 1"></path><circle cx="11" cy="13" r="1.1" class="eblip" fill="#C9A84C" stroke="none"></circle><circle cx="21" cy="18" r="1.1" class="eblip" fill="#C9A84C" stroke="none" style="animation-delay:.6s"></circle><circle cx="13" cy="21" r="1.1" class="eblip" fill="#C9A84C" stroke="none" style="animation-delay:1s"></circle></svg>`,
+      gear:   `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><g class="espin"><circle cx="16" cy="16" r="3.4"></circle><path d="M16 6v3 M16 23v3 M6 16h3 M23 16h3 M9 9l2 2 M21 21l2 2 M23 9l-2 2 M11 21l-2 2"></path><circle cx="16" cy="16" r="8.2" stroke-dasharray="1.4 4.2"></circle></g></svg>`,
+      note:   `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 23V9l9-2v12"></path><circle cx="11" cy="23" r="2.2"></circle><circle cx="20" cy="19" r="2.2"></circle></svg>`,
+      signal: `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line class="ew1" x1="7" y1="14" x2="7" y2="18"></line><line class="ew2" x1="11" y1="11" x2="11" y2="21"></line><line class="ew3" x1="16" y1="7" x2="16" y2="25"></line><line class="ew2" x1="21" y1="11" x2="21" y2="21"></line><line class="ew1" x1="25" y1="14" x2="25" y2="18"></line></svg>`,
+      dance:  `<svg viewBox="0 0 32 32" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><g class="ebob"><path d="M14 22V8l8-2"></path><path d="M14 12l8-2"></path><circle cx="12" cy="22" r="2.2"></circle><circle cx="22" cy="19" r="2.2"></circle></g></svg>`,
     };
 
     // Emotion bubbles
-    function bubble(el, sym, hideAfterMs) {
+    function bubble(el, icon, hideAfterMs) {
       if (!el) return;
-      el.innerHTML = SYM[sym] || '';
+      el.innerHTML = BICONS[icon] || BICONS.note;
       el.classList.add('show');
       if (hideAfterMs > 0) setTimeout(() => el.classList.remove('show'), hideAfterMs);
     }
     function hideBubble(el) { el?.classList.remove('show'); }
 
-    // Figure class helpers — clear all states then add requested
+    // Figure class helpers — char-body div'ine animasyon sınıfları uygulanır
     function setMaleCls(...add) {
-      maleFig.classList.remove('char-idle', 'char-walking', 'char-bounce');
+      maleFig.classList.remove(
+        'char-idle','char-walking','char-bounce','char-dance-male','char-thinking','char-sway'
+      );
       if (add.length) maleFig.classList.add(...add);
     }
     function setFemaleCls(...add) {
-      femaleFig.classList.remove('char-idle', 'char-sway', 'char-dance', 'char-arms-open');
+      femaleFig.classList.remove(
+        'char-idle','char-sway','char-dance','char-arms-open','char-thinking','char-walking','char-bounce'
+      );
       if (add.length) femaleFig.classList.add(...add);
+    }
+
+    // Fly orb (DOM-based, multiple simultaneous)
+    function flyOrb(sx, sy, ex, ey, color, durSec) {
+      const orb = document.createElement('div');
+      orb.className = 'fly-orb';
+      orb.style.background = `radial-gradient(circle at 38% 35%, #fffbe8, ${color} 58%, #5a3800)`;
+      orb.style.boxShadow = `0 0 10px 3px ${color}cc, 0 0 22px 7px ${color}55`;
+      orb.style.setProperty('--orb-dur', durSec + 's');
+      orb.style.left = sx + 'px';
+      orb.style.top  = sy + 'px';
+      orb.style.opacity = '1';
+      document.body.appendChild(orb);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        orb.style.left = ex + 'px';
+        orb.style.top  = ey + 'px';
+      }));
+      setTimeout(() => {
+        orb.style.opacity = '0';
+        setTimeout(() => orb.remove(), 280);
+      }, durSec * 1000 - 80);
+    }
+
+    // clearTimers helper
+    function clearTimers() {
+      stateTimers.forEach(t => clearTimeout(t));
+      stateTimers = [];
     }
 
     // Orb helpers
@@ -2676,177 +3371,304 @@ boot();
     // ── State handlers ──────────────────────────────────
     function goIdle() {
       charState = 'idle';
+      clearTimers();
       if (walkTimer) { clearTimeout(walkTimer); walkTimer = null; }
-      maleWrap.style.transform = 'translateX(0)';
+      maleWrap.style.setProperty('--char-walk-dur', '0.001s');
+      femaleWrap.style.setProperty('--char-walk-dur', '0.001s');
+      maleWrap.style.transform   = 'translateX(0) translateY(0)';
+      femaleWrap.style.transform = 'translateX(0) translateY(0)';
+      maleFig.classList.remove('facing-left');
+      femaleFig.classList.remove('facing-left');
       setMaleCls('char-idle');
       setFemaleCls('char-idle');
       hideBubble(maleBubble);
       hideBubble(femaleBubble);
       orbHide();
+      if (vesperOrb) vesperOrb.style.opacity = '0';
+      // Reveal any hidden cells
+      document.querySelectorAll('.cell-data-hidden').forEach(el => el.classList.remove('cell-data-hidden'));
     }
 
     function onAnalyzing() {
-      // Don't interrupt a delivery in progress
+      // Sadece veri teslimi sırasında kesme yapılmaz; dans/idle anında analiz başlayabilir
       if (charState === 'walking' || charState === 'receiving' || charState === 'returning') return;
       charState = 'analyzing';
-      setMaleCls('char-idle');
-      bubble(maleBubble, 'think', 0);
+      setMaleCls('char-bounce');     // VESPER zıplar
+      setFemaleCls('char-thinking'); // SERAPH sallanır
+      bubble(maleBubble, 'neural', 0);
+      bubble(femaleBubble, 'cloud', 0);
+      // Icon döngüsü (analiz süresince)
+      const aIcons = ['neural','clock','gear','signal','note'];
+      let ai = 0;
+      function cycleAnalyze() {
+        if (charState !== 'analyzing') return;
+        ai++;
+        bubble(maleBubble, aIcons[ai % aIcons.length], 0);
+        setTimeout(cycleAnalyze, 900);
+      }
+      setTimeout(cycleAnalyze, 900);
     }
 
     function onParamsUpdated() {
       if (charState === 'walking' || charState === 'receiving' || charState === 'returning') return;
-      if (window.innerWidth < 1100) return;   // panels not fixed on narrow screens
+      if (window.innerWidth < 1100) return;
       if (walkTimer) clearTimeout(walkTimer);
 
       charState = 'walking';
+
+      // Hücreleri hemen gizle
+      ['reasoning','prompts','p-bpm','p-scale','p-density','p-bright'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('cell-data-hidden');
+      });
 
       const sd = stepDur();
       const wd = walkDur();
       const dd = danceDur();
 
-      // Set CSS speed vars before transition starts
       maleWrap.style.setProperty('--char-walk-dur', wd + 's');
       maleFig.style.setProperty('--step-dur', sd + 's');
 
-      // Snapshot character positions BEFORE applying transform
       const mR = maleWrap.getBoundingClientRect();
       const fR = femaleWrap.getBoundingClientRect();
+      const MALE_CX     = mR.left + mR.width  / 2;
+      const FEMALE_CX   = fR.left + fR.width  / 2;
+      const MALE_HAND_Y   = mR.top + mR.height * 0.42;
+      const FEMALE_HAND_Y = fR.top + fR.height * 0.42;
 
-      // Walk distance: stop ~58px in front of female centre
-      const dist = (fR.left - mR.left) - 58;
+      // Ortam hücreleri
+      const envPickups = [
+        { id: 'in-noise',    icon: 'mic',    color: '#C9A84C' },
+        { id: 'in-weather',  icon: 'cloud',  color: '#5B9BD5' },
+        { id: 'in-temp',     icon: 'thermo', color: '#E07050' },
+        { id: 'in-time',     icon: 'clock',  color: '#9B7BE8' },
+        { id: 'in-movement', icon: 'pin',    color: '#7BCBA4' },
+      ];
 
-      // Orb: start at male right-hand area, end at female left-hand area
-      const orbSX = mR.right - 5;
-      const orbSY = mR.top + mR.height * 0.52;
-      const orbEX = fR.left + 12;
-      const orbEY = fR.top  + fR.height * 0.50;
+      // walkMaleTo helper
+      function walkMaleTo(toCX, dur, facing, toHandY, cb) {
+        if (charState !== 'walking' && charState !== 'receiving' && charState !== 'returning') { if(cb) cb(); return; }
+        if (facing === 'left') maleFig.classList.add('facing-left');
+        else maleFig.classList.remove('facing-left');
+        const tx = toCX - MALE_CX;
+        const ty = toHandY != null ? (toHandY - MALE_HAND_Y) : 0;
+        maleWrap.style.setProperty('--char-walk-dur', dur + 's');
+        maleFig.style.setProperty('--step-dur', stepDur() + 's');
+        setMaleCls('char-walking');
+        maleWrap.style.transform = `translateX(${tx}px) translateY(${ty}px)`;
+        const t = setTimeout(() => {
+          setMaleCls('char-idle');
+          if (cb) cb();
+        }, dur * 1000 + 60);
+        stateTimers.push(t);
+      }
 
-      // Kick off figures and walk transform
-      setMaleCls('char-walking');
-      setFemaleCls('char-idle');
-      bubble(maleBubble, 'deliver', 0);
-      bubble(femaleBubble, 'note', 0);
-      maleWrap.style.transform = `translateX(${dist}px)`;
+      // walkFemaleTo helper
+      function walkFemaleTo(toCX, dur, facing, toHandY, cb) {
+        if (facing === 'left') femaleFig.classList.add('facing-left');
+        else femaleFig.classList.remove('facing-left');
+        const tx = toCX - FEMALE_CX;
+        const ty = toHandY != null ? (toHandY - FEMALE_HAND_Y) : 0;
+        femaleWrap.style.setProperty('--char-walk-dur', dur + 's');
+        femaleFig.style.setProperty('--step-dur', stepDur() + 's');
+        setFemaleCls('char-walking');
+        femaleWrap.style.transform = `translateX(${tx}px) translateY(${ty}px)`;
+        const t = setTimeout(() => {
+          setFemaleCls('char-idle');
+          if (cb) cb();
+        }, dur * 1000 + 60);
+        stateTimers.push(t);
+      }
 
-      // Place orb at male hand instantly, then transition it across
-      if (orbEl) {
-        orbEl.style.transition = 'none';
-        orbEl.style.left    = orbSX + 'px';
-        orbEl.style.top     = orbSY + 'px';
-        orbEl.style.opacity = '1';
-        orbEl.classList.remove('orb-bursting');
-        requestAnimationFrame(() => {
-          orbEl.style.transition =
-            `opacity 0.3s, left ${wd}s cubic-bezier(0.42,0,0.38,1), top 0.4s ease`;
-          orbEl.style.left = orbEX + 'px';
-          orbEl.style.top  = orbEY + 'px';
+      // FAZ 1: VESPER ortam hücrelerine teker teker gider
+      bubble(maleBubble, 'gear', 0);
+      setMaleCls('char-idle');
+
+
+      function malePickup(idx, done) {
+        if (idx >= envPickups.length) { done(); return; }
+        const pick   = envPickups[idx];
+        const cellEl = document.getElementById(pick.id);
+        if (!cellEl) { malePickup(idx + 1, done); return; }
+
+        const targetEl = cellEl.closest('.cell') || cellEl;
+        const cR = targetEl.getBoundingClientRect();
+
+        const toCX = cR.left + cR.width * 0.65;
+
+        walkMaleTo(toCX, 0.75, 'left', cR.top + cR.height / 2, () => {
+          setMaleCls('char-bounce');
+          bubble(maleBubble, pick.icon, 0);
+          const mRN = maleWrap.getBoundingClientRect();
+          // Orb: hücrenin SOL iç kısmından fırlar → karakterin sol eline gider (facing-left)
+          const vR = cellEl.getBoundingClientRect();
+          flyOrb(
+            vR.left + 8,                          // hücre içi sol
+            vR.top + vR.height * 0.5,             // hücre dikey merkezi
+            mRN.left + mRN.width * 0.35,          // karakterin sola bakan eli
+            mRN.top + mRN.height * 0.60,
+            pick.color, 0.42
+          );
+          const t = setTimeout(() => {
+            setMaleCls('char-idle');
+            const t2 = setTimeout(() => malePickup(idx + 1, done), 80);
+            stateTimers.push(t2);
+          }, 460);
+          stateTimers.push(t);
         });
       }
 
-      // ── After walk: delivery scene ─────────────────────
-      walkTimer = setTimeout(() => {
-        if (charState !== 'walking') return;
-        charState = 'receiving';
+      malePickup(0, () => {
+        // Verileri teslim edeceği için VESPER'ın SVG orbu görünür olur
+        if (vesperOrb) vesperOrb.style.opacity = '1';
+        bubble(maleBubble, 'signal', 0);
+        const handoffCX = FEMALE_CX - 80;
+        walkMaleTo(handoffCX, 1.6, 'right', null, () => {
+          setMaleCls('char-bounce');
+          bubble(maleBubble, 'gear', 0);
+          // Orb teslim edildi — SVG orbu gizle
+          if (vesperOrb) vesperOrb.style.opacity = '0';
 
-        setMaleCls('char-idle');
-        bubble(maleBubble, 'star', 3600);
+          const mRN2 = maleWrap.getBoundingClientRect();
+          const hX2  = mRN2.right - 4;
+          const hY2  = mRN2.top + mRN2.height * 0.45;
+          const fRN  = femaleWrap.getBoundingClientRect();
+          const fX   = fRN.left + 10;
+          const fY   = fRN.top + fRN.height * 0.42;
 
-        // Female opens arms to catch
-        femaleFig.classList.add('char-arms-open');
-        bubble(femaleBubble, 'sparkle', 4000);
+          envPickups.forEach((pick, i) => {
+            const t = setTimeout(() => flyOrb(hX2, hY2, fX, fY, pick.color, 0.32), i * 110);
+            stateTimers.push(t);
+          });
 
-        // Orb bursts at female
-        setTimeout(orbBurst, 300);
+          const t1 = setTimeout(() => {
+            charState = 'receiving';
+            setFemaleCls('char-arms-open');
+            bubble(femaleBubble, 'dance', 0);
 
-        // Start dance + male walks home
-        setTimeout(() => {
-          if (charState !== 'receiving') return;
-          charState = 'returning';
+            const t2 = setTimeout(() => {
+              setMaleCls('char-idle');
+              setFemaleCls('char-idle');
+              bubble(maleBubble, 'neural', 1600);
 
-          femaleFig.classList.remove('char-arms-open');
-          femaleFig.style.setProperty('--dance-dur', dd + 's');
-          setFemaleCls('char-dance');
+              // FAZ 2: SERAPH kutucuklara teker teker gider
+              const deliveries = [
+                { id: 'reasoning', icon: 'note',   color: '#C9A84C' },
+                { id: 'prompts',   icon: 'dance',  color: '#7BCBA4' },
+                { id: 'p-bpm',     icon: 'signal', color: '#5B9BD5' },
+                { id: 'p-scale',   icon: 'note',   color: '#E07050' },
+                { id: 'p-density', icon: 'cloud',  color: '#9B7BE8' },
+                { id: 'p-bright',  icon: 'gear',   color: '#F0C84C' },
+              ];
 
-          // Male returns home
-          const rd = wd * 0.82;
-          maleWrap.style.setProperty('--char-walk-dur', rd + 's');
-          setMaleCls('char-walking');
-          maleWrap.style.transform = 'translateX(0)';
-          hideBubble(maleBubble);
+              function femaleDelivery(idx) {
+                if (idx >= deliveries.length) {
+                  // SERAPH eve döner
+                  femaleFig.classList.remove('facing-left');
+                  const curTX = parseFloat((femaleWrap.style.transform.match(/translateX\((-?[\d.]+)px\)/) || [0,0])[1]) || 0;
+                  femaleWrap.style.setProperty('--char-walk-dur', '0.5s');
+                  femaleWrap.style.transform = `translateX(${curTX}px) translateY(0)`;
+                  const t = setTimeout(() => {
+                    walkFemaleTo(FEMALE_CX, 1.2, 'right', null, () => {
+                      femaleFig.classList.remove('facing-left');
+                      bubble(femaleBubble, 'note', 0);
+                      // VESPER de eve döner
+                      walkMaleTo(MALE_CX, 1.4, 'left', null, () => {
+                        maleFig.classList.remove('facing-left');
+                        charState = 'idle';
+                        bubble(maleBubble, 'gear', 1800);
+                        setMaleCls('char-idle');
+                        setFemaleCls('char-idle');
+                      });
+                    });
+                  }, 500);
+                  stateTimers.push(t);
+                  return;
+                }
 
-          walkTimer = setTimeout(() => {
-            if (charState !== 'returning') return;
-            charState = 'dancing';
-            setMaleCls('char-idle');
-          }, rd * 1000 + 60);
+                const d    = deliveries[idx];
+                const dEl  = document.getElementById(d.id);
+                if (!dEl) { femaleDelivery(idx + 1); return; }
+                const dR = dEl.getBoundingClientRect();
+                if (dR.width === 0) { femaleDelivery(idx + 1); return; }
 
-        }, 500);
+                const targetCX    = Math.min(FEMALE_CX - 50, dR.left + dR.width / 2 + 50);
+                const targetHandY = dR.top + dR.height / 2;
 
-      }, wd * 1000 + 60);
+                walkFemaleTo(targetCX, 0.9, 'left', targetHandY, () => {
+                  setFemaleCls('char-thinking');
+                  bubble(femaleBubble, d.icon, 0);
+
+                  const fRN = femaleWrap.getBoundingClientRect();
+                  const hFX = fRN.left + 8;
+                  const hFY = fRN.top + fRN.height * 0.45;
+
+                  flyOrb(hFX, hFY, dR.left + dR.width / 2, dR.top + dR.height / 2, d.color, 0.35);
+
+                  const t = setTimeout(() => {
+                    dEl.classList.remove('cell-data-hidden');
+                    dEl.classList.add('cell-data-reveal', 'cell-data-flash');
+                    setTimeout(() => dEl.classList.remove('cell-data-reveal', 'cell-data-flash'), 520);
+                    const t2 = setTimeout(() => femaleDelivery(idx + 1), 180);
+                    stateTimers.push(t2);
+                  }, 400);
+                  stateTimers.push(t);
+                });
+              }
+
+              femaleDelivery(0);
+            }, 500);
+            stateTimers.push(t2);
+          }, envPickups.length * 110 + 360);
+          stateTimers.push(t1);
+        });
+      });
     }
 
     function onPlaying() {
       if (charState === 'walking' || charState === 'receiving' || charState === 'returning') return;
-      charState = 'sway';
+      charState = 'dancing';
+      maleFig.style.setProperty('--dance-dur', danceDur() + 's');
       femaleFig.style.setProperty('--sway-dur', swayDur() + 's');
-      setFemaleCls('char-sway');
-      bubble(femaleBubble, 'note', 2400);
+      setMaleCls('char-dance-male');
+      setFemaleCls('char-dance-female');  // SERAPH da artık dans ediyor
+      bubble(maleBubble, 'note', 0);
+      bubble(femaleBubble, 'dance', 0);
+
+      let ph = 0;
+      const mB = ['note','signal','neural','gear','dance','mic'];
+      const fB = ['dance','note','signal','cloud','mic','dance'];
+      function cycleBubble() {
+        if (charState !== 'dancing') return;
+        ph++;
+        bubble(maleBubble,   mB[ph % mB.length], 0);
+        bubble(femaleBubble, fB[ph % fB.length], 0);
+        setTimeout(cycleBubble, 2200 + Math.random() * 1200);
+      }
+      setTimeout(cycleBubble, 2000);
     }
 
     function onPaused() {
       if (charState === 'walking' || charState === 'receiving' || charState === 'returning') return;
       goIdle();
-      bubble(femaleBubble, 'zzz', 3200);
+      bubble(femaleBubble, 'cloud', 3200);
     }
 
-    // Listen to module events
+    // Events
     window.addEventListener('atmosfera-analyzing',      onAnalyzing);
     window.addEventListener('atmosfera-params-updated', onParamsUpdated);
     window.addEventListener('atmosfera-playing',        onPlaying);
     window.addEventListener('atmosfera-paused',         onPaused);
 
-    // Also refresh sway speed whenever params update (BPM may have changed)
+    // BPM değişince hızı güncelle
     window.addEventListener('atmosfera-params-updated', () => {
-      if (charState === 'sway') {
+      if (charState === 'dancing') {
+        maleFig.style.setProperty('--dance-dur', danceDur() + 's');
         femaleFig.style.setProperty('--sway-dur', swayDur() + 's');
       }
     });
 
     goIdle();
-  })();
-
-  // ── POSITION FIXED PANEL CHARACTERS ──────────────────
-  // ELEGY sits on the top-right corner of the Machine Thoughts panel.
-  // PULSE sits on the right edge of the Generation Parameters panel.
-  // Positions are recalculated after layout settles and on every resize.
-  (function positionPanelChars() {
-    const elegyCont = document.getElementById('char-elegy-fixed');
-    const pulseCont = document.getElementById('char-female-wrap');
-    const ROB_H = 120;   // robot-svg height in px
-    const ROB_W = 72;    // robot-svg width at 120px height (120 × 120/200)
-
-    function place() {
-      const thoughtsEl = document.getElementById('thoughts-panel');
-      const paramsEl   = document.querySelector('.section-params');
-
-      if (thoughtsEl && elegyCont) {
-        const r = thoughtsEl.getBoundingClientRect();
-        // Straddle the top-right corner: centre robot on right edge, feet ~20 px into panel
-        elegyCont.style.left = (r.right - ROB_W / 2) + 'px';
-        elegyCont.style.top  = (r.top  - ROB_H + 24) + 'px';
-      }
-
-      if (paramsEl && pulseCont) {
-        const r = paramsEl.getBoundingClientRect();
-        // Straddle the right edge of the params panel, vertically centred on it
-        pulseCont.style.left = (r.right - ROB_W / 2) + 'px';
-        pulseCont.style.top  = (r.top   + r.height / 2 - ROB_H / 2) + 'px';
-      }
-    }
-
-    // Wait two animation frames so the grid has fully laid out
-    requestAnimationFrame(() => requestAnimationFrame(place));
-    window.addEventListener('resize', place);
   })();
 
   resizeCanvas();
