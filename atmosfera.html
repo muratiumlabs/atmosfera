@@ -605,41 +605,13 @@
 
   /* ── Bottom Tool Row ───────────────────────────────── */
   .bottom-tool-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
     margin-top: 18px;
     padding-top: 14px;
     border-top: 1px solid rgba(var(--accent-rgb, 154,98,0), 0.12);
   }
 
-  .tool-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-width: 0;
-  }
-
-  .theme-switch-label,
-  .snapshot-label {
-    font-family: var(--font-ui);
-    color: var(--text-secondary);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .theme-toggle,
   .snapshot-toggle {
-    min-width: 136px;
     padding: 9px 16px;
-  }
-
-  .snapshot-toggle {
-    min-width: 118px;
   }
 
   .snapshot-modal {
@@ -781,7 +753,6 @@
     .section { padding: 20px 18px; }
     .grid, .params { grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .cell .v { font-size: 23px; }
-    .bottom-tool-row { grid-template-columns: 1fr; }
   }
 
   /* ── App Header ────────────────────────────────────── */
@@ -794,15 +765,22 @@
 
   .app-header > .app-header-title { flex: 1 1 auto; min-width: 0; }
 
-  /* ── Language Toggle ────────────────────────────────── */
-  #btn-lang {
+  /* ── Header Controls (theme + language toggles) ─────── */
+  .header-controls {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 0 0 auto;
+    margin-top: 4px;
+  }
+
+  #btn-lang,
+  #btn-theme {
     padding: 7px 16px;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 2.5px;
     min-width: auto;
-    flex: 0 0 auto;
-    margin-top: 4px;
     border-radius: 5px;
   }
 
@@ -965,7 +943,10 @@
       <h1>ATMOSFERA</h1>
       <div class="sub">AUTONOMOUS DJ AGENT</div>
     </div>
-    <button id="btn-lang" type="button" aria-label="Dil değiştir / Change language">TR</button>
+    <div class="header-controls">
+      <button id="btn-theme" type="button" aria-label="Switch to dark mode">DARK MODE</button>
+      <button id="btn-lang" type="button" aria-label="Dil değiştir / Change language">TR</button>
+    </div>
   </div>
 
   <!-- LEFT PANEL: MUSIC PREFERENCE -->
@@ -1101,15 +1082,7 @@
     </div>
 
     <div class="bottom-tool-row">
-      <div class="tool-box snapshot-tool-box">
-        <div class="snapshot-label">Night Map</div>
-        <button id="btn-snapshot" class="snapshot-toggle" type="button">📷 SAVE</button>
-      </div>
-
-      <div class="tool-box theme-tool-box">
-        <div class="theme-switch-label">Visual Mode</div>
-        <button id="btn-theme" class="theme-toggle" type="button">DARK MODE</button>
-      </div>
+      <button id="btn-snapshot" class="snapshot-toggle" type="button">📷 SAVE</button>
     </div>
 
     <div id="status">Loading keys…</div>
