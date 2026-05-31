@@ -456,11 +456,45 @@
     letter-spacing: 2px;
   }
 
-  .manual-field { margin-bottom: 12px; }
-  .manual-field label { display: block; margin-bottom: 5px; }
+  /* ── Music Preference Panel ─────────────────────────── */
+  .pref-field { margin-bottom: 18px; }
 
-  .manual-field input,
-  .manual-field select {
+  .pref-label {
+    font-family: var(--font-ui);
+    color: var(--text-secondary);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.65;
+    margin-bottom: 9px;
+  }
+
+  .pref-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pref-chip {
+    padding: 5px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    border-radius: 20px;
+    line-height: 1.4;
+    text-transform: none;
+  }
+
+  .pref-chip.active {
+    background: var(--gold);
+    color: #fff;
+    border-color: var(--gold);
+    box-shadow: 0 2px 10px rgba(154,98,0,0.30);
+    transform: none;
+  }
+
+  .pref-select {
     width: 100%;
     background: rgba(255, 255, 255, 0.78);
     border: 1px solid rgba(154, 98, 0, 0.12);
@@ -469,25 +503,73 @@
     font-size: 12px;
     padding: 9px;
     border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    appearance: auto;
   }
 
-  .manual-field input:focus,
-  .manual-field select:focus {
-    outline: none;
+  .pref-select:focus {
     border-color: var(--gold);
     box-shadow: 0 0 0 3px rgba(154,98,0,0.08);
   }
 
-  .manual-toggle {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    color: var(--text-primary);
-    font-size: 12px;
-    margin: 12px 0 16px;
+  .pref-tempo-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
   }
 
-  .manual-toggle input { accent-color: var(--gold); }
+  .pref-tempo-btn {
+    padding: 7px 4px;
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    text-transform: none;
+  }
+
+  .pref-tempo-btn.active {
+    background: var(--gold);
+    color: #fff;
+    border-color: var(--gold);
+    box-shadow: 0 2px 10px rgba(154,98,0,0.30);
+    transform: none;
+  }
+
+  .pref-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(154, 98, 0, 0.10);
+  }
+
+  .pref-apply-btn { flex: 1; }
+
+  .pref-clear-btn {
+    flex: 0 0 auto;
+    padding: 11px 20px;
+    opacity: 0.60;
+  }
+
+  .pref-active-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-left: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+    animation: pulse 1.6s infinite;
+    box-shadow: 0 0 8px var(--gold), 0 0 14px rgba(154,98,0,0.30);
+  }
+
+  html[data-theme="dark"] .pref-chip.active,
+  html[data-theme="dark"] .pref-tempo-btn.active { color: #050505; }
+
+  html[data-theme="dark"] .pref-select {
+    background: rgba(0, 0, 0, 0.58);
+    border-color: rgba(201, 168, 76, 0.14);
+    color: var(--text-primary);
+  }
 
   .logic-item {
     border-top: 1px solid rgba(154, 98, 0, 0.10);
@@ -942,60 +1024,67 @@
     <button id="btn-lang" type="button" aria-label="Dil değiştir / Change language">TR</button>
   </div>
 
-  <!-- LEFT PANEL: MANUAL INPUT -->
+  <!-- LEFT PANEL: MUSIC PREFERENCE -->
   <aside class="side-panel left" id="manual-panel">
     <div class="panel-head">
-      <div class="side-panel-title" data-i18n="panel-manual-title">Manual Input</div>
-      <button id="btn-collapse-manual" class="panel-collapse-btn" type="button" title="Collapse manual input" aria-label="Collapse manual input" aria-expanded="true">
+      <div class="side-panel-title">
+        <span data-i18n="panel-manual-title">Müzikal Tercih</span>
+        <span id="pref-dot" class="pref-active-dot" style="display:none" aria-hidden="true"></span>
+      </div>
+      <button id="btn-collapse-manual" class="panel-collapse-btn" type="button" title="Collapse" aria-label="Collapse music preference" aria-expanded="true">
         <span id="manual-collapse-icon">^</span>
       </button>
     </div>
 
     <div class="panel-body manual-body" id="manual-body">
-      <div class="manual-toggle">
-        <input type="checkbox" id="manual-enabled" />
-        <label for="manual-enabled" data-i18n="label-use-manual">Use manual input</label>
+
+      <!-- MOOD -->
+      <div class="pref-field">
+        <div class="pref-label" data-i18n="label-mood">Ruh Hali</div>
+        <div class="pref-chips" id="mood-chips">
+          <button type="button" class="pref-chip" data-value="energetic"   data-i18n="mood-energetic">Enerjik</button>
+          <button type="button" class="pref-chip" data-value="melancholic" data-i18n="mood-melancholic">Hüzünlü</button>
+          <button type="button" class="pref-chip" data-value="romantic"    data-i18n="mood-romantic">Romantik</button>
+          <button type="button" class="pref-chip" data-value="focused"     data-i18n="mood-focused">Odaklı</button>
+          <button type="button" class="pref-chip" data-value="calm"        data-i18n="mood-calm">Sakin</button>
+          <button type="button" class="pref-chip" data-value="euphoric"    data-i18n="mood-euphoric">Coşkulu</button>
+        </div>
       </div>
 
-      <div class="manual-field">
-        <label for="manual-noise" data-i18n="label-noise">Noise 0–100</label>
-        <input id="manual-noise" type="number" min="0" max="100" value="40" />
-      </div>
-
-      <div class="manual-field">
-        <label for="manual-weather" data-i18n="label-weather">Weather</label>
-        <select id="manual-weather">
-          <option value="clear sky">Clear sky</option>
-          <option value="few clouds">Few clouds</option>
-          <option value="cloudy">Cloudy</option>
-          <option value="rain">Rain</option>
-          <option value="storm">Storm</option>
-          <option value="snow">Snow</option>
-          <option value="mist">Mist</option>
+      <!-- GENRE -->
+      <div class="pref-field">
+        <div class="pref-label" data-i18n="label-genre">Tür</div>
+        <select id="pref-genre" class="pref-select">
+          <option value=""           data-i18n="genre-any">Herhangi</option>
+          <option value="Jazz">Caz / Jazz</option>
+          <option value="Electronic">Elektronik / Electronic</option>
+          <option value="Classical">Klasik / Classical</option>
+          <option value="Pop">Pop</option>
+          <option value="Latin">Latin</option>
+          <option value="Folk">Folk</option>
+          <option value="Hip-Hop">Hip-Hop</option>
+          <option value="Rock">Rock</option>
+          <option value="Funk">Funk</option>
+          <option value="Ambient">Ambient</option>
         </select>
       </div>
 
-      <div class="manual-field">
-        <label for="manual-temp" data-i18n="label-temp">Temperature °C</label>
-        <input id="manual-temp" type="number" min="-20" max="50" value="22" />
+      <!-- TEMPO -->
+      <div class="pref-field">
+        <div class="pref-label" data-i18n="label-tempo">Tempo</div>
+        <div class="pref-tempo-group">
+          <button type="button" class="pref-tempo-btn" data-value="slow"   data-i18n="tempo-slow">Yavaş</button>
+          <button type="button" class="pref-tempo-btn" data-value="medium" data-i18n="tempo-medium">Orta</button>
+          <button type="button" class="pref-tempo-btn" data-value="fast"   data-i18n="tempo-fast">Hızlı</button>
+        </div>
       </div>
 
-      <div class="manual-field">
-        <label for="manual-humidity" data-i18n="label-humidity">Humidity %</label>
-        <input id="manual-humidity" type="number" min="0" max="100" value="60" />
+      <!-- ACTIONS -->
+      <div class="pref-actions">
+        <button id="btn-apply-manual" class="pref-apply-btn" data-i18n="btn-apply">Uygula</button>
+        <button id="btn-clear-pref"   class="pref-clear-btn" data-i18n="btn-clear">Temizle</button>
       </div>
 
-      <div class="manual-field">
-        <label for="manual-hour" data-i18n="label-hour">Hour 0–23</label>
-        <input id="manual-hour" type="number" min="0" max="23" value="20" />
-      </div>
-
-      <div class="manual-field">
-        <label for="manual-mood"><span data-i18n="label-mood">Mood / Vibe</span> <span data-i18n="label-mood-hint" style="opacity:.55;font-weight:400">(optional, overrides everything)</span></label>
-        <input id="manual-mood" type="text" placeholder="enerjik, hüzünlü, focus, romantic…" autocomplete="off" />
-      </div>
-
-      <button id="btn-apply-manual" data-i18n="btn-apply">Apply Input</button>
     </div>
   </aside>
 
@@ -1152,14 +1241,11 @@ const state = {
   weatherCache: { data: null, fetchedAt: null },
   location: { lat: null, lon: null, label: FALLBACK_CITY, source: 'fallback' },
 
-  manual: {
-    enabled: false,
-    noise: 40,
-    weather: 'clear sky',
-    temp: 22,
-    humidity: 60,
-    hour: 20,
-    mood: '',
+  pref: {
+    mood: '',    // English value for Gemini: energetic|melancholic|romantic|focused|calm|euphoric
+    genre: '',   // e.g. 'Jazz', 'Electronic', '' = any
+    tempo: '',   // 'slow'|'medium'|'fast'|''
+    active: false,
   },
 };
 
@@ -1187,14 +1273,10 @@ const els = {
   status: $('status'),
   dot: $('dot'),
 
-  manualEnabled: $('manual-enabled'),
-  manualNoise: $('manual-noise'),
-  manualWeather: $('manual-weather'),
-  manualTemp: $('manual-temp'),
-  manualHumidity: $('manual-humidity'),
-  manualHour: $('manual-hour'),
-  manualMood: $('manual-mood'),
+  prefGenre: $('pref-genre'),
+  prefDot: $('pref-dot'),
   applyManual: $('btn-apply-manual'),
+  clearPref: $('btn-clear-pref'),
   manualPanel: $('manual-panel'),
   manualBody: $('manual-body'),
   collapseManual: $('btn-collapse-manual'),
@@ -1530,15 +1612,51 @@ function clampNumber(value, min, max, fallback) {
   return Math.max(min, Math.min(max, n));
 }
 
-function readManualInputs() {
-  state.manual.enabled = els.manualEnabled.checked;
-  state.manual.noise = clampNumber(els.manualNoise.value, 0, 100, 40);
-  state.manual.weather = els.manualWeather.value;
-  state.manual.temp = clampNumber(els.manualTemp.value, -20, 50, 22);
-  state.manual.humidity = clampNumber(els.manualHumidity.value, 0, 100, 60);
-  state.manual.hour = clampNumber(els.manualHour.value, 0, 23, 20);
-  // Mood is always read — active even without full manual mode
-  state.manual.mood = (els.manualMood?.value || '').trim();
+// ---- Music Preference helpers ----
+function syncPrefDot() {
+  if (els.prefDot) {
+    els.prefDot.style.display = state.pref.active ? 'inline-block' : 'none';
+  }
+}
+
+function applyPreference() {
+  const activeChip  = document.querySelector('.pref-chip.active');
+  const activeTempo = document.querySelector('.pref-tempo-btn.active');
+
+  state.pref.mood  = activeChip   ? activeChip.dataset.value   : '';
+  state.pref.genre = els.prefGenre ? els.prefGenre.value        : '';
+  state.pref.tempo = activeTempo  ? activeTempo.dataset.value   : '';
+  state.pref.active = !!(state.pref.mood || state.pref.genre || state.pref.tempo);
+
+  localStorage.setItem('atmosfera-pref', JSON.stringify(state.pref));
+  syncPrefDot();
+
+  const parts = [
+    state.pref.mood  && `mood: ${state.pref.mood}`,
+    state.pref.genre && `genre: ${state.pref.genre}`,
+    state.pref.tempo && `tempo: ${state.pref.tempo}`,
+  ].filter(Boolean);
+
+  addLogicLog(
+    state.pref.active
+      ? `Preference applied — ${parts.join(', ')}.`
+      : 'Preference saved (nothing selected — cleared).',
+    state.pref.active ? 'ok' : ''
+  );
+  analyze();
+}
+
+function clearPreference() {
+  state.pref = { mood: '', genre: '', tempo: '', active: false };
+  localStorage.removeItem('atmosfera-pref');
+
+  document.querySelectorAll('.pref-chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.pref-tempo-btn').forEach(b => b.classList.remove('active'));
+  if (els.prefGenre) els.prefGenre.value = '';
+
+  syncPrefDot();
+  addLogicLog('Music preference cleared — full auto mode.', 'ok');
+  analyze();
 }
 
 function buildLogicText(inputs, source, shouldLog = true) {
@@ -1579,53 +1697,24 @@ function buildLogicText(inputs, source, shouldLog = true) {
 
 // ---- Gather inputs ----
 function gatherInputs(shouldLog = true) {
-  readManualInputs();
-
-  let noise;
-  let weather;
-  let hour;
-  let source;
-
-  if (state.manual.enabled) {
-    noise = state.manual.noise;
-
-    weather = {
-      condition: state.manual.weather,
-      description: state.manual.weather,
-      temp: state.manual.temp,
-      humidity: state.manual.humidity,
-      place: 'manual input',
-      ok: true,
-    };
-
-    hour = state.manual.hour;
-    source = 'Manual input';
-  } else {
-    noise = readNoise();
-    weather = getCachedWeather();
-
-    const now = new Date();
-    hour = now.getHours();
-
-    source = 'Automatic sensors';
-  }
+  const noise   = readNoise();
+  const weather = getCachedWeather();
+  const hour    = new Date().getHours();
+  const source  = state.pref.active ? 'Sensors + Preference' : 'Automatic sensors';
 
   els.noise.innerHTML = `${noise}<small> dB</small>`;
-  const weatherText = weather.description || weather.condition;
-  const weatherPlace = state.manual.enabled ? '' : weather.place;
-
-  els.weather.textContent = weatherPlace
-    ? `${weatherText} · ${weatherPlace}`
+  const weatherText  = weather.description || weather.condition;
+  els.weather.textContent = weather.place
+    ? `${weatherText} · ${weather.place}`
     : weatherText;
   els.temp.innerHTML = weather.temp === null
     ? '—<small> °C</small>'
     : `${weather.temp}<small> °C</small>`;
   els.time.textContent = String(hour).padStart(2, '0') + ':00';
 
-  const mood = state.manual.mood || '';
   buildLogicText({ noise, weather, hour }, source, shouldLog);
 
-  return { noise, weather, hour, mood };
+  return { noise, weather, hour, pref: { ...state.pref } };
 }
 
 // ---- Gemini interpretation ----
@@ -1645,13 +1734,23 @@ async function askGemini(inputs) {
     inputs.hour < 21 ? 'evening' :
     'night';
 
-  const moodLine = inputs.mood
-    ? `- User mood / vibe: "${inputs.mood}"  ← HIGHEST PRIORITY — overrides time and weather completely`
-    : '- User mood: not specified (use environment signals below)';
+  const pref     = inputs.pref || {};
+  const hasMood  = pref.active && !!pref.mood;
+  const hasGenre = pref.active && !!pref.genre;
+  const hasTempo = pref.active && !!pref.tempo;
+  const hasPref  = !!pref.active;
 
-  // Random seed injected into prompt to prevent Gemini from caching the same genre answer
+  const prefLines = [
+    hasMood
+      ? `- User mood: "${pref.mood}"  ← HIGHEST PRIORITY — sets emotional tone absolutely`
+      : '- User mood: not specified (use environment signals below)',
+    hasGenre ? `- Preferred genre: "${pref.genre}"  ← USER PREFERENCE — make this the genre family` : '',
+    hasTempo ? `- Preferred tempo: "${pref.tempo}" → slow = 55–82 BPM, medium = 85–120 BPM, fast = 130–175 BPM  ← USER PREFERENCE` : '',
+  ].filter(Boolean).join('\n');
+
+  // Random seed only when no preference active — prevents Gemini caching the same genre answer
   const seed = Math.floor(Math.random() * 99991) + 10;
-  const seedLine = inputs.mood ? '' : `\nVariation seed (ignore the number, but use it to make a fresh genre choice different from your last): #${seed}`;
+  const seedLine = hasPref ? '' : `\nVariation seed (ignore the number, but use it to make a fresh genre choice different from your last): #${seed}`;
 
   // Reasoning language based on UI language setting
   const reasoningLang = (window.atmosferaLang || 'TR') === 'TR'
@@ -1661,13 +1760,13 @@ async function askGemini(inputs) {
   const prompt = `You are the creative director of an autonomous DJ. Pick the most emotionally fitting music for RIGHT NOW. Be bold and diverse — do NOT default to ambient unless everything explicitly points that way.
 
 PRIORITY ORDER (strongest → weakest):
-1. USER MOOD — if provided, override everything else completely
+1. USER PREFERENCE (mood + genre + tempo) — if set, this is absolute and overrides everything
 2. Ambient noise — high noise means high energy music
 3. Weather + temperature — shapes texture and emotional color
 4. Time of day — soft background influence only
 
 ENVIRONMENT:
-${moodLine}
+${prefLines}
 - Ambient noise: ${inputs.noise}/100 — ${noiseDesc}
 - Location: ${inputs.weather.place || getWeatherPlaceName()}
 - Weather: ${inputs.weather.description || inputs.weather.condition}
@@ -1680,14 +1779,16 @@ Funk · Reggae · Blues · Country · Folk · Acoustic · Jazz · Bossa Nova
 Soul · R&B · Indie · Electronic Dance · Deep House · Drum & Bass
 Ambient · Neo Classical · Trip Hop · Experimental · Dark Jazz · Lo-fi · World Music
 
-MOOD → MUSIC (when user mood is provided, this is absolute):
-• "enerjik" / "mutlu" / "happy" / "energetic" → pop, funk, dance, latin | 100–130 BPM | major or mixolydian | high density + brightness
-• "hüzünlü" / "sad" / "melancholic" / "üzgün" → slow ballad, neo soul, blues | 55–72 BPM | minor or dorian | low density
-• "odaklan" / "focus" / "çalış" / "study" → neo classical, lo-fi hip hop, minimal | 72–92 BPM | dorian or major | mid density
-• "romantik" / "romantic" / "aşk" → jazz, bossa nova, cinematic strings | 68–95 BPM | major or lydian
-• "öfke" / "angry" / "agresif" / "intense" → rock, drum & bass, dark electronic | 140–170 BPM | phrygian or minor
-• "sakin" / "calm" / "dinlen" / "relax" → acoustic folk, light jazz, ambient | 62–85 BPM
-• Any other mood → interpret creatively and pick the most fitting genre
+PREFERENCE → MUSIC (when user preference is set, follow it absolutely):
+• mood "energetic"   → pop, funk, dance, latin | 100–130 BPM | major or mixolydian | high density + brightness
+• mood "melancholic" → slow ballad, neo soul, blues | 55–72 BPM | minor or dorian | low density
+• mood "focused"     → neo classical, lo-fi hip hop, minimal | 72–92 BPM | dorian or major | mid density
+• mood "romantic"    → jazz, bossa nova, cinematic strings | 68–95 BPM | major or lydian
+• mood "euphoric"    → drum & bass, upbeat dance, bright electronic | 138–170 BPM | major or mixolydian | max brightness
+• mood "calm"        → acoustic folk, light jazz, gentle ambient | 62–85 BPM
+• Any other mood     → interpret creatively and pick the most fitting genre
+• If genre preferred → lock to that genre family; adjust BPM, scale, density accordingly
+• If tempo preferred → BPM MUST fall within the specified range above; it overrides BPM defaults
 
 NOISE SIGNAL (when no user mood):
 • 0–30 silent → sparse, introspective, quiet genre
@@ -1709,7 +1810,7 @@ AMBIENT RULE — only choose ambient/drone/minimal when ALL THREE are true:
   hour is past midnight (00:00–06:00)  AND  noise < 10  AND  user has not provided a mood
   Otherwise pick something with more movement and personality.
 
-ADVENTUROUSNESS (automatic mode — no user mood):
+ADVENTUROUSNESS (automatic mode — no user preference active):
   Be deliberately unpredictable. Even with identical inputs, vary the genre every cycle.
   The same morning can be flamenco, bossa nova, indie pop, blues, or cinematic — not always "light acoustic".
   The same evening can be funk, latin jazz, afrobeat, or orchestral — not always "deep house".
@@ -2063,7 +2164,52 @@ async function boot() {
   });
 
   els.analyze.addEventListener('click', () => analyze());
-  els.applyManual.addEventListener('click', () => analyze());
+  els.applyManual.addEventListener('click', applyPreference);
+  els.clearPref.addEventListener('click', clearPreference);
+
+  // Mood chips — toggle: click same chip again to deselect
+  document.querySelectorAll('.pref-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const wasActive = chip.classList.contains('active');
+      document.querySelectorAll('.pref-chip').forEach(c => c.classList.remove('active'));
+      if (!wasActive) chip.classList.add('active');
+    });
+  });
+
+  // Tempo buttons — same toggle logic
+  document.querySelectorAll('.pref-tempo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wasActive = btn.classList.contains('active');
+      document.querySelectorAll('.pref-tempo-btn').forEach(b => b.classList.remove('active'));
+      if (!wasActive) btn.classList.add('active');
+    });
+  });
+
+  // Restore saved preference from previous session
+  try {
+    const savedPref = localStorage.getItem('atmosfera-pref');
+    if (savedPref) {
+      const p = JSON.parse(savedPref);
+      state.pref = {
+        mood:   p.mood   || '',
+        genre:  p.genre  || '',
+        tempo:  p.tempo  || '',
+        active: !!p.active,
+      };
+      if (state.pref.mood) {
+        const chip = document.querySelector(`.pref-chip[data-value="${state.pref.mood}"]`);
+        if (chip) chip.classList.add('active');
+      }
+      if (state.pref.genre && els.prefGenre) {
+        els.prefGenre.value = state.pref.genre;
+      }
+      if (state.pref.tempo) {
+        const btn = document.querySelector(`.pref-tempo-btn[data-value="${state.pref.tempo}"]`);
+        if (btn) btn.classList.add('active');
+      }
+      syncPrefDot();
+    }
+  } catch (e) {}
 
   els.collapseManual.addEventListener('click', () => {
     const collapsed = !els.manualPanel.classList.contains('panel-collapsed');
@@ -2127,25 +2273,17 @@ async function finishInit() {
 // keep input display ticking even when idle
 setInterval(() => {
   if (!analyzing) {
-    if (state.manual.enabled) {
-      gatherInputs(false);
-    } else {
-      const n = readNoise();
-      els.noise.innerHTML = `${n}<small> dB</small>`;
-      const d = new Date();
-      els.time.textContent =
-        String(d.getHours()).padStart(2, '0') + ':' +
-        String(d.getMinutes()).padStart(2, '0');
-    }
+    const n = readNoise();
+    els.noise.innerHTML = `${n}<small> dB</small>`;
+    const d = new Date();
+    els.time.textContent =
+      String(d.getHours()).padStart(2, '0') + ':' +
+      String(d.getMinutes()).padStart(2, '0');
   }
 
-  if (state.weatherCache.fetchedAt && !state.manual.enabled) {
+  if (state.weatherCache.fetchedAt) {
     const mins = Math.floor((Date.now() - state.weatherCache.fetchedAt) / 60000);
     els.weatherAge.textContent = mins < 1 ? 'just now' : `${mins}m ago`;
-  }
-
-  if (state.manual.enabled) {
-    els.weatherAge.textContent = '';
   }
 }, 1000);
 
@@ -2160,68 +2298,98 @@ boot();
   // ── i18n system ───────────────────────────────────────
   const I18N = {
     TR: {
-      'env-label':        'ORTAM GİRDİSİ',
-      'ai-label':         'GEMİNİ YORUMU',
-      'prompts-label':    'AKTİF LYRİA PROMPTLARI',
-      'params-label':     'ÜRETİM PARAMETRELERİ',
-      'k-noise':          'GÜRÜLTÜ',
-      'k-weather':        'HAVA',
-      'k-temp':           'SICAKLIK',
-      'k-time':           'SAAT',
-      'k-bpm':            'BPM',
-      'k-scale':          'SKALA',
-      'k-density':        'YOĞUNLUK',
-      'k-brightness':     'PARLAKLIK',
-      'panel-manual-title': 'Manuel Girdi',
+      // Section labels
+      'env-label':          'ORTAM GİRDİSİ',
+      'ai-label':           'GEMİNİ YORUMU',
+      'prompts-label':      'AKTİF LYRİA PROMPTLARI',
+      'params-label':       'ÜRETİM PARAMETRELERİ',
+      // Cell keys
+      'k-noise':            'GÜRÜLTÜ',
+      'k-weather':          'HAVA',
+      'k-temp':             'SICAKLIK',
+      'k-time':             'SAAT',
+      'k-bpm':              'BPM',
+      'k-scale':            'SKALA',
+      'k-density':          'YOĞUNLUK',
+      'k-brightness':       'PARLAKLIK',
+      // Panel titles
+      'panel-manual-title': 'Müzikal Tercih',
       'panel-logic-title':  'Canlı Mantık',
-      'label-use-manual': 'Manuel girdi kullan',
-      'label-noise':      'Gürültü 0–100',
-      'label-weather':    'Hava',
-      'label-temp':       'Sıcaklık °C',
-      'label-humidity':   'Nem %',
-      'label-hour':       'Saat 0–23',
-      'label-mood':       'Ruh Hali / Vibe',
-      'label-mood-hint':  '(isteğe bağlı, her şeyi geçersiz kılar)',
-      'logic-k-source':   'Girdi Kaynağı',
-      'logic-k-state':    'Mevcut Durum',
-      'logic-k-decision': 'Son Karar',
-      'logic-k-stream':   'Mantık Akışı',
-      'btn-apply':        'Girdiyi Uygula',
-      'btn-play':         'OYNAT',
-      'btn-pause':        'DURAKLAT',
-      'btn-reanalyze':    'YENİDEN ANALİZ ET',
+      // Preference panel field labels
+      'label-mood':         'Ruh Hali',
+      'label-genre':        'Tür',
+      'label-tempo':        'Tempo',
+      // Mood chips
+      'mood-energetic':     'Enerjik',
+      'mood-melancholic':   'Hüzünlü',
+      'mood-romantic':      'Romantik',
+      'mood-focused':       'Odaklı',
+      'mood-calm':          'Sakin',
+      'mood-euphoric':      'Coşkulu',
+      // Tempo buttons
+      'tempo-slow':         'Yavaş',
+      'tempo-medium':       'Orta',
+      'tempo-fast':         'Hızlı',
+      // Genre dropdown first option
+      'genre-any':          'Herhangi',
+      // Logic panel labels
+      'logic-k-source':     'Girdi Kaynağı',
+      'logic-k-state':      'Mevcut Durum',
+      'logic-k-decision':   'Son Karar',
+      'logic-k-stream':     'Mantık Akışı',
+      // Buttons
+      'btn-apply':          'Uygula',
+      'btn-clear':          'Temizle',
+      'btn-play':           'OYNAT',
+      'btn-pause':          'DURAKLAT',
+      'btn-reanalyze':      'YENİDEN ANALİZ ET',
     },
     EN: {
-      'env-label':        'ENVIRONMENT INPUT',
-      'ai-label':         'GEMINI INTERPRETATION',
-      'prompts-label':    'ACTIVE LYRIA PROMPTS',
-      'params-label':     'GENERATION PARAMETERS',
-      'k-noise':          'NOISE',
-      'k-weather':        'WEATHER',
-      'k-temp':           'TEMP',
-      'k-time':           'TIME',
-      'k-bpm':            'BPM',
-      'k-scale':          'SCALE',
-      'k-density':        'DENSITY',
-      'k-brightness':     'BRIGHTNESS',
-      'panel-manual-title': 'Manual Input',
+      // Section labels
+      'env-label':          'ENVIRONMENT INPUT',
+      'ai-label':           'GEMINI INTERPRETATION',
+      'prompts-label':      'ACTIVE LYRIA PROMPTS',
+      'params-label':       'GENERATION PARAMETERS',
+      // Cell keys
+      'k-noise':            'NOISE',
+      'k-weather':          'WEATHER',
+      'k-temp':             'TEMP',
+      'k-time':             'TIME',
+      'k-bpm':              'BPM',
+      'k-scale':            'SCALE',
+      'k-density':          'DENSITY',
+      'k-brightness':       'BRIGHTNESS',
+      // Panel titles
+      'panel-manual-title': 'Music Preference',
       'panel-logic-title':  'Live Logic',
-      'label-use-manual': 'Use manual input',
-      'label-noise':      'Noise 0–100',
-      'label-weather':    'Weather',
-      'label-temp':       'Temperature °C',
-      'label-humidity':   'Humidity %',
-      'label-hour':       'Hour 0–23',
-      'label-mood':       'Mood / Vibe',
-      'label-mood-hint':  '(optional, overrides everything)',
-      'logic-k-source':   'Input Source',
-      'logic-k-state':    'Current State',
-      'logic-k-decision': 'Last Decision',
-      'logic-k-stream':   'Reasoning Stream',
-      'btn-apply':        'Apply Input',
-      'btn-play':         'PLAY',
-      'btn-pause':        'PAUSE',
-      'btn-reanalyze':    'RE-ANALYZE',
+      // Preference panel field labels
+      'label-mood':         'Mood',
+      'label-genre':        'Genre',
+      'label-tempo':        'Tempo',
+      // Mood chips
+      'mood-energetic':     'Energetic',
+      'mood-melancholic':   'Melancholic',
+      'mood-romantic':      'Romantic',
+      'mood-focused':       'Focused',
+      'mood-calm':          'Calm',
+      'mood-euphoric':      'Euphoric',
+      // Tempo buttons
+      'tempo-slow':         'Slow',
+      'tempo-medium':       'Medium',
+      'tempo-fast':         'Fast',
+      // Genre dropdown first option
+      'genre-any':          'Any',
+      // Logic panel labels
+      'logic-k-source':     'Input Source',
+      'logic-k-state':      'Current State',
+      'logic-k-decision':   'Last Decision',
+      'logic-k-stream':     'Reasoning Stream',
+      // Buttons
+      'btn-apply':          'Apply',
+      'btn-clear':          'Clear',
+      'btn-play':           'PLAY',
+      'btn-pause':          'PAUSE',
+      'btn-reanalyze':      'RE-ANALYZE',
     },
   };
 
