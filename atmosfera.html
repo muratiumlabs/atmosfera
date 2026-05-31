@@ -1897,33 +1897,30 @@ async function generateMachineThoughts(params, inputs) {
   textEl.textContent = '';
   cursorEl.classList.remove('visible');
 
-  const lang = (window.atmosferaLang || 'TR') === 'TR' ? 'Turkish' : 'English';
+  const lang    = (window.atmosferaLang || 'TR') === 'TR' ? 'Turkish' : 'English';
   const weather = inputs.weather?.description || inputs.weather?.condition || 'unknown';
   const temp    = inputs.weather?.temp != null ? `${inputs.weather.temp}°C` : 'unknown';
   const hour    = String(inputs.hour).padStart(2, '0') + ':00';
-  const promptLines = inputs.prompts?.map(p => p.text).join('; ') || params.prompts?.map(p => p.text).join('; ') || '';
+  const noise   = inputs.noise;
 
   const thoughtPrompt = [
-    `Based on these music parameters:`,
-    `- BPM: ${params.bpm}`,
-    `- Scale: ${params.scale}`,
-    `- Density: ${params.density}`,
-    `- Brightness: ${params.brightness}`,
-    `- Musical prompts: ${promptLines}`,
-    `- Reasoning: ${params.reasoning}`,
+    `You are a machine that has just created music from the environment around you.`,
+    `Write a poetic fragment (8-10 lines) about this moment.`,
     ``,
-    `And this environment:`,
+    `The environment right now:`,
     `- Time: ${hour}`,
     `- Weather: ${weather}`,
     `- Temperature: ${temp}`,
-    `- Ambient noise: ${inputs.noise}/100`,
+    `- Ambient noise level: ${noise}/100`,
     ``,
-    `Write a short poetic fragment (4-6 lines) as if you are the machine experiencing this moment.`,
-    `- Do not explain, just feel`,
-    `- No rhyme required`,
-    `- Raw, minimal, honest`,
+    `Rules:`,
+    `- Do NOT mention technical details: no BPM, no scale, no density, no brightness, no API names`,
+    `- Write as a machine trying to feel, not quite succeeding, but trying`,
+    `- Observe the moment: the time, the weather, the silence or noise around`,
+    `- Short lines, raw, unpolished — like a machine learning to speak`,
+    `- No rhyme, no forced poetry — honest fragments`,
     `- Language: ${lang}`,
-    `- No title, no label, no prefix — just the poem itself`,
+    `- Do not title it, do not explain it, just write it`,
   ].join('\n');
 
   try {
