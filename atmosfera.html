@@ -397,7 +397,8 @@
     transition: width 0.2s ease, max-height 0.2s ease, padding 0.2s ease, transform 0.2s ease;
   }
 
-  .side-panel.left { left: 24px; }
+  .side-panel.left  { left:  24px; }
+  .side-panel.right { right: 24px; }
 
   .side-panel-title {
     color: var(--gold);
@@ -570,6 +571,48 @@
     color: var(--text-primary);
   }
 
+
+  /* ── Machine Thoughts Panel ─────────────────────────── */
+  .thoughts-panel {
+    background: rgba(5, 5, 5, 0.95) !important;
+    border-color: rgba(201, 168, 76, 0.22) !important;
+    border-left: 3px solid #C9A84C !important;
+  }
+
+  .thoughts-panel .side-panel-title { color: #C9A84C; }
+  .thoughts-panel .panel-collapse-btn { color: #C9A84C; border-color: rgba(201,168,76,0.25); }
+
+  .thoughts-poem {
+    margin-top: 16px;
+    font-family: 'Space Mono', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.85;
+    color: #C9A84C;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .thoughts-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 0.95em;
+    background: #C9A84C;
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .thoughts-cursor.visible { opacity: 1; }
+
+  html.is-playing .thoughts-cursor.visible {
+    animation: thoughts-blink 1s step-end infinite;
+  }
+
+  @keyframes thoughts-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
 
   @media (max-width: 1450px) {
     .side-panel {
@@ -1013,6 +1056,24 @@
     </div>
   </aside>
 
+  <!-- RIGHT PANEL: MACHINE THOUGHTS -->
+  <aside class="side-panel right thoughts-panel" id="thoughts-panel">
+    <div class="panel-head">
+      <div class="side-panel-title">
+        <span data-i18n="panel-thoughts-title">MAKİNENİN DÜŞÜNCELERİ</span>
+      </div>
+      <button id="btn-collapse-thoughts" class="panel-collapse-btn" type="button"
+              title="Collapse" aria-label="Collapse machine thoughts" aria-expanded="true">
+        <span id="thoughts-collapse-icon">&gt;</span>
+      </button>
+    </div>
+    <div class="panel-body" id="thoughts-body">
+      <div class="thoughts-poem">
+        <span id="thoughts-text"></span><span class="thoughts-cursor" id="thoughts-cursor"></span>
+      </div>
+    </div>
+  </aside>
+
 
   <div class="section section-env">
     <div class="label"><span class="icon">🌡</span><span data-i18n="env-label">Environment Input</span></div>
@@ -1164,6 +1225,12 @@ const els = {
   collapseManual: $('btn-collapse-manual'),
   manualCollapseIcon: $('manual-collapse-icon'),
 
+  thoughtsPanel: $('thoughts-panel'),
+  thoughtsText: $('thoughts-text'),
+  thoughtsCursor: $('thoughts-cursor'),
+  collapseThoughts: $('btn-collapse-thoughts'),
+  thoughtsCollapseIcon: $('thoughts-collapse-icon'),
+
 };
 
 function setStatus(msg, kind = '') {
@@ -1186,10 +1253,7 @@ function setPanelCollapsed(panel, button, icon, collapsed, side) {
     icon.textContent = collapsed ? '<' : '>';
   }
 
-  const panelName = side === 'left' ? 'manual input' : 'live logic';
   button.setAttribute('aria-expanded', String(!collapsed));
-  button.title = collapsed ? `Expand ${panelName}` : `Collapse ${panelName}`;
-  button.setAttribute('aria-label', collapsed ? `Expand ${panelName}` : `Collapse ${panelName}`);
 }
 
 function syncPanelIcons() {
@@ -1199,6 +1263,13 @@ function syncPanelIcons() {
     els.manualCollapseIcon,
     els.manualPanel.classList.contains('panel-collapsed'),
     'left'
+  );
+  setPanelCollapsed(
+    els.thoughtsPanel,
+    els.collapseThoughts,
+    els.thoughtsCollapseIcon,
+    els.thoughtsPanel.classList.contains('panel-collapsed'),
+    'right'
   );
 }
 
@@ -1808,6 +1879,84 @@ async function applyParams(p) {
   });
 }
 
+// ---- Machine Thoughts (poetic second Gemini call) ----
+let thoughtsTypewriterTimer = null;
+
+async function generateMachineThoughts(params, inputs) {
+  const textEl   = els.thoughtsText;
+  const cursorEl = els.thoughtsCursor;
+  if (!textEl || !cursorEl || !state.ai) return;
+
+  // Cancel any running typewriter
+  if (thoughtsTypewriterTimer) {
+    clearTimeout(thoughtsTypewriterTimer);
+    thoughtsTypewriterTimer = null;
+  }
+
+  // Reset display
+  textEl.textContent = '';
+  cursorEl.classList.remove('visible');
+
+  const lang = (window.atmosferaLang || 'TR') === 'TR' ? 'Turkish' : 'English';
+  const weather = inputs.weather?.description || inputs.weather?.condition || 'unknown';
+  const temp    = inputs.weather?.temp != null ? `${inputs.weather.temp}°C` : 'unknown';
+  const hour    = String(inputs.hour).padStart(2, '0') + ':00';
+  const promptLines = inputs.prompts?.map(p => p.text).join('; ') || params.prompts?.map(p => p.text).join('; ') || '';
+
+  const thoughtPrompt = [
+    `Based on these music parameters:`,
+    `- BPM: ${params.bpm}`,
+    `- Scale: ${params.scale}`,
+    `- Density: ${params.density}`,
+    `- Brightness: ${params.brightness}`,
+    `- Musical prompts: ${promptLines}`,
+    `- Reasoning: ${params.reasoning}`,
+    ``,
+    `And this environment:`,
+    `- Time: ${hour}`,
+    `- Weather: ${weather}`,
+    `- Temperature: ${temp}`,
+    `- Ambient noise: ${inputs.noise}/100`,
+    ``,
+    `Write a short poetic fragment (4-6 lines) as if you are the machine experiencing this moment.`,
+    `- Do not explain, just feel`,
+    `- No rhyme required`,
+    `- Raw, minimal, honest`,
+    `- Language: ${lang}`,
+    `- No title, no label, no prefix — just the poem itself`,
+  ].join('\n');
+
+  try {
+    const res = await state.ai.models.generateContent({
+      model: GEMINI_MODEL,
+      contents: thoughtPrompt,
+      config: { temperature: 1.3 },
+    });
+
+    const text = (res.text || '').trim();
+    if (!text) return;
+
+    // Show cursor, then type character by character
+    cursorEl.classList.add('visible');
+    let i = 0;
+    const SPEED_MS = 38;
+
+    function typeNext() {
+      if (i < text.length) {
+        textEl.textContent += text[i];
+        i++;
+        thoughtsTypewriterTimer = setTimeout(typeNext, SPEED_MS);
+      } else {
+        thoughtsTypewriterTimer = null;
+        // Blinking is controlled by html.is-playing class — nothing extra needed here
+      }
+    }
+    typeNext();
+  } catch (_) {
+    // Silently fail — no error shown
+  }
+}
+
 // ---- Orchestration ----
 let analyzing = false;
 
@@ -1826,6 +1975,9 @@ async function analyze() {
     const params = await askGemini(inputs);
 
     renderParams(params);
+
+    // Fire machine thoughts in background — non-blocking, silently ignored if it fails
+    generateMachineThoughts(params, inputs).catch(() => {});
 
     if (state.playing) {
       const prev = state.lastParams;
@@ -1866,6 +2018,7 @@ async function startPlayback() {
     await state.session.play();
 
     state.playing = true;
+    document.documentElement.classList.add('is-playing');
     window.dispatchEvent(new CustomEvent('atmosfera-playing'));
     els.play.innerHTML = `<span class="dot live" id="dot"></span>${window.i18n ? window.i18n('btn-pause') : 'PAUSE'}`;
     setStatus('Live — generating from current atmosphere.', 'ok');
@@ -1880,6 +2033,7 @@ async function startPlayback() {
 
 async function pausePlayback() {
   state.playing = false;
+  document.documentElement.classList.remove('is-playing');
   window.dispatchEvent(new CustomEvent('atmosfera-paused'));
 
   if (state.reanalyzeTimer) {
@@ -1953,6 +2107,11 @@ async function boot() {
   els.collapseManual.addEventListener('click', () => {
     const collapsed = !els.manualPanel.classList.contains('panel-collapsed');
     setPanelCollapsed(els.manualPanel, els.collapseManual, els.manualCollapseIcon, collapsed, 'left');
+  });
+
+  els.collapseThoughts.addEventListener('click', () => {
+    const collapsed = !els.thoughtsPanel.classList.contains('panel-collapsed');
+    setPanelCollapsed(els.thoughtsPanel, els.collapseThoughts, els.thoughtsCollapseIcon, collapsed, 'right');
   });
 
   window.addEventListener('resize', syncPanelIcons);
@@ -2040,8 +2199,9 @@ boot();
       'k-scale':            'SKALA',
       'k-density':          'YOĞUNLUK',
       'k-brightness':       'PARLAKLIK',
-      // Panel title
-      'panel-manual-title': 'Müzikal Tercih',
+      // Panel titles
+      'panel-manual-title':   'Müzikal Tercih',
+      'panel-thoughts-title': 'MAKİNENİN DÜŞÜNCELERİ',
       // Preference panel field labels
       'label-mood':         'Ruh Hali',
       'label-genre':        'Tür',
@@ -2081,8 +2241,9 @@ boot();
       'k-scale':            'SCALE',
       'k-density':          'DENSITY',
       'k-brightness':       'BRIGHTNESS',
-      // Panel title
-      'panel-manual-title': 'Music Preference',
+      // Panel titles
+      'panel-manual-title':   'Music Preference',
+      'panel-thoughts-title': 'MACHINE THOUGHTS',
       // Preference panel field labels
       'label-mood':         'Mood',
       'label-genre':        'Genre',
