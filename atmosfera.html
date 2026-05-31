@@ -758,6 +758,28 @@
     .bottom-tool-row { grid-template-columns: 1fr; }
   }
 
+  /* ── App Header ────────────────────────────────────── */
+  .app-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .app-header > .app-header-title { flex: 1 1 auto; min-width: 0; }
+
+  /* ── Language Toggle ────────────────────────────────── */
+  #btn-lang {
+    padding: 7px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    min-width: auto;
+    flex: 0 0 auto;
+    margin-top: 4px;
+    border-radius: 5px;
+  }
+
   /* ── ANIMATED CHARACTERS ─────────────────────────────── */
   #character-stage {
     position: fixed;
@@ -912,13 +934,18 @@
     <div id="char-orb"></div>
   </div>
 
-  <h1>ATMOSFERA</h1>
-  <div class="sub" id="location-sub">AUTONOMOUS DJ AGENT · DETECTING LOCATION</div>
+  <div class="app-header">
+    <div class="app-header-title">
+      <h1>ATMOSFERA</h1>
+      <div class="sub" id="location-sub">AUTONOMOUS DJ AGENT · DETECTING LOCATION</div>
+    </div>
+    <button id="btn-lang" type="button" aria-label="Dil değiştir / Change language">TR</button>
+  </div>
 
   <!-- LEFT PANEL: MANUAL INPUT -->
   <aside class="side-panel left" id="manual-panel">
     <div class="panel-head">
-      <div class="side-panel-title">Manual Input</div>
+      <div class="side-panel-title" data-i18n="panel-manual-title">Manual Input</div>
       <button id="btn-collapse-manual" class="panel-collapse-btn" type="button" title="Collapse manual input" aria-label="Collapse manual input" aria-expanded="true">
         <span id="manual-collapse-icon">^</span>
       </button>
@@ -927,16 +954,16 @@
     <div class="panel-body manual-body" id="manual-body">
       <div class="manual-toggle">
         <input type="checkbox" id="manual-enabled" />
-        <label for="manual-enabled">Use manual input</label>
+        <label for="manual-enabled" data-i18n="label-use-manual">Use manual input</label>
       </div>
 
       <div class="manual-field">
-        <label for="manual-noise">Noise 0–100</label>
+        <label for="manual-noise" data-i18n="label-noise">Noise 0–100</label>
         <input id="manual-noise" type="number" min="0" max="100" value="40" />
       </div>
 
       <div class="manual-field">
-        <label for="manual-weather">Weather</label>
+        <label for="manual-weather" data-i18n="label-weather">Weather</label>
         <select id="manual-weather">
           <option value="clear sky">Clear sky</option>
           <option value="few clouds">Few clouds</option>
@@ -949,33 +976,33 @@
       </div>
 
       <div class="manual-field">
-        <label for="manual-temp">Temperature °C</label>
+        <label for="manual-temp" data-i18n="label-temp">Temperature °C</label>
         <input id="manual-temp" type="number" min="-20" max="50" value="22" />
       </div>
 
       <div class="manual-field">
-        <label for="manual-humidity">Humidity %</label>
+        <label for="manual-humidity" data-i18n="label-humidity">Humidity %</label>
         <input id="manual-humidity" type="number" min="0" max="100" value="60" />
       </div>
 
       <div class="manual-field">
-        <label for="manual-hour">Hour 0–23</label>
+        <label for="manual-hour" data-i18n="label-hour">Hour 0–23</label>
         <input id="manual-hour" type="number" min="0" max="23" value="20" />
       </div>
 
       <div class="manual-field">
-        <label for="manual-mood">Mood / Vibe <span style="opacity:.55;font-weight:400">(optional, overrides everything)</span></label>
+        <label for="manual-mood"><span data-i18n="label-mood">Mood / Vibe</span> <span data-i18n="label-mood-hint" style="opacity:.55;font-weight:400">(optional, overrides everything)</span></label>
         <input id="manual-mood" type="text" placeholder="enerjik, hüzünlü, focus, romantic…" autocomplete="off" />
       </div>
 
-      <button id="btn-apply-manual">Apply Input</button>
+      <button id="btn-apply-manual" data-i18n="btn-apply">Apply Input</button>
     </div>
   </aside>
 
   <!-- RIGHT PANEL: LIVE LOGIC STREAM -->
   <aside class="side-panel right" id="logic-panel">
     <div class="panel-head">
-      <div class="side-panel-title">Live Logic</div>
+      <div class="side-panel-title" data-i18n="panel-logic-title">Live Logic</div>
       <button id="btn-collapse-logic" class="panel-collapse-btn" type="button" title="Collapse live logic" aria-label="Collapse live logic" aria-expanded="true">
         <span id="logic-collapse-icon">&gt;</span>
       </button>
@@ -983,22 +1010,22 @@
 
     <div class="panel-body logic-body" id="logic-body">
       <div class="logic-item">
-        <div class="logic-k">Input Source</div>
+        <div class="logic-k" data-i18n="logic-k-source">Input Source</div>
         <div class="logic-v gold" id="logic-source">Automatic sensors</div>
       </div>
 
       <div class="logic-item">
-        <div class="logic-k">Current State</div>
+        <div class="logic-k" data-i18n="logic-k-state">Current State</div>
         <div class="logic-v gold" id="logic-state">Idle</div>
       </div>
 
       <div class="logic-item">
-        <div class="logic-k">Last Decision</div>
+        <div class="logic-k" data-i18n="logic-k-decision">Last Decision</div>
         <div class="logic-v" id="logic-output">Awaiting decision…</div>
       </div>
 
       <div class="logic-stream-wrap">
-        <div class="logic-k">Reasoning Stream</div>
+        <div class="logic-k" data-i18n="logic-k-stream">Reasoning Stream</div>
         <div id="logic-stream" class="logic-stream">
           <div class="logic-line muted">[system] waiting for first analysis…</div>
         </div>
@@ -1007,61 +1034,61 @@
   </aside>
 
   <div class="section section-env">
-    <div class="label"><span class="icon">🌡</span>Environment Input</div>
+    <div class="label"><span class="icon">🌡</span><span data-i18n="env-label">Environment Input</span></div>
     <div class="grid">
       <div class="cell">
-        <div class="k">Noise</div>
+        <div class="k" data-i18n="k-noise">Noise</div>
         <div class="v" id="in-noise">—<small> dB</small></div>
       </div>
 
       <div class="cell">
-        <div class="k">Weather</div>
+        <div class="k" data-i18n="k-weather">Weather</div>
         <div class="v" id="in-weather" style="font-size:15px">—</div>
         <div class="v-sub" id="in-weather-age"></div>
       </div>
 
       <div class="cell">
-        <div class="k">Temp</div>
+        <div class="k" data-i18n="k-temp">Temp</div>
         <div class="v" id="in-temp">—<small> °C</small></div>
       </div>
 
       <div class="cell">
-        <div class="k">Time</div>
+        <div class="k" data-i18n="k-time">Time</div>
         <div class="v" id="in-time">—</div>
       </div>
     </div>
   </div>
 
   <div class="section section-ai">
-    <div class="label"><span class="icon">✦</span>Gemini Interpretation</div>
+    <div class="label"><span class="icon">✦</span><span data-i18n="ai-label">Gemini Interpretation</span></div>
     <div id="reasoning" class="empty">Awaiting analysis…</div>
   </div>
 
   <div class="section section-prompts">
-    <div class="label"><span class="icon">♫</span>Active Lyria Prompts</div>
+    <div class="label"><span class="icon">♫</span><span data-i18n="prompts-label">Active Lyria Prompts</span></div>
     <div id="prompts"><span style="color:var(--dim)">—</span></div>
   </div>
 
   <div class="section section-params">
-    <div class="label"><span class="icon">⚙</span>Generation Parameters</div>
+    <div class="label"><span class="icon">⚙</span><span data-i18n="params-label">Generation Parameters</span></div>
     <div class="params">
       <div class="cell">
-        <div class="k">BPM</div>
+        <div class="k" data-i18n="k-bpm">BPM</div>
         <div class="v" id="p-bpm">—</div>
       </div>
 
       <div class="cell">
-        <div class="k">Scale</div>
+        <div class="k" data-i18n="k-scale">Scale</div>
         <div class="v" id="p-scale" style="font-size:14px">—</div>
       </div>
 
       <div class="cell">
-        <div class="k">Density</div>
+        <div class="k" data-i18n="k-density">Density</div>
         <div class="v" id="p-density">—</div>
       </div>
 
       <div class="cell">
-        <div class="k">Brightness</div>
+        <div class="k" data-i18n="k-brightness">Brightness</div>
         <div class="v" id="p-bright">—</div>
       </div>
     </div>
@@ -1070,7 +1097,7 @@
   <div class="section section-ctrl">
     <div class="controls">
       <button id="btn-play" disabled><span class="dot" id="dot"></span>PLAY</button>
-      <button id="btn-analyze" disabled>RE-ANALYZE</button>
+      <button id="btn-analyze" disabled data-i18n="btn-reanalyze">RE-ANALYZE</button>
     </div>
 
     <div class="bottom-tool-row">
@@ -1626,6 +1653,11 @@ async function askGemini(inputs) {
   const seed = Math.floor(Math.random() * 99991) + 10;
   const seedLine = inputs.mood ? '' : `\nVariation seed (ignore the number, but use it to make a fresh genre choice different from your last): #${seed}`;
 
+  // Reasoning language based on UI language setting
+  const reasoningLang = (window.atmosferaLang || 'TR') === 'TR'
+    ? 'Write the "reasoning" field in Turkish (Türkçe).'
+    : 'Write the "reasoning" field in English.';
+
   const prompt = `You are the creative director of an autonomous DJ. Pick the most emotionally fitting music for RIGHT NOW. Be bold and diverse — do NOT default to ambient unless everything explicitly points that way.
 
 PRIORITY ORDER (strongest → weakest):
@@ -1702,7 +1734,8 @@ Respond with ONLY valid JSON, no markdown:
 }
 Rules: 1–3 prompts. Be SPECIFIC and VARIED — avoid vague generics like "ambient texture" or "warm pads".
 Good examples: "funky electric piano and horn stabs", "flamenco acoustic guitar with cajon percussion", "cinematic orchestral string swell", "upbeat bossa nova piano trio", "lo-fi hip hop with warm vinyl crackle", "dark jazz saxophone over brushed snare".
-Choose scale deliberately to match the genre mood.${seedLine}`;
+Choose scale deliberately to match the genre mood.
+${reasoningLang}${seedLine}`;
 
   addLogicLog('Sending environment to Gemini for music interpretation...');
 
@@ -1989,7 +2022,7 @@ async function startPlayback() {
 
     state.playing = true;
     window.dispatchEvent(new CustomEvent('atmosfera-playing'));
-    els.play.innerHTML = '<span class="dot live" id="dot"></span>PAUSE';
+    els.play.innerHTML = `<span class="dot live" id="dot"></span>${window.i18n ? window.i18n('btn-pause') : 'PAUSE'}`;
     setStatus('Live — generating from current atmosphere.', 'ok');
 
     if (state.reanalyzeTimer) clearInterval(state.reanalyzeTimer);
@@ -2019,7 +2052,7 @@ async function pausePlayback() {
   } catch (e) {}
 
   stopAudio();
-  els.play.innerHTML = '<span class="dot" id="dot"></span>PLAY';
+  els.play.innerHTML = `<span class="dot" id="dot"></span>${window.i18n ? window.i18n('btn-play') : 'PLAY'}`;
   setStatus('Paused.', '');
 }
 
@@ -2123,6 +2156,121 @@ boot();
 <script>
 (function(){
   'use strict';
+
+  // ── i18n system ───────────────────────────────────────
+  const I18N = {
+    TR: {
+      'env-label':        'ORTAM GİRDİSİ',
+      'ai-label':         'GEMİNİ YORUMU',
+      'prompts-label':    'AKTİF LYRİA PROMPTLARI',
+      'params-label':     'ÜRETİM PARAMETRELERİ',
+      'k-noise':          'GÜRÜLTÜ',
+      'k-weather':        'HAVA',
+      'k-temp':           'SICAKLIK',
+      'k-time':           'SAAT',
+      'k-bpm':            'BPM',
+      'k-scale':          'SKALA',
+      'k-density':        'YOĞUNLUK',
+      'k-brightness':     'PARLAKLIK',
+      'panel-manual-title': 'Manuel Girdi',
+      'panel-logic-title':  'Canlı Mantık',
+      'label-use-manual': 'Manuel girdi kullan',
+      'label-noise':      'Gürültü 0–100',
+      'label-weather':    'Hava',
+      'label-temp':       'Sıcaklık °C',
+      'label-humidity':   'Nem %',
+      'label-hour':       'Saat 0–23',
+      'label-mood':       'Ruh Hali / Vibe',
+      'label-mood-hint':  '(isteğe bağlı, her şeyi geçersiz kılar)',
+      'logic-k-source':   'Girdi Kaynağı',
+      'logic-k-state':    'Mevcut Durum',
+      'logic-k-decision': 'Son Karar',
+      'logic-k-stream':   'Mantık Akışı',
+      'btn-apply':        'Girdiyi Uygula',
+      'btn-play':         'OYNAT',
+      'btn-pause':        'DURAKLAT',
+      'btn-reanalyze':    'YENİDEN ANALİZ ET',
+    },
+    EN: {
+      'env-label':        'ENVIRONMENT INPUT',
+      'ai-label':         'GEMINI INTERPRETATION',
+      'prompts-label':    'ACTIVE LYRIA PROMPTS',
+      'params-label':     'GENERATION PARAMETERS',
+      'k-noise':          'NOISE',
+      'k-weather':        'WEATHER',
+      'k-temp':           'TEMP',
+      'k-time':           'TIME',
+      'k-bpm':            'BPM',
+      'k-scale':          'SCALE',
+      'k-density':        'DENSITY',
+      'k-brightness':     'BRIGHTNESS',
+      'panel-manual-title': 'Manual Input',
+      'panel-logic-title':  'Live Logic',
+      'label-use-manual': 'Use manual input',
+      'label-noise':      'Noise 0–100',
+      'label-weather':    'Weather',
+      'label-temp':       'Temperature °C',
+      'label-humidity':   'Humidity %',
+      'label-hour':       'Hour 0–23',
+      'label-mood':       'Mood / Vibe',
+      'label-mood-hint':  '(optional, overrides everything)',
+      'logic-k-source':   'Input Source',
+      'logic-k-state':    'Current State',
+      'logic-k-decision': 'Last Decision',
+      'logic-k-stream':   'Reasoning Stream',
+      'btn-apply':        'Apply Input',
+      'btn-play':         'PLAY',
+      'btn-pause':        'PAUSE',
+      'btn-reanalyze':    'RE-ANALYZE',
+    },
+  };
+
+  // Expose global i18n helper — used by module script too
+  window.i18n = function(key) {
+    const lang = window.atmosferaLang || 'TR';
+    return (I18N[lang] || I18N.TR)[key] || key;
+  };
+
+  function applyLang(lang) {
+    window.atmosferaLang = lang;
+    localStorage.setItem('atmosfera-lang', lang);
+    const t = I18N[lang] || I18N.TR;
+
+    // Update all static data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) el.textContent = t[key];
+    });
+
+    // Play button — preserve the dot span inside it
+    const playBtn = document.getElementById('btn-play');
+    if (playBtn) {
+      const dotEl = playBtn.querySelector('.dot');
+      const isLive = dotEl && dotEl.classList.contains('live');
+      const dotClass = isLive ? 'dot live' : 'dot';
+      const btnText = isLive ? t['btn-pause'] : t['btn-play'];
+      playBtn.innerHTML = `<span class="${dotClass}" id="dot"></span>${btnText}`;
+    }
+
+    // Update lang toggle button label and html lang attribute
+    const langBtn = document.getElementById('btn-lang');
+    if (langBtn) langBtn.textContent = lang;
+    document.documentElement.lang = lang === 'TR' ? 'tr' : 'en';
+  }
+
+  // Restore saved language (default: TR)
+  const savedLang = localStorage.getItem('atmosfera-lang');
+  applyLang(savedLang === 'EN' ? 'EN' : 'TR');
+
+  // Lang toggle button
+  const langButton = document.getElementById('btn-lang');
+  if (langButton) {
+    langButton.addEventListener('click', () => {
+      applyLang(window.atmosferaLang === 'TR' ? 'EN' : 'TR');
+    });
+  }
+
+  // ── end i18n ──────────────────────────────────────────
 
   const root = document.documentElement;
   const themeButton = document.getElementById('btn-theme');
