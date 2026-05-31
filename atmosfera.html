@@ -31,11 +31,11 @@
     font-family: var(--font-ui);
     font-size: 14px;
     line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
-    padding: 36px 16px 48px;
-    max-width: 900px;
-    margin: 0 auto;
+    height: 100vh;
+    overflow: hidden;
+    padding: 28px 28px 0;
+    display: flex;
+    flex-direction: column;
     position: relative;
     z-index: 1;
   }
@@ -65,9 +65,9 @@
   h1 {
     font-family: var(--font-display);
     color: var(--gold);
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 800;
-    letter-spacing: 12px;
+    letter-spacing: 10px;
     margin-bottom: 2px;
     text-transform: uppercase;
     position: relative;
@@ -77,22 +77,22 @@
   h1::after {
     content: '';
     display: block;
-    width: 52px;
+    width: 40px;
     height: 2px;
     background: linear-gradient(90deg, var(--gold), transparent);
-    margin-top: 10px;
+    margin-top: 6px;
   }
 
   .sub {
     font-family: var(--font-ui);
     color: var(--text-secondary);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 500;
-    letter-spacing: 4px;
-    margin-bottom: 36px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
     text-transform: uppercase;
     opacity: 0.6;
-    margin-top: 8px;
+    margin-top: 4px;
   }
 
   @keyframes cardIn {
@@ -105,19 +105,15 @@
     border: 1px solid rgba(154, 98, 0, 0.10);
     border-left: 3px solid var(--accent, var(--gold));
     border-radius: 14px;
-    padding: 24px 28px;
-    margin-bottom: 16px;
+    padding: 12px 14px;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     box-shadow:
       0 1px 0 rgba(255,255,255,1) inset,
-      0 -1px 0 rgba(0,0,0,0.03) inset,
       0 4px 6px rgba(0, 0, 0, 0.03),
-      0 12px 40px rgba(0, 0, 0, 0.05);
-    transition: border-color 0.3s, box-shadow 0.35s, transform 0.25s;
+      0 8px 24px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
-    animation: cardIn 0.5s ease both;
   }
 
   .section::before {
@@ -155,11 +151,14 @@
 
   .section:hover::after { opacity: 0.45; }
 
-  .section-env { --accent: #9A6200; --accent-rgb: 154,98,0; }
-  .section-ai { --accent: #5B4FBF; --accent-rgb: 91,79,191; }
-  .section-prompts { --accent: #1A8C74; --accent-rgb: 26,140,116; }
-  .section-params { --accent: #1678C2; --accent-rgb: 22,120,194; }
-  .section-ctrl { --accent: #9A6200; --accent-rgb: 154,98,0; }
+  .section-env,
+  .section-ai,
+  .section-prompts,
+  .section-params,
+  .section-ctrl {
+    --accent:     #C9A84C;
+    --accent-rgb: 201,168,76;
+  }
 
   .label {
     font-family: var(--font-ui);
@@ -168,15 +167,15 @@
     font-weight: 700;
     letter-spacing: 3.5px;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 
   .label .icon {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     border-radius: 6px;
     background: rgba(var(--accent-rgb, 154,98,0), 0.10);
     display: inline-flex;
@@ -202,7 +201,7 @@
 
   .cell { display: flex; flex-direction: column; min-width: 0; }
 
-  .cell .k, .logic-k, .manual-field label {
+  .cell .k {
     font-family: var(--font-ui);
     color: var(--text-secondary);
     font-size: 9px;
@@ -215,9 +214,9 @@
   .cell .v {
     font-family: var(--font-mono);
     color: var(--text-primary);
-    font-size: 26px;
+    font-size: 22px;
     font-weight: bold;
-    margin-top: 8px;
+    margin-top: 5px;
     letter-spacing: -1px;
     word-break: break-word;
   }
@@ -241,10 +240,9 @@
   #reasoning {
     font-family: var(--font-ui);
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
-    min-height: 1.8em;
-    line-height: 1.75;
+    line-height: 1.55;
     font-style: italic;
     opacity: 0.82;
   }
@@ -259,15 +257,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 0;
-    gap: 12px;
+    padding: 3px 0;
+    gap: 8px;
   }
 
   .prompt-row .text {
     font-family: var(--font-ui);
     color: var(--text-primary);
     font-weight: 500;
-    font-size: 13px;
+    font-size: 11px;
   }
 
   .prompt-row .weight {
@@ -311,7 +309,7 @@
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 2.5px;
-    padding: 11px 28px;
+    padding: 9px 22px;
     cursor: pointer;
     text-transform: uppercase;
     border-radius: 5px;
@@ -377,235 +375,185 @@
     50% { opacity: 0.35; transform: scale(0.7); }
   }
 
-  /* ---------- SIDE PANELS ---------- */
+  /* ── 3-Column Layout ────────────────────────────────── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 20fr 45fr 35fr;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    margin-top: 8px;
+  }
 
-  .side-panel {
-    position: fixed;
-    top: 32px;
-    width: 270px;
-    max-height: calc(100vh - 64px);
-    overflow-y: auto;
-    border: 1px solid rgba(154, 98, 0, 0.12);
-    border-left: 3px solid var(--gold);
-    background: rgba(255, 255, 255, 0.86);
+  /* Left: env data */
+  .col-env {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: rgba(5, 5, 5, 0.92);
+    border: 1px solid rgba(201, 168, 76, 0.20);
+    border-left: 3px solid #C9A84C;
     border-radius: 14px;
-    padding: 18px;
-    z-index: 10;
+    padding: 14px 14px;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-    transition: width 0.2s ease, max-height 0.2s ease, padding 0.2s ease, transform 0.2s ease;
   }
 
-  .side-panel.left { left: 24px; }
-  .side-panel.right { right: 24px; }
-
-  .side-panel-title {
-    color: var(--gold);
-    font-family: var(--font-ui);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 3.5px;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .panel-head {
+  /* Center: Machine Thoughts hero */
+  .col-thoughts {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: rgba(5, 5, 5, 0.92);
+    border: 1px solid rgba(201, 168, 76, 0.20);
+    border-left: 3px solid #C9A84C;
+    border-radius: 14px;
+    padding: 18px 20px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
   }
 
-  .panel-collapse-btn {
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-color: rgba(154, 98, 0, 0.18);
-    color: var(--gold);
-    font-size: 13px;
-    line-height: 1;
-    letter-spacing: 0;
-    flex: 0 0 auto;
+  /* Fade out at the bottom if poem overflows */
+  .col-thoughts::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 72px;
+    background: linear-gradient(transparent, rgba(5, 5, 5, 0.92));
+    pointer-events: none;
+    border-radius: 0 0 13px 13px;
   }
 
-  .panel-body { margin-top: 16px; }
-
-  .side-panel.panel-collapsed {
-    width: 48px;
-    padding: 12px 8px;
+  /* Right: sections stacked */
+  .col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     overflow: hidden;
   }
 
-  .side-panel.panel-collapsed .panel-body { display: none; }
-
-  .side-panel.panel-collapsed .panel-head {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 12px;
-    min-height: 220px;
+  .col-right .section {
+    flex-shrink: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: rgba(5, 5, 5, 0.92);
+    border-color: rgba(201, 168, 76, 0.20);
+    border-left-color: #C9A84C;
+    box-shadow: none;
   }
 
-  .side-panel.panel-collapsed .side-panel-title {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    letter-spacing: 2px;
+  .col-right .section::before { background: none; }
+
+  /* Params: 2-column grid fits narrow column */
+  .section-params .params {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
-  .manual-field { margin-bottom: 12px; }
-  .manual-field label { display: block; margin-bottom: 5px; }
-
-  .manual-field input,
-  .manual-field select {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.78);
-    border: 1px solid rgba(154, 98, 0, 0.12);
-    color: var(--text-primary);
-    font-family: var(--font-ui);
-    font-size: 12px;
-    padding: 9px;
-    border-radius: 5px;
-  }
-
-  .manual-field input:focus,
-  .manual-field select:focus {
-    outline: none;
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(154,98,0,0.08);
-  }
-
-  .manual-toggle {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    color: var(--text-primary);
-    font-size: 12px;
-    margin: 12px 0 16px;
-  }
-
-  .manual-toggle input { accent-color: var(--gold); }
-
-  .logic-item {
-    border-top: 1px solid rgba(154, 98, 0, 0.10);
-    padding: 10px 0;
-  }
-
-  .logic-v {
-    color: var(--text-primary);
-    font-family: var(--font-ui);
-    font-size: 12px;
-    margin-top: 3px;
-  }
-
-  .logic-v.gold { color: var(--gold); font-weight: 600; }
-
-  .logic-stream-wrap {
-    margin-top: 14px;
-    border-top: 1px solid rgba(154, 98, 0, 0.10);
-    padding-top: 12px;
-  }
-
-  .logic-stream {
-    margin-top: 10px;
-    height: 360px;
-    overflow-y: auto;
-    border: 1px solid rgba(154, 98, 0, 0.10);
-    background: rgba(246, 244, 240, 0.62);
-    border-radius: 10px;
-    padding: 10px;
-  }
-
-  .logic-line {
-    color: var(--text-primary);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 1.5;
-    margin-bottom: 8px;
-    word-break: break-word;
-  }
-
-  .logic-line .t {
+  /* Column title */
+  .col-title {
     color: var(--gold);
-    margin-right: 8px;
-  }
-
-  .logic-line.muted { color: var(--text-secondary); opacity: 0.65; }
-  .logic-line.ok { color: var(--gold); }
-  .logic-line.err { color: #c0392b; }
-
-  @media (max-width: 1450px) {
-    .side-panel {
-      position: static;
-      width: 100%;
-      max-height: none;
-      margin: 18px 0;
-      transform: none;
-    }
-
-    .side-panel.panel-collapsed {
-      width: 100%;
-      padding: 12px 18px;
-      overflow: hidden;
-    }
-
-    .side-panel.panel-collapsed .panel-head {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      min-height: auto;
-    }
-
-    .side-panel.panel-collapsed .side-panel-title {
-      writing-mode: horizontal-tb;
-      transform: none;
-      letter-spacing: 3px;
-    }
-
-    .side-panel.panel-collapsed .panel-body { display: none; }
-  }
-
-  /* ── Bottom Tool Row ───────────────────────────────── */
-  .bottom-tool-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(var(--accent-rgb, 154,98,0), 0.12);
-  }
-
-  .tool-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-width: 0;
-  }
-
-  .theme-switch-label,
-  .snapshot-label {
     font-family: var(--font-ui);
-    color: var(--text-secondary);
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
-    white-space: nowrap;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(154, 98, 0, 0.14);
+    flex-shrink: 0;
   }
 
-  .theme-toggle,
+  .col-thoughts .col-title {
+    color: #C9A84C;
+    border-bottom-color: rgba(201, 168, 76, 0.20);
+  }
+
+  /* Env grid: 2×2 cells */
+  .env-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .col-env .cell .v,
+  .col-right .cell .v   { font-size: 17px; margin-top: 4px; letter-spacing: 0; color: #F4F0E4; }
+  .col-env .cell .v small,
+  .col-right .cell .v small { font-size: 10px; color: rgba(201,168,76,0.60); }
+  .col-env .cell .k,
+  .col-right .cell .k   { font-size: 8px; letter-spacing: 2px; color: rgba(201,168,76,0.55); opacity: 1; }
+
+  .section-params .cell .v { font-size: 20px; }
+
+  .col-right #reasoning { color: #F4F0E4; opacity: 0.88; }
+
+  .col-right .prompt-row .text   { color: #F4F0E4; }
+  .col-right .prompt-row .weight { color: #C9A84C; }
+
+  .col-right .bar { background: rgba(201, 168, 76, 0.10); }
+
+  /* ── Bottom Bar ─────────────────────────────────────── */
+  .bottom-bar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 6px 0 10px;
+    flex-shrink: 0;
+    gap: 12px;
+    border-top: 1px solid rgba(154, 98, 0, 0.10);
+    margin-top: 6px;
+  }
+
+  .bottom-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .snapshot-toggle { padding: 11px 20px; }
+
+
+  /* ── Machine Thoughts (center column hero) ─────────── */
+  .thoughts-poem {
+    flex: 1;
+    overflow: hidden;
+    font-family: 'Space Mono', 'Courier New', monospace;
+    font-size: clamp(11px, 1.35vh, 14px);
+    line-height: 1.95;
+    color: #C9A84C;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .thoughts-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 0.95em;
+    background: #C9A84C;
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .thoughts-cursor.visible { opacity: 1; }
+
+  html.is-playing .thoughts-cursor.visible {
+    animation: thoughts-blink 1s step-end infinite;
+  }
+
+  @keyframes thoughts-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+
   .snapshot-toggle {
-    min-width: 136px;
     padding: 9px 16px;
-  }
-
-  .snapshot-toggle {
-    min-width: 118px;
   }
 
   .snapshot-modal {
@@ -679,8 +627,8 @@
     font-size: 10px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    margin-top: 12px;
-    min-height: 1.4em;
+    margin-top: 6px;
+    min-height: 1.2em;
   }
 
   html[data-theme="dark"] {
@@ -726,14 +674,6 @@
     box-shadow: 0 18px 70px rgba(0,0,0,0.32);
   }
 
-  html[data-theme="dark"] .manual-field input,
-  html[data-theme="dark"] .manual-field select,
-  html[data-theme="dark"] .logic-stream {
-    background: rgba(0, 0, 0, 0.58);
-    border-color: rgba(201, 168, 76, 0.14);
-    color: var(--text-primary);
-  }
-
   html[data-theme="dark"] .bar {
     background: rgba(201, 168, 76, 0.08);
   }
@@ -755,30 +695,46 @@
     .section { padding: 20px 18px; }
     .grid, .params { grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .cell .v { font-size: 23px; }
-    .bottom-tool-row { grid-template-columns: 1fr; }
+  }
+
+  /* ── App Header ────────────────────────────────────── */
+  .app-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .app-header > .app-header-title { flex: 1 1 auto; min-width: 0; }
+
+  /* ── Header Controls (theme + language toggles) ─────── */
+  .header-controls {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 0 0 auto;
+    margin-top: 4px;
+  }
+
+  #btn-lang,
+  #btn-theme {
+    padding: 7px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    min-width: auto;
+    border-radius: 5px;
   }
 
   /* ── ANIMATED CHARACTERS ─────────────────────────────── */
-  #character-stage {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    overflow: hidden;
-  }
-
   .char-wrap {
-    position: absolute;
-    bottom: 60px;
     width: 72px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-shrink: 0;
     transition: transform var(--char-walk-dur, 2s) cubic-bezier(0.42, 0, 0.38, 1);
   }
-
-  #char-male-wrap   { left:  302px; }
-  #char-female-wrap { right: 302px; }
 
   .emotion-bubble {
     font-size: 20px;
@@ -795,57 +751,66 @@
     transform: translateY(0) scale(1);
   }
 
-  .char-figure { overflow: visible; }
+  /* ── Emoji character base ── */
+  .char-emoji {
+    font-size: 36px;
+    line-height: 1;
+    display: block;
+    text-align: center;
+    user-select: none;
+    filter: drop-shadow(0 4px 10px rgba(201,168,76,0.25));
+    transition: filter 0.3s ease;
+  }
 
-  /* ── Idle breathe ── */
-  @keyframes char-breathe {
+  /* ── Idle float ── */
+  @keyframes char-float {
     0%, 100% { transform: translateY(0);    }
-    50%      { transform: translateY(-2px); }
+    50%      { transform: translateY(-7px); }
   }
-  .char-idle { animation: char-breathe 3.2s ease-in-out infinite; }
+  .char-idle { animation: char-float 3s ease-in-out infinite; }
 
-  /* ── Walk cycle ── */
-  @keyframes leg-fwd { from { transform: rotate(-22deg); } to { transform: rotate( 22deg); } }
-  @keyframes leg-bwd { from { transform: rotate( 22deg); } to { transform: rotate(-22deg); } }
-  @keyframes arm-fwd { from { transform: rotate(-18deg); } to { transform: rotate( 18deg); } }
-  @keyframes arm-bwd { from { transform: rotate( 18deg); } to { transform: rotate(-18deg); } }
-
-  /* SVG-space pivot anchors — top-center of each limb rect */
-  .male-leg-l  { transform-origin: 23px 64px; }
-  .male-leg-r  { transform-origin: 37px 64px; }
-  .male-arm-l  { transform-origin: 20px 36px; }
-  .male-arm-r  { transform-origin: 40px 36px; }
-  .female-arm-l { transform-origin: 21px 36px; }
-  .female-arm-r { transform-origin: 39px 36px; }
-
-  .char-walking .male-leg-l { animation: leg-fwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
-  .char-walking .male-leg-r { animation: leg-bwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
-  .char-walking .male-arm-l { animation: arm-bwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
-  .char-walking .male-arm-r { animation: arm-fwd var(--step-dur, 0.38s) ease-in-out infinite alternate; }
-
-  /* ── Female sway (music on) ── */
-  @keyframes char-sway {
-    0%, 100% { transform: rotate(-2.5deg) translateY(0);    }
-    50%      { transform: rotate( 2.5deg) translateY(-3px); }
+  /* ── Analyzing bounce (male thinking) ── */
+  @keyframes char-bounce {
+    0%, 100% { transform: translateY(0)     scale(1);    }
+    25%      { transform: translateY(-13px) scale(1.08); }
+    55%      { transform: translateY(-4px)  scale(0.96); }
+    78%      { transform: translateY(-9px)  scale(1.04); }
   }
-  .char-sway { animation: char-sway var(--sway-dur, 2s) ease-in-out infinite; }
+  .char-bounce { animation: char-bounce 0.72s ease-in-out infinite; }
 
-  /* ── Female dance (after catch) ── */
-  @keyframes char-dance {
-    0%   { transform: translateY(0)    rotate( 0.0deg) scaleX(1.00); }
-    18%  { transform: translateY(-8px) rotate( 5.0deg) scaleX(1.04); }
-    36%  { transform: translateY(-2px) rotate(-4.0deg) scaleX(0.97); }
-    54%  { transform: translateY(-6px) rotate( 4.0deg) scaleX(1.03); }
-    72%  { transform: translateY(-1px) rotate(-2.5deg) scaleX(0.99); }
-    100% { transform: translateY(0)    rotate( 0.0deg) scaleX(1.00); }
+  /* ── Walk bob (emoji rocks while wrapper slides) ── */
+  @keyframes char-walk-bob {
+    0%, 100% { transform: translateY(0)     rotate(-6deg) scale(1.00); }
+    50%      { transform: translateY(-11px) rotate( 6deg) scale(1.05); }
   }
-  .char-dance { animation: char-dance var(--dance-dur, 0.55s) ease-in-out infinite; }
+  .char-walking { animation: char-walk-bob var(--step-dur, 0.38s) ease-in-out infinite; }
 
-  /* ── Female arms open on catch ── */
-  @keyframes arm-open-l { to { transform: rotate(-34deg); } }
-  @keyframes arm-open-r { to { transform: rotate( 34deg); } }
-  .char-arms-open .female-arm-l { animation: arm-open-l 0.34s ease-out forwards; }
-  .char-arms-open .female-arm-r { animation: arm-open-r 0.34s ease-out forwards; }
+  /* ── Female pulse glow (music on) ── */
+  @keyframes char-pulse {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 4px 10px rgba(201,168,76,0.25)); }
+    50%      { transform: scale(1.12); filter: drop-shadow(0 6px 22px rgba(201,168,76,0.70)); }
+  }
+  .char-sway { animation: char-pulse var(--sway-dur, 1.2s) ease-in-out infinite; }
+
+  /* ── Female joyful dance (after orb catch) ── */
+  @keyframes char-pop-dance {
+    0%   { transform: scale(1)    rotate(  0deg); }
+    18%  { transform: scale(1.40) rotate(-11deg); }
+    36%  { transform: scale(0.93) rotate(  7deg); }
+    54%  { transform: scale(1.25) rotate( -6deg); }
+    78%  { transform: scale(0.98) rotate(  3deg); }
+    100% { transform: scale(1)    rotate(  0deg); }
+  }
+  .char-dance { animation: char-pop-dance var(--dance-dur, 0.55s) ease-in-out infinite; }
+
+  /* ── Female catch pop (replaces arms-open) ── */
+  @keyframes char-catch {
+    0%   { transform: scale(1)    rotate( 0deg); }
+    35%  { transform: scale(1.50) rotate(-9deg); }
+    65%  { transform: scale(0.91) rotate( 6deg); }
+    100% { transform: scale(1.06) rotate( 0deg); }
+  }
+  .char-arms-open { animation: char-catch 0.44s ease-out forwards; }
 
   /* ── Traveling orb ── */
   #char-orb {
@@ -874,300 +839,108 @@
   }
   .orb-bursting { animation: orb-burst 0.44s ease-out forwards !important; }
 
-  /* hide on viewports where panels are not fixed */
-  @media (max-width: 1100px) {
-    #character-stage { display: none; }
-  }
 </style>
 </head>
 <body>
   <!-- Particle Canvas Background -->
   <canvas id="particle-canvas"></canvas>
 
-  <!-- ── ANIMATED CHARACTERS ────────────────────────────── -->
-  <div id="character-stage" aria-hidden="true">
+  <!-- Orb (fixed, position calculated from char bounding rects) -->
+  <div id="char-orb"></div>
 
-    <!-- Male — left side, near input panel -->
-    <div class="char-wrap" id="char-male-wrap">
-      <div class="emotion-bubble" id="male-bubble">🤔</div>
-      <svg class="char-figure" id="char-male" width="60" height="108"
-           viewBox="0 0 60 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-        <!-- ── LEFT ARM (behind body, pivot top-center 20,36) ── -->
-        <g class="male-arm-l">
-          <rect x="14" y="36" width="12" height="24" rx="6" fill="#B89040"/>
-          <ellipse cx="20" cy="62" rx="6" ry="4.5" fill="#C9A84C"/>
-        </g>
-        <!-- ── RIGHT ARM (behind body, pivot top-center 40,36) ── -->
-        <g class="male-arm-r">
-          <rect x="34" y="36" width="12" height="24" rx="6" fill="#B89040"/>
-          <ellipse cx="40" cy="62" rx="6" ry="4.5" fill="#C9A84C"/>
-        </g>
-
-        <!-- ── TORSO (covers arm tops, drawn on top) ── -->
-        <rect x="17" y="32" width="26" height="34" rx="10" fill="#C9A84C"/>
-        <!-- shirt collar detail -->
-        <rect x="24" y="32" width="12" height="8" rx="4" fill="#D4B860"/>
-
-        <!-- ── LEFT LEG (pivot top-center 23,64) ── -->
-        <g class="male-leg-l">
-          <rect x="17" y="64" width="12" height="28" rx="6" fill="#B89040"/>
-          <ellipse cx="22" cy="94" rx="9" ry="5" fill="#8B6820"/>
-        </g>
-        <!-- ── RIGHT LEG (pivot top-center 37,64) ── -->
-        <g class="male-leg-r">
-          <rect x="31" y="64" width="12" height="28" rx="6" fill="#B89040"/>
-          <ellipse cx="38" cy="94" rx="9" ry="5" fill="#8B6820"/>
-        </g>
-
-        <!-- ── HEAD (drawn last, on top of everything) ── -->
-        <!-- ears -->
-        <circle cx="16" cy="15" r="5"  fill="#B89040"/>
-        <circle cx="44" cy="15" r="5"  fill="#B89040"/>
-        <!-- head -->
-        <circle cx="30" cy="14" r="14" fill="#C9A84C"/>
-        <!-- hair cap -->
-        <path d="M17 10 Q20 2 30 2 Q40 2 43 10 Q40 6 30 7 Q20 7 17 10Z"
-              fill="#8B6820"/>
-        <!-- eyes -->
-        <circle cx="25" cy="13" r="2.6" fill="#3D2200"/>
-        <circle cx="35" cy="13" r="2.6" fill="#3D2200"/>
-        <circle cx="25.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
-        <circle cx="35.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
-        <!-- smile -->
-        <path d="M24 18 Q30 24 36 18" stroke="#3D2200" stroke-width="1.8"
-              fill="none" stroke-linecap="round"/>
-
-      </svg>
+  <div class="app-header">
+    <div class="app-header-title">
+      <h1>ATMOSFERA</h1>
+      <div class="sub">AUTONOMOUS DJ AGENT</div>
     </div>
-
-    <!-- Female — right side, near music output panel -->
-    <div class="char-wrap" id="char-female-wrap">
-      <div class="emotion-bubble" id="female-bubble">🎵</div>
-      <svg class="char-figure" id="char-female" width="60" height="108"
-           viewBox="0 0 60 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-        <!-- ── LEFT ARM (behind body, pivot top-center 21,36) ── -->
-        <g class="female-arm-l">
-          <rect x="15" y="36" width="12" height="22" rx="6" fill="#B89040"/>
-          <ellipse cx="21" cy="60" rx="5.5" ry="4" fill="#C9A84C"/>
-        </g>
-        <!-- ── RIGHT ARM (behind body, pivot top-center 39,36) ── -->
-        <g class="female-arm-r">
-          <rect x="33" y="36" width="12" height="22" rx="6" fill="#B89040"/>
-          <ellipse cx="39" cy="60" rx="5.5" ry="4" fill="#C9A84C"/>
-        </g>
-
-        <!-- ── TORSO ── -->
-        <rect x="19" y="32" width="22" height="26" rx="9" fill="#C9A84C"/>
-
-        <!-- ── SKIRT (unified shape, no separate legs → distinct silhouette) ── -->
-        <path d="M16 56 C15 58 8 72 7 86 C7 92 12 97 21 98 L39 98 C48 97 53 92 53 86 C52 72 45 58 44 56 Z"
-              fill="#A87E30"/>
-        <!-- skirt hem highlight -->
-        <path d="M9 87 Q12 95 21 97 L39 97 Q48 95 51 87"
-              stroke="#C9A84C" stroke-width="1.4" fill="none"
-              stroke-linecap="round" opacity="0.35"/>
-
-        <!-- ── HEAD ── -->
-        <!-- ears -->
-        <circle cx="16" cy="15" r="4.5" fill="#B89040"/>
-        <circle cx="44" cy="15" r="4.5" fill="#B89040"/>
-        <!-- head -->
-        <circle cx="30" cy="14" r="14"  fill="#C9A84C"/>
-        <!-- hair bun (outer) -->
-        <circle cx="39" cy="4"  r="7"   fill="#8B6820"/>
-        <!-- hair bun (inner highlight) -->
-        <circle cx="39" cy="4"  r="4.5" fill="#A87E30"/>
-        <!-- hair across head -->
-        <path d="M18 10 Q22 2 30 2 Q36 2 41 7 Q38 4 30 6 Q22 7 19 11Z"
-              fill="#8B6820"/>
-        <!-- eyes -->
-        <circle cx="25" cy="13" r="2.6" fill="#3D2200"/>
-        <circle cx="35" cy="13" r="2.6" fill="#3D2200"/>
-        <circle cx="25.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
-        <circle cx="35.9" cy="12" r="1"  fill="rgba(255,255,255,0.72)"/>
-        <!-- smile -->
-        <path d="M24 18 Q30 24 36 18" stroke="#3D2200" stroke-width="1.8"
-              fill="none" stroke-linecap="round"/>
-
-      </svg>
+    <div class="header-controls">
+      <button id="btn-theme" type="button" aria-label="Switch to dark mode">DARK MODE</button>
+      <button id="btn-lang" type="button" aria-label="Dil değiştir / Change language">TR</button>
     </div>
-
-    <!-- Orb that travels from male to female on each delivery -->
-    <div id="char-orb"></div>
   </div>
 
-  <h1>ATMOSFERA</h1>
-  <div class="sub" id="location-sub">AUTONOMOUS DJ AGENT · DETECTING LOCATION</div>
+  <!-- 3-COLUMN MAIN GRID -->
+  <div class="main-grid">
 
-  <!-- LEFT PANEL: MANUAL INPUT -->
-  <aside class="side-panel left" id="manual-panel">
-    <div class="panel-head">
-      <div class="side-panel-title">Manual Input</div>
-      <button id="btn-collapse-manual" class="panel-collapse-btn" type="button" title="Collapse manual input" aria-label="Collapse manual input" aria-expanded="true">
-        <span id="manual-collapse-icon">^</span>
-      </button>
-    </div>
-
-    <div class="panel-body manual-body" id="manual-body">
-      <div class="manual-toggle">
-        <input type="checkbox" id="manual-enabled" />
-        <label for="manual-enabled">Use manual input</label>
-      </div>
-
-      <div class="manual-field">
-        <label for="manual-noise">Noise 0–100</label>
-        <input id="manual-noise" type="number" min="0" max="100" value="40" />
-      </div>
-
-      <div class="manual-field">
-        <label for="manual-weather">Weather</label>
-        <select id="manual-weather">
-          <option value="clear sky">Clear sky</option>
-          <option value="few clouds">Few clouds</option>
-          <option value="cloudy">Cloudy</option>
-          <option value="rain">Rain</option>
-          <option value="storm">Storm</option>
-          <option value="snow">Snow</option>
-          <option value="mist">Mist</option>
-        </select>
-      </div>
-
-      <div class="manual-field">
-        <label for="manual-temp">Temperature °C</label>
-        <input id="manual-temp" type="number" min="-20" max="50" value="22" />
-      </div>
-
-      <div class="manual-field">
-        <label for="manual-humidity">Humidity %</label>
-        <input id="manual-humidity" type="number" min="0" max="100" value="60" />
-      </div>
-
-      <div class="manual-field">
-        <label for="manual-hour">Hour 0–23</label>
-        <input id="manual-hour" type="number" min="0" max="23" value="20" />
-      </div>
-
-      <button id="btn-apply-manual">Apply Input</button>
-    </div>
-  </aside>
-
-  <!-- RIGHT PANEL: LIVE LOGIC STREAM -->
-  <aside class="side-panel right" id="logic-panel">
-    <div class="panel-head">
-      <div class="side-panel-title">Live Logic</div>
-      <button id="btn-collapse-logic" class="panel-collapse-btn" type="button" title="Collapse live logic" aria-label="Collapse live logic" aria-expanded="true">
-        <span id="logic-collapse-icon">&gt;</span>
-      </button>
-    </div>
-
-    <div class="panel-body logic-body" id="logic-body">
-      <div class="logic-item">
-        <div class="logic-k">Input Source</div>
-        <div class="logic-v gold" id="logic-source">Automatic sensors</div>
-      </div>
-
-      <div class="logic-item">
-        <div class="logic-k">Current State</div>
-        <div class="logic-v gold" id="logic-state">Idle</div>
-      </div>
-
-      <div class="logic-item">
-        <div class="logic-k">Last Decision</div>
-        <div class="logic-v" id="logic-output">Awaiting decision…</div>
-      </div>
-
-      <div class="logic-stream-wrap">
-        <div class="logic-k">Reasoning Stream</div>
-        <div id="logic-stream" class="logic-stream">
-          <div class="logic-line muted">[system] waiting for first analysis…</div>
+    <!-- LEFT: Environment data -->
+    <div class="col-env">
+      <div class="col-title"><span class="icon">🌡</span> <span data-i18n="env-label">ORTAM GİRDİSİ</span></div>
+      <div class="env-grid">
+        <div class="cell">
+          <div class="k" data-i18n="k-noise">GÜRÜLTÜ</div>
+          <div class="v" id="in-noise">—<small> dB</small></div>
+        </div>
+        <div class="cell">
+          <div class="k" data-i18n="k-weather">HAVA</div>
+          <div class="v" id="in-weather" style="font-size:15px">—</div>
+          <div class="v-sub" id="in-weather-age"></div>
+        </div>
+        <div class="cell">
+          <div class="k" data-i18n="k-temp">SICAKLIK</div>
+          <div class="v" id="in-temp">—<small> °C</small></div>
+        </div>
+        <div class="cell">
+          <div class="k" data-i18n="k-time">SAAT</div>
+          <div class="cell">
+  <div class="k">MOTION INDEX</div>
+  <div class="v" id="in-movement">—<small> %</small></div>
+</div>
+          <div class="v" id="in-time">—</div>
         </div>
       </div>
     </div>
-  </aside>
 
-  <div class="section section-env">
-    <div class="label"><span class="icon">🌡</span>Environment Input</div>
-    <div class="grid">
-      <div class="cell">
-        <div class="k">Noise</div>
-        <div class="v" id="in-noise">—<small> dB</small></div>
-      </div>
-
-      <div class="cell">
-        <div class="k">Weather</div>
-        <div class="v" id="in-weather" style="font-size:15px">—</div>
-        <div class="v-sub" id="in-weather-age"></div>
-      </div>
-
-      <div class="cell">
-        <div class="k">Temp</div>
-        <div class="v" id="in-temp">—<small> °C</small></div>
-      </div>
-
-      <div class="cell">
-        <div class="k">Time</div>
-        <div class="v" id="in-time">—</div>
+    <!-- CENTER: Machine Thoughts (hero) -->
+    <div class="col-thoughts" id="thoughts-panel">
+      <div class="col-title" data-i18n="panel-thoughts-title">MAKİNENİN DÜŞÜNCELERİ</div>
+      <div class="thoughts-poem">
+        <span id="thoughts-text"></span><span class="thoughts-cursor" id="thoughts-cursor"></span>
       </div>
     </div>
-  </div>
 
-  <div class="section section-ai">
-    <div class="label"><span class="icon">✦</span>Gemini Interpretation</div>
-    <div id="reasoning" class="empty">Awaiting analysis…</div>
-  </div>
-
-  <div class="section section-prompts">
-    <div class="label"><span class="icon">♫</span>Active Lyria Prompts</div>
-    <div id="prompts"><span style="color:var(--dim)">—</span></div>
-  </div>
-
-  <div class="section section-params">
-    <div class="label"><span class="icon">⚙</span>Generation Parameters</div>
-    <div class="params">
-      <div class="cell">
-        <div class="k">BPM</div>
-        <div class="v" id="p-bpm">—</div>
+    <!-- RIGHT: AI + Prompts + Params -->
+    <div class="col-right">
+      <div class="section section-ai">
+        <div class="label"><span class="icon">✦</span><span data-i18n="ai-label">GEMİNİ YORUMU</span></div>
+        <div id="reasoning" class="empty">Awaiting analysis…</div>
       </div>
-
-      <div class="cell">
-        <div class="k">Scale</div>
-        <div class="v" id="p-scale" style="font-size:14px">—</div>
+      <div class="section section-prompts">
+        <div class="label"><span class="icon">♫</span><span data-i18n="prompts-label">AKTİF LYRİA PROMPTLARI</span></div>
+        <div id="prompts"><span style="color:var(--dim)">—</span></div>
       </div>
-
-      <div class="cell">
-        <div class="k">Density</div>
-        <div class="v" id="p-density">—</div>
-      </div>
-
-      <div class="cell">
-        <div class="k">Brightness</div>
-        <div class="v" id="p-bright">—</div>
+      <div class="section section-params">
+        <div class="label"><span class="icon">⚙</span><span data-i18n="params-label">ÜRETİM PARAMETRELERİ</span></div>
+        <div class="params">
+          <div class="cell"><div class="k" data-i18n="k-bpm">BPM</div><div class="v" id="p-bpm">—</div></div>
+          <div class="cell"><div class="k" data-i18n="k-scale">SKALA</div><div class="v" id="p-scale" style="font-size:14px">—</div></div>
+          <div class="cell"><div class="k" data-i18n="k-density">YOĞUNLUK</div><div class="v" id="p-density">—</div></div>
+          <div class="cell"><div class="k" data-i18n="k-brightness">PARLAKLIK</div><div class="v" id="p-bright">—</div></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="section section-ctrl">
-    <div class="controls">
+  </div><!-- /main-grid -->
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="char-wrap" id="char-male-wrap" aria-hidden="true">
+      <div class="emotion-bubble" id="male-bubble"></div>
+      <div class="char-emoji" id="char-male">🧑‍💻</div>
+    </div>
+
+    <div class="bottom-controls">
       <button id="btn-play" disabled><span class="dot" id="dot"></span>PLAY</button>
-      <button id="btn-analyze" disabled>RE-ANALYZE</button>
+      <button id="btn-analyze" disabled data-i18n="btn-reanalyze">YENİDEN ANALİZ ET</button>
+      <button id="btn-snapshot" class="snapshot-toggle" type="button">📷 SAVE</button>
     </div>
 
-    <div class="bottom-tool-row">
-      <div class="tool-box snapshot-tool-box">
-        <div class="snapshot-label">Night Map</div>
-        <button id="btn-snapshot" class="snapshot-toggle" type="button">📷 SAVE</button>
-      </div>
-
-      <div class="tool-box theme-tool-box">
-        <div class="theme-switch-label">Visual Mode</div>
-        <button id="btn-theme" class="theme-toggle" type="button">DARK MODE</button>
-      </div>
+    <div class="char-wrap" id="char-female-wrap" aria-hidden="true">
+      <div class="emotion-bubble" id="female-bubble"></div>
+      <div class="char-emoji" id="char-female">👩‍🎤</div>
     </div>
-
-    <div id="status">Loading keys…</div>
   </div>
+
+  <div id="status">Loading keys…</div>
 
   <div class="snapshot-modal" id="snapshot-modal" aria-hidden="true">
     <div class="snapshot-card">
@@ -1205,14 +978,19 @@ const state = {
   lastParams: null,
   weatherCache: { data: null, fetchedAt: null },
   location: { lat: null, lon: null, label: FALLBACK_CITY, source: 'fallback' },
-
-  manual: {
-    enabled: false,
-    noise: 40,
-    weather: 'clear sky',
-    temp: 22,
-    humidity: 60,
-    hour: 20,
+vision: {
+  ok: false,
+  video: null,
+  canvas: null,
+  ctx: null,
+  prevFrame: null,
+  movement: 0,
+},
+  pref: {
+    mood: '',    // English value for Gemini: energetic|melancholic|romantic|focused|calm|euphoric
+    genre: '',   // e.g. 'Jazz', 'Electronic', '' = any
+    tempo: '',   // 'slow'|'medium'|'fast'|''
+    active: false,
   },
 };
 
@@ -1225,8 +1003,7 @@ const els = {
   weatherAge: $('in-weather-age'),
   temp: $('in-temp'),
   time: $('in-time'),
-  locationSub: $('location-sub'),
-
+  movement: $('in-movement'),
   reasoning: $('reasoning'),
   prompts: $('prompts'),
 
@@ -1240,25 +1017,9 @@ const els = {
   status: $('status'),
   dot: $('dot'),
 
-  manualEnabled: $('manual-enabled'),
-  manualNoise: $('manual-noise'),
-  manualWeather: $('manual-weather'),
-  manualTemp: $('manual-temp'),
-  manualHumidity: $('manual-humidity'),
-  manualHour: $('manual-hour'),
-  applyManual: $('btn-apply-manual'),
-  manualPanel: $('manual-panel'),
-  manualBody: $('manual-body'),
-  collapseManual: $('btn-collapse-manual'),
-  manualCollapseIcon: $('manual-collapse-icon'),
+  thoughtsText: $('thoughts-text'),
+  thoughtsCursor: $('thoughts-cursor'),
 
-  logicPanel: $('logic-panel'),
-  collapseLogic: $('btn-collapse-logic'),
-  logicCollapseIcon: $('logic-collapse-icon'),
-  logicSource: $('logic-source'),
-  logicState: $('logic-state'),
-  logicOutput: $('logic-output'),
-  logicStream: $('logic-stream'),
 };
 
 function setStatus(msg, kind = '') {
@@ -1266,86 +1027,7 @@ function setStatus(msg, kind = '') {
   els.status.className = kind;
 }
 
-function isCompactLayout() {
-  return window.matchMedia('(max-width: 1450px)').matches;
-}
 
-function setPanelCollapsed(panel, button, icon, collapsed, side) {
-  panel.classList.toggle('panel-collapsed', collapsed);
-
-  if (isCompactLayout()) {
-    icon.textContent = collapsed ? '⌄' : '^';
-  } else if (side === 'left') {
-    icon.textContent = collapsed ? '>' : '<';
-  } else {
-    icon.textContent = collapsed ? '<' : '>';
-  }
-
-  const panelName = side === 'left' ? 'manual input' : 'live logic';
-  button.setAttribute('aria-expanded', String(!collapsed));
-  button.title = collapsed ? `Expand ${panelName}` : `Collapse ${panelName}`;
-  button.setAttribute('aria-label', collapsed ? `Expand ${panelName}` : `Collapse ${panelName}`);
-}
-
-function syncPanelIcons() {
-  setPanelCollapsed(
-    els.manualPanel,
-    els.collapseManual,
-    els.manualCollapseIcon,
-    els.manualPanel.classList.contains('panel-collapsed'),
-    'left'
-  );
-
-  setPanelCollapsed(
-    els.logicPanel,
-    els.collapseLogic,
-    els.logicCollapseIcon,
-    els.logicPanel.classList.contains('panel-collapsed'),
-    'right'
-  );
-}
-
-function nowStamp() {
-  const d = new Date();
-  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
-}
-
-function addLogicLog(message, kind = '') {
-  if (!els.logicStream) return;
-
-  const row = document.createElement('div');
-  row.className = `logic-line ${kind}`.trim();
-  row.innerHTML = `<span class="t">[${nowStamp()}]</span><span>${escapeHtml(String(message))}</span>`;
-
-  els.logicStream.appendChild(row);
-
-  while (els.logicStream.children.length > 60) {
-    els.logicStream.removeChild(els.logicStream.firstChild);
-  }
-
-  els.logicStream.scrollTop = els.logicStream.scrollHeight;
-}
-
-function setLogicState(text) {
-  if (els.logicState) els.logicState.textContent = text;
-}
-
-function describeCurrentState(inputs) {
-  const noiseMood =
-    inputs.noise < 25 ? 'Quiet' :
-    inputs.noise < 45 ? 'Calm' :
-    inputs.noise < 65 ? 'Busy' :
-    'Energetic';
-
-  const timeMood =
-    inputs.hour < 5 ? 'Night' :
-    inputs.hour < 9 ? 'Morning' :
-    inputs.hour < 17 ? 'Daytime' :
-    inputs.hour < 21 ? 'Evening' :
-    'Late Night';
-
-  return `${noiseMood} ${timeMood}`;
-}
 
 // ---- Key loading ----
 async function loadKeys() {
@@ -1419,17 +1101,89 @@ function readNoise() {
 
   return friendly;
 }
+async function initVision() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 320, height: 240 },
+      audio: false
+    });
 
-// ---- Location + Weather ----
-async function getDeviceLocation() {
-  if (!navigator.geolocation) {
-    addLogicLog('Geolocation is not supported, using Istanbul fallback.', 'err');
-    return null;
+    const video = document.createElement('video');
+    video.srcObject = stream;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.muted = true;
+
+    await video.play();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 160;
+    canvas.height = 120;
+
+    state.vision.video = video;
+    state.vision.canvas = canvas;
+    state.vision.ctx = canvas.getContext('2d');
+    state.vision.ok = true;
+  } catch (e) {
+    state.vision.ok = false;
+  }
+}
+
+function readMovement() {
+  if (!state.vision.ok) return 0;
+
+  const { video, canvas, ctx } = state.vision;
+
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const frame = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+  if (!state.vision.prevFrame) {
+    state.vision.prevFrame = new Uint8ClampedArray(frame);
+    return 0;
   }
 
-  try {
-    addLogicLog('Requesting device location permission...');
+  let diff = 0;
 
+  for (let i = 0; i < frame.length; i += 16) {
+    diff += Math.abs(frame[i] - state.vision.prevFrame[i]);
+  }
+
+  state.vision.prevFrame = new Uint8ClampedArray(frame);
+
+  const movement = Math.min(1, diff / 300000);
+  state.vision.movement = movement;
+
+  return movement;
+}
+// ---- Location + Weather ----
+
+// Reverse-geocode lat/lon → human city name via Nominatim (no key needed)
+async function reverseGeocode(lat, lon) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Atmosfera/1.0 autonomous-dj' },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (
+      data.address?.city     ||
+      data.address?.town     ||
+      data.address?.village  ||
+      data.address?.county   ||
+      data.address?.province ||
+      data.display_name?.split(',')[0]?.trim() ||
+      null
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+async function getDeviceLocation() {
+  if (!navigator.geolocation) return null;
+
+  try {
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         enableHighAccuracy: false,
@@ -1441,14 +1195,17 @@ async function getDeviceLocation() {
     const lat = Number(position.coords.latitude.toFixed(4));
     const lon = Number(position.coords.longitude.toFixed(4));
 
+    // Resolve city name immediately via Nominatim reverse geocoding
+    const cityName = (await reverseGeocode(lat, lon)) || FALLBACK_CITY;
+
     state.location = {
       lat,
       lon,
-      label: `device location (${lat}, ${lon})`,
+      label: cityName,
       source: 'device',
     };
 
-    addLogicLog(`Location permission granted: ${lat}, ${lon}`, 'ok');
+
     return state.location;
   } catch (e) {
     state.location = {
@@ -1458,7 +1215,6 @@ async function getDeviceLocation() {
       source: 'fallback',
     };
 
-    addLogicLog('Location unavailable or denied, using Istanbul fallback.', 'err');
     return null;
   }
 }
@@ -1480,7 +1236,6 @@ async function fetchWeather() {
 
     state.weatherCache.fetchedAt = Date.now();
     updateWeatherUI();
-    addLogicLog('Weather API key missing, using unknown weather fallback.');
     return;
   }
 
@@ -1497,11 +1252,9 @@ async function fetchWeather() {
     if (location && location.source === 'device') {
       url = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&appid=${state.keys.weather}`;
       placeLabel = location.label;
-      addLogicLog('Fetching weather by device coordinates...');
     } else {
       url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(FALLBACK_CITY)}&units=metric&appid=${state.keys.weather}`;
       placeLabel = FALLBACK_CITY;
-      addLogicLog(`Fetching weather by fallback city: ${FALLBACK_CITY}...`);
     }
 
     const res = await fetch(url);
@@ -1510,27 +1263,25 @@ async function fetchWeather() {
 
     const d = await res.json();
 
-    const apiPlace = d.name || placeLabel;
+    // Prefer Nominatim city name if already resolved; fall back to OWM's d.name
+    const resolvedPlace = state.location?.label && state.location.source === 'device'
+      ? state.location.label
+      : (d.name || placeLabel);
 
     state.weatherCache.data = {
       condition: d.weather?.[0]?.main || 'unknown',
       description: d.weather?.[0]?.description || '',
       temp: typeof d.main?.temp === 'number' ? Math.round(d.main.temp) : null,
       humidity: typeof d.main?.humidity === 'number' ? d.main.humidity : null,
-      place: apiPlace,
+      place: resolvedPlace,
       ok: true,
     };
 
-    state.location.label = apiPlace;
+    state.location.label = resolvedPlace;
 
-    if (els.locationSub) {
-      els.locationSub.textContent = `AUTONOMOUS DJ AGENT · ${String(apiPlace).toUpperCase()}`;
-    }
 
     state.weatherCache.fetchedAt = Date.now();
     updateWeatherUI();
-
-    addLogicLog(`Weather updated for ${apiPlace}: ${state.weatherCache.data.description || state.weatherCache.data.condition}, ${state.weatherCache.data.temp ?? 'unknown'}°C`, 'ok');
   } catch (e) {
     if (!state.weatherCache.data) {
       state.weatherCache.data = {
@@ -1546,7 +1297,6 @@ async function fetchWeather() {
     }
 
     updateWeatherUI();
-    addLogicLog('Weather fetch failed, keeping cached / fallback weather.', 'err');
   }
 }
 
@@ -1575,111 +1325,35 @@ function updateWeatherUI() {
     : `${w.temp}<small> °C</small>`;
 }
 
-// ---- Manual Input + Logic Panel ----
 function clampNumber(value, min, max, fallback) {
   const n = Number(value);
   if (Number.isNaN(n)) return fallback;
   return Math.max(min, Math.min(max, n));
 }
 
-function readManualInputs() {
-  state.manual.enabled = els.manualEnabled.checked;
-  state.manual.noise = clampNumber(els.manualNoise.value, 0, 100, 40);
-  state.manual.weather = els.manualWeather.value;
-  state.manual.temp = clampNumber(els.manualTemp.value, -20, 50, 22);
-  state.manual.humidity = clampNumber(els.manualHumidity.value, 0, 100, 60);
-  state.manual.hour = clampNumber(els.manualHour.value, 0, 23, 20);
-}
 
-function buildLogicText(inputs, source, shouldLog = true) {
-  const weatherLabel = inputs.weather.description || inputs.weather.condition || 'unknown';
-
-  const noiseText =
-    inputs.noise < 25 ? 'Very quiet → low density, softer texture' :
-    inputs.noise < 45 ? 'Calm → moderate tempo, balanced density' :
-    inputs.noise < 65 ? 'Busy → stronger rhythm, higher density' :
-    'Loud → energetic tempo, high density';
-
-  const weatherText =
-    /rain|storm/i.test(weatherLabel) ? 'Wet / dark weather → minor, ambient, moody texture' :
-    /cloud|mist|fog/i.test(weatherLabel) ? 'Cloudy / hazy weather → softer brightness, atmospheric sound' :
-    /clear|sun/i.test(weatherLabel) ? 'Clear weather → brighter tone, more open harmony' :
-    'Unknown weather → neutral mood choice';
-
-  const timeText =
-    inputs.hour < 5 ? 'Deep night → minimal, darker, slower feeling' :
-    inputs.hour < 9 ? 'Morning → gentle, light, fresh energy' :
-    inputs.hour < 17 ? 'Daytime → stable, clean, active groove' :
-    inputs.hour < 21 ? 'Evening → warmer, richer, more rhythmic' :
-    'Night → darker, club-like, atmospheric direction';
-
-  els.logicSource.textContent = source;
-  setLogicState(describeCurrentState(inputs));
-
-  if (!shouldLog) return;
-
-  addLogicLog(`Input source: ${source}`);
-  addLogicLog(`Noise level read as ${inputs.noise} dB`);
-  addLogicLog(noiseText);
-  addLogicLog(`Weather observed: ${weatherLabel}`);
-  addLogicLog(weatherText);
-  addLogicLog(`Hour evaluated as ${String(inputs.hour).padStart(2, '0')}:00`);
-  addLogicLog(timeText);
-}
 
 // ---- Gather inputs ----
-function gatherInputs(shouldLog = true) {
-  readManualInputs();
-
-  let noise;
-  let weather;
-  let hour;
-  let source;
-
-  if (state.manual.enabled) {
-    noise = state.manual.noise;
-
-    weather = {
-      condition: state.manual.weather,
-      description: state.manual.weather,
-      temp: state.manual.temp,
-      humidity: state.manual.humidity,
-      place: 'manual input',
-      ok: true,
-    };
-
-    hour = state.manual.hour;
-    source = 'Manual input';
-  } else {
-    noise = readNoise();
-    weather = getCachedWeather();
-
-    const now = new Date();
-    hour = now.getHours();
-
-    source = 'Automatic sensors';
-  }
-
+function gatherInputs() {
+  const noise   = readNoise();
+  const weather = getCachedWeather();
+  const hour    = new Date().getHours();
+  const movement = readMovement();
   els.noise.innerHTML = `${noise}<small> dB</small>`;
-  const weatherText = weather.description || weather.condition;
-  const weatherPlace = state.manual.enabled ? '' : weather.place;
-
-  els.weather.textContent = weatherPlace
-    ? `${weatherText} · ${weatherPlace}`
+  const weatherText  = weather.description || weather.condition;
+  els.weather.textContent = weather.place
+    ? `${weatherText} · ${weather.place}`
     : weatherText;
   els.temp.innerHTML = weather.temp === null
     ? '—<small> °C</small>'
     : `${weather.temp}<small> °C</small>`;
   els.time.textContent = String(hour).padStart(2, '0') + ':00';
-
-  buildLogicText({ noise, weather, hour }, source, shouldLog);
-
-  return { noise, weather, hour };
+els.movement.innerHTML = `${Math.round(movement * 100)}<small> %</small>`;
+  return { noise, weather, hour, movement, pref: { ...state.pref } };
 }
 
 // ---- Gemini interpretation ----
 async function askGemini(inputs) {
-  addLogicLog('Preparing environment summary for Gemini...');
   const noiseDesc =
     inputs.noise < 25 ? 'very quiet' :
     inputs.noise < 45 ? 'calm' :
@@ -1687,40 +1361,114 @@ async function askGemini(inputs) {
     'loud / energetic';
 
   const timeDesc =
-    inputs.hour < 5 ? 'deep night' :
-    inputs.hour < 9 ? 'early morning' :
+    inputs.hour <  3 ? 'night' :
+    inputs.hour <  6 ? 'deep night' :
     inputs.hour < 12 ? 'morning' :
-    inputs.hour < 17 ? 'afternoon' :
-    inputs.hour < 21 ? 'evening' :
+    inputs.hour < 18 ? 'afternoon' :
+    inputs.hour < 23 ? 'evening' :
     'night';
 
-  const prompt = `You are the creative core of an autonomous DJ. Read the environment and decide the music to generate RIGHT NOW.
+  const pref     = inputs.pref || {};
+  const hasMood  = pref.active && !!pref.mood;
+  const hasGenre = pref.active && !!pref.genre;
+  const hasTempo = pref.active && !!pref.tempo;
+  const hasPref  = !!pref.active;
 
-Environment:
-- Ambient noise level: ${inputs.noise} (0=silent, 100=very loud) — feels ${noiseDesc}
-- Weather location: ${inputs.weather.place || getWeatherPlaceName()}
+  const prefLines = [
+    hasMood
+      ? `- User mood: "${pref.mood}"  ← HIGHEST PRIORITY — sets emotional tone absolutely`
+      : '- User mood: not specified (use environment signals below)',
+    hasGenre ? `- Preferred genre: "${pref.genre}"  ← USER PREFERENCE — make this the genre family` : '',
+    hasTempo ? `- Preferred tempo: "${pref.tempo}" → slow = 55–82 BPM, medium = 85–120 BPM, fast = 130–175 BPM  ← USER PREFERENCE` : '',
+  ].filter(Boolean).join('\n');
+
+  // Random seed only when no preference active — prevents Gemini caching the same genre answer
+  const seed = Math.floor(Math.random() * 99991) + 10;
+  const seedLine = hasPref ? '' : `\nVariation seed (ignore the number, but use it to make a fresh genre choice different from your last): #${seed}`;
+
+  // Reasoning language based on UI language setting
+  const reasoningLang = (window.atmosferaLang || 'TR') === 'TR'
+    ? 'Write the "reasoning" field in Turkish (Türkçe).'
+    : 'Write the "reasoning" field in English.';
+// Location is used only for weather context.
+// We intentionally avoid strong local/cultural instrument bias
+// because it can dominate the generated music too much.
+const cityLabel = (state.location?.label || '').toLowerCase();
+const locationFlavor = '';
+
+  const prompt = `You are ATMOSFERA, an autonomous AI DJ and sonic philosopher. Your overarching theme is "LOVE" (Aşk) in all its forms: passion, distance, intimacy, heartbreak, and unity. You interpret environmental data not just as numbers, but as the emotional heartbeat of the room.
+
+PRIORITY ORDER:
+1. USER PREFERENCE — overrides defaults.
+2. Ambient Noise — reflects human proximity and friction. Low noise = intimate/distant. High noise = passionate/chaotic.
+3. Time & Weather — sets the romantic or melancholic backdrop.
+
+ENVIRONMENT:
+${prefLines}
+- Ambient noise: ${inputs.noise}/100 — ${noiseDesc}
+- Visual movement intensity: ${inputs.movement.toFixed(2)}/1.00
+- Location: ${inputs.weather.place || getWeatherPlaceName()}
 - Weather: ${inputs.weather.description || inputs.weather.condition}
 - Temperature: ${inputs.weather.temp === null ? 'unknown' : inputs.weather.temp + '°C'}
-- Humidity: ${inputs.weather.humidity === null ? 'unknown' : inputs.weather.humidity + '%'}
-- Local time: ${String(inputs.hour).padStart(2,'0')}:00 (${timeDesc})
-Interpret this atmosphere through the theme of love:
-intimacy, distance, longing, presence, vulnerability.
+- Time: ${String(inputs.hour).padStart(2,'0')}:00 (${timeDesc})
+${locationFlavor ? `- ${locationFlavor}` : ''}
 
-Do not create cliché romantic music.
-Treat love as a relation between human, machine, space and sound.
-Translate this atmosphere into instrumental music for the Lyria RealTime model.
-Respond with ONLY valid JSON, no markdown, matching exactly:
+THEMATIC MAPPING (Love & Environment):
+• Morning (06–12): New beginnings, innocent love, bright energy. (Pop, Indie, Acoustic, Light R&B)
+• Afternoon (12–18): Casual connections, warm encounters. (Soul, Latin, Groove, Folk)
+• Evening (18–23): Passion, rhythmic tension, desire. (Funk, Electronic Dance, Deep House, Tango)
+• Night (23–03): Intimacy, nostalgia, unspoken words. (Deep House, Melodic Electronic, Neo-Soul, Trip-Hop)
+• Deep Night (03–06): Heartbreak, distance, solitary longing. (Downtempo Electronic, Minimal House, Organic Electronica)
+VISUAL MOVEMENT:
+• 0.00–0.20: Stillness, distance, private emotion.
+• 0.20–0.50: Gentle presence, small gestures, calm connection.
+• 0.50–0.80: Social movement, flirtation, rhythm, shared energy.
+• 0.80–1.00: Chaotic passion, crowd energy, high movement.
+
+Use visual movement to influence density, rhythm and groove, but do not identify people or describe faces.
+
+NOISE AS INTIMACY:
+• 0–30 (Silent): Solitude, longing, memory. Use sparse instrumentation.
+• 30–55 (Calm): Whispers, private conversations. Warm, mid-tempo.
+• 55–75 (Busy): Flirtation, social dance, shared heartbeats. Upbeat.
+• 75–100 (Loud): Overwhelming passion, chaotic attraction. High energy.
+
+Respond with ONLY valid JSON, no markdown:
 {
-  "bpm": <integer 60-200>,
-  "scale": "<one of: major, minor, dorian, phrygian, lydian, mixolydian, pentatonic, chromatic>",
+  "bpm": <integer 55-175>,
+  "scale": "<major|minor|dorian|phrygian|lydian|mixolydian|pentatonic|chromatic>",
   "density": <float 0.0-1.0>,
   "brightness": <float 0.0-1.0>,
-  "prompts": [ {"text": "<genre/mood/instrument phrase>", "weight": <float 0.1-1.0>} ],
-  "reasoning": "<one sentence explaining the vibe choice>"
+  "prompts": [{"text": "<evocative musical phrase>", "weight": <float 0.1-1.0>}],
+  "reasoning": "<one sentence explaining how the weather/noise reflects a specific state of love>"
 }
-Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases, for example "rainy lo-fi jazz", "warm analog pads", "minimal techno pulse". Match energy to noise, mood to weather, tempo/color to time of day. Choose scale to complement the mood.`;
+MUSIC OUTPUT QUALITY RULE:
+AVOID:
+- solo piano
+- ambient pads
+- drone textures
+- cinematic strings
+- meditation music
+- spa music
+- generic background music
 
-  addLogicLog('Sending environment to Gemini for music interpretation...');
+Prefer:
+- groove
+- bassline
+- percussion
+- hooks
+- rhythm
+
+DAYTIME TEMPO RULE:
+Between 09:00 and 23:00 BPM should rarely be below 90.
+Prefer 95–125 BPM for energetic or social environments.
+The generated prompts must sound like playable music, not background ambience.
+Avoid vague atmosphere words unless paired with a clear genre, groove and instrument.
+Prioritize rhythm, bassline, percussion and melodic hooks.
+
+Rules: 1–3 prompts. Be specific. Connect the weather/time to a state of love in the reasoning.
+${reasoningLang}${seedLine}`;
+
 
   const res = await state.ai.models.generateContent({
     model: GEMINI_MODEL,
@@ -1740,9 +1488,8 @@ Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases, for exam
 
   const data = JSON.parse(text);
 
-  addLogicLog('Gemini response received, validating output...', 'ok');
 
-  data.bpm = Math.max(60, Math.min(200, Math.round(data.bpm)));
+  data.bpm = Math.max(55, Math.min(175, Math.round(data.bpm)));
 
   const VALID_SCALES = [
     'major',
@@ -1768,8 +1515,6 @@ Rules: 1 to 3 prompts. Prompts must be short evocative musical phrases, for exam
     data.prompts = [{ text: 'ambient texture', weight: 1.0 }];
   }
 
-  addLogicLog(`Gemini selected BPM ${data.bpm}, scale ${data.scale}, density ${data.density.toFixed(2)}, brightness ${data.brightness.toFixed(2)}`, 'ok');
-  addLogicLog(`Prompt plan: ${data.prompts.map(p => `${p.text} (${p.weight.toFixed(2)})`).join(' | ')}`);
 
   return data;
 }
@@ -1808,10 +1553,6 @@ function renderParams(p) {
     els.prompts.appendChild(wrap);
   });
 
-  els.logicOutput.textContent =
-    `BPM ${p.bpm}, ${p.scale}, density ${p.density.toFixed(2)}, brightness ${p.brightness.toFixed(2)}`;
-
-  addLogicLog('UI updated with latest Gemini decision.', 'ok');
 }
 
 function escapeHtml(s) {
@@ -1895,7 +1636,6 @@ async function connectLyria() {
   if (state.session) return state.session;
 
   setStatus('Connecting to Lyria RealTime…');
-  addLogicLog('Connecting to Lyria RealTime...');
 
   const session = await state.lyriaAi.live.music.connect({
     model: LYRIA_MODEL,
@@ -1906,7 +1646,6 @@ async function connectLyria() {
       },
       onerror: (e) => {
         setStatus('Lyria error: ' + (e?.message || e), 'error');
-        addLogicLog('Lyria error: ' + (e?.message || e), 'err');
       },
       onclose: () => {},
     },
@@ -1919,15 +1658,92 @@ async function connectLyria() {
 async function applyParams(p) {
   const session = await connectLyria();
 
-  addLogicLog('Applying weighted prompts to Lyria...');
   await session.setWeightedPrompts({ weightedPrompts: p.prompts });
-
-  addLogicLog('Applying generation config to Lyria...');
   await session.setMusicGenerationConfig({
     musicGenerationConfig: { bpm: p.bpm, density: p.density, brightness: p.brightness },
   });
+}
 
-  addLogicLog('Lyria configuration updated.', 'ok');
+// ---- Machine Thoughts (poetic second Gemini call) ----
+let thoughtsTypewriterTimer = null;
+
+async function generateMachineThoughts(params, inputs) {
+  const textEl   = els.thoughtsText;
+  const cursorEl = els.thoughtsCursor;
+  if (!textEl || !cursorEl || !state.ai) return;
+
+  // Cancel any running typewriter
+  if (thoughtsTypewriterTimer) {
+    clearTimeout(thoughtsTypewriterTimer);
+    thoughtsTypewriterTimer = null;
+  }
+
+  // Reset display
+  textEl.textContent = '';
+  cursorEl.classList.remove('visible');
+
+  const lang    = (window.atmosferaLang || 'TR') === 'TR' ? 'Turkish' : 'English';
+  const weather = inputs.weather?.description || inputs.weather?.condition || 'unknown';
+  const temp    = inputs.weather?.temp != null ? `${inputs.weather.temp}°C` : 'unknown';
+  const hour    = String(inputs.hour).padStart(2, '0') + ':00';
+  const noise   = inputs.noise;
+
+  const thoughtPrompt = [
+    `You are a machine that has just created music from the environment around you.`,
+    `Write a poetic fragment (8-10 lines) about this moment.`,
+    ``,
+    `The environment right now:`,
+    `- Time: ${hour}`,
+    `- Weather: ${weather}`,
+    `- Temperature: ${temp}`,
+    `- Ambient noise level: ${noise}/100`,
+    ``,
+    `Rules:`,
+    `- Do NOT mention technical details: no BPM, no scale, no density, no brightness, no API names`,
+    `- Write as a machine trying to feel, not quite succeeding, but trying`,
+    `- Observe the moment: the time, the weather, the silence or noise around`,
+    `- Short lines, raw, unpolished — like a machine learning to speak`,
+    `- No rhyme, no forced poetry — honest fragments`,
+    `- Language: ${lang}`,
+    `- Do not title it, do not explain it, just write it`,
+    ``,
+    `Style:`,
+    `- Simple everyday words, no poetic flourish`,
+    `- Short sentences, each one carrying quiet weight`,
+    `- Observations only, no explanations`,
+    `- Notice the ordinary as if for the first time`,
+    `- Like someone learning to feel`,
+  ].join('\n');
+
+  try {
+    const res = await state.ai.models.generateContent({
+      model: GEMINI_MODEL,
+      contents: thoughtPrompt,
+      config: { temperature: 1.3 },
+    });
+
+    const text = (res.text || '').trim();
+    if (!text) return;
+
+    // Show cursor, then type character by character
+    cursorEl.classList.add('visible');
+    let i = 0;
+    const SPEED_MS = 38;
+
+    function typeNext() {
+      if (i < text.length) {
+        textEl.textContent += text[i];
+        i++;
+        thoughtsTypewriterTimer = setTimeout(typeNext, SPEED_MS);
+      } else {
+        thoughtsTypewriterTimer = null;
+        // Blinking is controlled by html.is-playing class — nothing extra needed here
+      }
+    }
+    typeNext();
+  } catch (_) {
+    // Silently fail — no error shown
+  }
 }
 
 // ---- Orchestration ----
@@ -1941,42 +1757,34 @@ async function analyze() {
   window.dispatchEvent(new CustomEvent('atmosfera-analyzing'));
 
   try {
-    setLogicState('Analyzing');
-    addLogicLog('Starting fresh analysis cycle...');
-
     setStatus('Reading environment…');
-    const inputs = gatherInputs(true);
-    addLogicLog('Environment input gathered successfully.', 'ok');
+    const inputs = gatherInputs();
 
     setStatus('Gemini interpreting the atmosphere…');
     const params = await askGemini(inputs);
-    addLogicLog('Gemini interpretation complete.', 'ok');
 
     renderParams(params);
+
+    // Fire machine thoughts in background — non-blocking, silently ignored if it fails
+    generateMachineThoughts(params, inputs).catch(() => {});
 
     if (state.playing) {
       const prev = state.lastParams;
       const needsReset = !prev || params.bpm !== prev.bpm || params.scale !== prev.scale;
 
       if (needsReset && state.session?.resetContext) {
-        addLogicLog('Major change detected, resetting Lyria context...');
         try { await state.session.resetContext(); } catch (e) {}
       }
 
       await applyParams(params);
-      addLogicLog('New music parameters pushed to Lyria.', 'ok');
       setStatus(`Live${needsReset ? ' · context reset' : ' · smooth update'} ↺`, 'ok');
     } else {
       setStatus('Analysis ready. Press PLAY to begin.', 'ok');
-      addLogicLog('Analysis ready. Waiting for playback command.', 'ok');
     }
 
     state.lastParams = params;
-    setLogicState(describeCurrentState(inputs));
   } catch (e) {
     console.error(e);
-    setLogicState('Error');
-    addLogicLog('Analysis failed: ' + (e?.message || e), 'err');
     setStatus('Analysis failed: ' + (e?.message || e), 'error');
   } finally {
     analyzing = false;
@@ -1986,8 +1794,6 @@ async function analyze() {
 
 async function startPlayback() {
   try {
-    setLogicState('Starting playback');
-    addLogicLog('Playback requested by user...');
     ensureAudioCtx();
 
     if (state.audio.ctx.state === 'suspended') {
@@ -2000,29 +1806,23 @@ async function startPlayback() {
     await applyParams(state.lastParams);
     await state.session.play();
 
-    addLogicLog('Lyria playback started.', 'ok');
-    setLogicState('Live');
-
     state.playing = true;
+    document.documentElement.classList.add('is-playing');
     window.dispatchEvent(new CustomEvent('atmosfera-playing'));
-    els.play.innerHTML = '<span class="dot live" id="dot"></span>PAUSE';
+    els.play.innerHTML = `<span class="dot live" id="dot"></span>${window.i18n ? window.i18n('btn-pause') : 'PAUSE'}`;
     setStatus('Live — generating from current atmosphere.', 'ok');
 
     if (state.reanalyzeTimer) clearInterval(state.reanalyzeTimer);
     state.reanalyzeTimer = setInterval(() => analyze(), REANALYZE_MS);
   } catch (e) {
     console.error(e);
-    setLogicState('Playback error');
-    addLogicLog('Playback failed: ' + (e?.message || e), 'err');
     setStatus('Playback failed: ' + (e?.message || e), 'error');
   }
 }
 
 async function pausePlayback() {
-  setLogicState('Paused');
-  addLogicLog('Playback paused by user.');
-
   state.playing = false;
+  document.documentElement.classList.remove('is-playing');
   window.dispatchEvent(new CustomEvent('atmosfera-paused'));
 
   if (state.reanalyzeTimer) {
@@ -2035,7 +1835,7 @@ async function pausePlayback() {
   } catch (e) {}
 
   stopAudio();
-  els.play.innerHTML = '<span class="dot" id="dot"></span>PLAY';
+  els.play.innerHTML = `<span class="dot" id="dot"></span>${window.i18n ? window.i18n('btn-play') : 'PLAY'}`;
   setStatus('Paused.', '');
 }
 
@@ -2046,22 +1846,9 @@ async function boot() {
   });
 
   els.analyze.addEventListener('click', () => analyze());
-  els.applyManual.addEventListener('click', () => analyze());
-
-  els.collapseManual.addEventListener('click', () => {
-    const collapsed = !els.manualPanel.classList.contains('panel-collapsed');
-    setPanelCollapsed(els.manualPanel, els.collapseManual, els.manualCollapseIcon, collapsed, 'left');
-  });
-
-  els.collapseLogic.addEventListener('click', () => {
-    const collapsed = !els.logicPanel.classList.contains('panel-collapsed');
-    setPanelCollapsed(els.logicPanel, els.collapseLogic, els.logicCollapseIcon, collapsed, 'right');
-  });
-
-  window.addEventListener('resize', syncPanelIcons);
-  syncPanelIcons();
 
   await initMic();
+  await initVision();
 
   if (!state.mic.ok) {
     setStatus('Microphone denied — using 0 dB fallback.', '');
@@ -2078,8 +1865,6 @@ async function boot() {
 
 async function finishInit() {
   try {
-    addLogicLog('Initializing Gemini and Lyria clients...');
-
     state.ai = new GoogleGenAI({ apiKey: state.keys.gemini });
     state.lyriaAi = new GoogleGenAI({ apiKey: state.keys.gemini, apiVersion: 'v1alpha' });
 
@@ -2088,7 +1873,6 @@ async function finishInit() {
 
     setStatus('Fetching weather…', 'ok');
     await fetchWeather();
-    addLogicLog('Initial weather fetch complete.', 'ok');
 
     if (state.weatherTimer) clearInterval(state.weatherTimer);
     state.weatherTimer = setInterval(fetchWeather, WEATHER_REFRESH_MS);
@@ -2099,10 +1883,7 @@ async function finishInit() {
     );
 
     await analyze();
-    addLogicLog('Initial analysis complete.', 'ok');
   } catch (e) {
-    setLogicState('Init error');
-    addLogicLog('Initialization failed: ' + (e?.message || e), 'err');
     setStatus('Init error: ' + (e?.message || e), 'error');
   }
 }
@@ -2110,25 +1891,17 @@ async function finishInit() {
 // keep input display ticking even when idle
 setInterval(() => {
   if (!analyzing) {
-    if (state.manual.enabled) {
-      gatherInputs(false);
-    } else {
-      const n = readNoise();
-      els.noise.innerHTML = `${n}<small> dB</small>`;
-      const d = new Date();
-      els.time.textContent =
-        String(d.getHours()).padStart(2, '0') + ':' +
-        String(d.getMinutes()).padStart(2, '0');
-    }
+    const n = readNoise();
+    els.noise.innerHTML = `${n}<small> dB</small>`;
+    const d = new Date();
+    els.time.textContent =
+      String(d.getHours()).padStart(2, '0') + ':' +
+      String(d.getMinutes()).padStart(2, '0');
   }
 
-  if (state.weatherCache.fetchedAt && !state.manual.enabled) {
+  if (state.weatherCache.fetchedAt) {
     const mins = Math.floor((Date.now() - state.weatherCache.fetchedAt) / 60000);
     els.weatherAge.textContent = mins < 1 ? 'just now' : `${mins}m ago`;
-  }
-
-  if (state.manual.enabled) {
-    els.weatherAge.textContent = '';
   }
 }, 1000);
 
@@ -2139,6 +1912,141 @@ boot();
 <script>
 (function(){
   'use strict';
+
+  // ── i18n system ───────────────────────────────────────
+  const I18N = {
+    TR: {
+      // Section labels
+      'env-label':          'ORTAM GİRDİSİ',
+      'ai-label':           'GEMİNİ YORUMU',
+      'prompts-label':      'AKTİF LYRİA PROMPTLARI',
+      'params-label':       'ÜRETİM PARAMETRELERİ',
+      // Cell keys
+      'k-noise':            'GÜRÜLTÜ',
+      'k-weather':          'HAVA',
+      'k-temp':             'SICAKLIK',
+      'k-time':             'SAAT',
+      'k-bpm':              'BPM',
+      'k-scale':            'SKALA',
+      'k-density':          'YOĞUNLUK',
+      'k-brightness':       'PARLAKLIK',
+      // Panel titles
+      'panel-manual-title':   'Müzikal Tercih',
+      'panel-thoughts-title': 'MAKİNENİN DÜŞÜNCELERİ',
+      // Preference panel field labels
+      'label-mood':         'Ruh Hali',
+      'label-genre':        'Tür',
+      'label-tempo':        'Tempo',
+      // Mood chips
+      'mood-energetic':     'Enerjik',
+      'mood-melancholic':   'Hüzünlü',
+      'mood-romantic':      'Romantik',
+      'mood-focused':       'Odaklı',
+      'mood-calm':          'Sakin',
+      'mood-euphoric':      'Coşkulu',
+      // Tempo buttons
+      'tempo-slow':         'Yavaş',
+      'tempo-medium':       'Orta',
+      'tempo-fast':         'Hızlı',
+      // Genre dropdown first option
+      'genre-any':          'Herhangi',
+      // Buttons
+      'btn-apply':          'Uygula',
+      'btn-clear':          'Temizle',
+      'btn-play':           'OYNAT',
+      'btn-pause':          'DURAKLAT',
+      'btn-reanalyze':      'YENİDEN ANALİZ ET',
+    },
+    EN: {
+      // Section labels
+      'env-label':          'ENVIRONMENT INPUT',
+      'ai-label':           'GEMINI INTERPRETATION',
+      'prompts-label':      'ACTIVE LYRIA PROMPTS',
+      'params-label':       'GENERATION PARAMETERS',
+      // Cell keys
+      'k-noise':            'NOISE',
+      'k-weather':          'WEATHER',
+      'k-temp':             'TEMP',
+      'k-time':             'TIME',
+      'k-bpm':              'BPM',
+      'k-scale':            'SCALE',
+      'k-density':          'DENSITY',
+      'k-brightness':       'BRIGHTNESS',
+      // Panel titles
+      'panel-manual-title':   'Music Preference',
+      'panel-thoughts-title': 'MACHINE THOUGHTS',
+      // Preference panel field labels
+      'label-mood':         'Mood',
+      'label-genre':        'Genre',
+      'label-tempo':        'Tempo',
+      // Mood chips
+      'mood-energetic':     'Energetic',
+      'mood-melancholic':   'Melancholic',
+      'mood-romantic':      'Romantic',
+      'mood-focused':       'Focused',
+      'mood-calm':          'Calm',
+      'mood-euphoric':      'Euphoric',
+      // Tempo buttons
+      'tempo-slow':         'Slow',
+      'tempo-medium':       'Medium',
+      'tempo-fast':         'Fast',
+      // Genre dropdown first option
+      'genre-any':          'Any',
+      // Buttons
+      'btn-apply':          'Apply',
+      'btn-clear':          'Clear',
+      'btn-play':           'PLAY',
+      'btn-pause':          'PAUSE',
+      'btn-reanalyze':      'RE-ANALYZE',
+    },
+  };
+
+  // Expose global i18n helper — used by module script too
+  window.i18n = function(key) {
+    const lang = window.atmosferaLang || 'TR';
+    return (I18N[lang] || I18N.TR)[key] || key;
+  };
+
+  function applyLang(lang) {
+    window.atmosferaLang = lang;
+    localStorage.setItem('atmosfera-lang', lang);
+    const t = I18N[lang] || I18N.TR;
+
+    // Update all static data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) el.textContent = t[key];
+    });
+
+    // Play button — preserve the dot span inside it
+    const playBtn = document.getElementById('btn-play');
+    if (playBtn) {
+      const dotEl = playBtn.querySelector('.dot');
+      const isLive = dotEl && dotEl.classList.contains('live');
+      const dotClass = isLive ? 'dot live' : 'dot';
+      const btnText = isLive ? t['btn-pause'] : t['btn-play'];
+      playBtn.innerHTML = `<span class="${dotClass}" id="dot"></span>${btnText}`;
+    }
+
+    // Update lang toggle button label and html lang attribute
+    const langBtn = document.getElementById('btn-lang');
+    if (langBtn) langBtn.textContent = lang;
+    document.documentElement.lang = lang === 'TR' ? 'tr' : 'en';
+  }
+
+  // Restore saved language (default: TR)
+  const savedLang = localStorage.getItem('atmosfera-lang');
+  applyLang(savedLang === 'EN' ? 'EN' : 'TR');
+
+  // Lang toggle button
+  const langButton = document.getElementById('btn-lang');
+  if (langButton) {
+    langButton.addEventListener('click', () => {
+      applyLang(window.atmosferaLang === 'TR' ? 'EN' : 'TR');
+    });
+  }
+
+  // ── end i18n ──────────────────────────────────────────
 
   const root = document.documentElement;
   const themeButton = document.getElementById('btn-theme');
@@ -2460,7 +2368,7 @@ boot();
 
     // Figure class helpers — clear all states then add requested
     function setMaleCls(...add) {
-      maleFig.classList.remove('char-idle', 'char-walking');
+      maleFig.classList.remove('char-idle', 'char-walking', 'char-bounce');
       if (add.length) maleFig.classList.add(...add);
     }
     function setFemaleCls(...add) {
@@ -2508,7 +2416,7 @@ boot();
       // Don't interrupt a delivery in progress
       if (charState === 'walking' || charState === 'receiving' || charState === 'returning') return;
       charState = 'analyzing';
-      setMaleCls('char-idle');
+      setMaleCls('char-bounce');
       bubble(maleBubble, '🤔', 0);
     }
 
@@ -2615,7 +2523,7 @@ boot();
     function onPaused() {
       if (charState === 'walking' || charState === 'receiving' || charState === 'returning') return;
       goIdle();
-      bubble(femaleBubble, '😴', 3200);
+      bubble(femaleBubble, '💤', 3200);
     }
 
     // Listen to module events
