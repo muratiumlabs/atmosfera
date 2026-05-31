@@ -202,7 +202,7 @@
 
   .cell { display: flex; flex-direction: column; min-width: 0; }
 
-  .cell .k, .logic-k, .manual-field label {
+  .cell .k {
     font-family: var(--font-ui);
     color: var(--text-secondary);
     font-size: 9px;
@@ -398,7 +398,6 @@
   }
 
   .side-panel.left { left: 24px; }
-  .side-panel.right { right: 24px; }
 
   .side-panel-title {
     color: var(--gold);
@@ -571,53 +570,6 @@
     color: var(--text-primary);
   }
 
-  .logic-item {
-    border-top: 1px solid rgba(154, 98, 0, 0.10);
-    padding: 10px 0;
-  }
-
-  .logic-v {
-    color: var(--text-primary);
-    font-family: var(--font-ui);
-    font-size: 12px;
-    margin-top: 3px;
-  }
-
-  .logic-v.gold { color: var(--gold); font-weight: 600; }
-
-  .logic-stream-wrap {
-    margin-top: 14px;
-    border-top: 1px solid rgba(154, 98, 0, 0.10);
-    padding-top: 12px;
-  }
-
-  .logic-stream {
-    margin-top: 10px;
-    height: 360px;
-    overflow-y: auto;
-    border: 1px solid rgba(154, 98, 0, 0.10);
-    background: rgba(246, 244, 240, 0.62);
-    border-radius: 10px;
-    padding: 10px;
-  }
-
-  .logic-line {
-    color: var(--text-primary);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 1.5;
-    margin-bottom: 8px;
-    word-break: break-word;
-  }
-
-  .logic-line .t {
-    color: var(--gold);
-    margin-right: 8px;
-  }
-
-  .logic-line.muted { color: var(--text-secondary); opacity: 0.65; }
-  .logic-line.ok { color: var(--gold); }
-  .logic-line.err { color: #c0392b; }
 
   @media (max-width: 1450px) {
     .side-panel {
@@ -806,14 +758,6 @@
     background: rgba(5, 5, 5, 0.90);
     border-color: rgba(201, 168, 76, 0.16);
     box-shadow: 0 18px 70px rgba(0,0,0,0.32);
-  }
-
-  html[data-theme="dark"] .manual-field input,
-  html[data-theme="dark"] .manual-field select,
-  html[data-theme="dark"] .logic-stream {
-    background: rgba(0, 0, 0, 0.58);
-    border-color: rgba(201, 168, 76, 0.14);
-    color: var(--text-primary);
   }
 
   html[data-theme="dark"] .bar {
@@ -1088,39 +1032,6 @@
     </div>
   </aside>
 
-  <!-- RIGHT PANEL: LIVE LOGIC STREAM -->
-  <aside class="side-panel right" id="logic-panel">
-    <div class="panel-head">
-      <div class="side-panel-title" data-i18n="panel-logic-title">Live Logic</div>
-      <button id="btn-collapse-logic" class="panel-collapse-btn" type="button" title="Collapse live logic" aria-label="Collapse live logic" aria-expanded="true">
-        <span id="logic-collapse-icon">&gt;</span>
-      </button>
-    </div>
-
-    <div class="panel-body logic-body" id="logic-body">
-      <div class="logic-item">
-        <div class="logic-k" data-i18n="logic-k-source">Input Source</div>
-        <div class="logic-v gold" id="logic-source">Automatic sensors</div>
-      </div>
-
-      <div class="logic-item">
-        <div class="logic-k" data-i18n="logic-k-state">Current State</div>
-        <div class="logic-v gold" id="logic-state">Idle</div>
-      </div>
-
-      <div class="logic-item">
-        <div class="logic-k" data-i18n="logic-k-decision">Last Decision</div>
-        <div class="logic-v" id="logic-output">Awaiting decision…</div>
-      </div>
-
-      <div class="logic-stream-wrap">
-        <div class="logic-k" data-i18n="logic-k-stream">Reasoning Stream</div>
-        <div id="logic-stream" class="logic-stream">
-          <div class="logic-line muted">[system] waiting for first analysis…</div>
-        </div>
-      </div>
-    </div>
-  </aside>
 
   <div class="section section-env">
     <div class="label"><span class="icon">🌡</span><span data-i18n="env-label">Environment Input</span></div>
@@ -1282,13 +1193,6 @@ const els = {
   collapseManual: $('btn-collapse-manual'),
   manualCollapseIcon: $('manual-collapse-icon'),
 
-  logicPanel: $('logic-panel'),
-  collapseLogic: $('btn-collapse-logic'),
-  logicCollapseIcon: $('logic-collapse-icon'),
-  logicSource: $('logic-source'),
-  logicState: $('logic-state'),
-  logicOutput: $('logic-output'),
-  logicStream: $('logic-stream'),
 };
 
 function setStatus(msg, kind = '') {
@@ -1325,57 +1229,8 @@ function syncPanelIcons() {
     els.manualPanel.classList.contains('panel-collapsed'),
     'left'
   );
-
-  setPanelCollapsed(
-    els.logicPanel,
-    els.collapseLogic,
-    els.logicCollapseIcon,
-    els.logicPanel.classList.contains('panel-collapsed'),
-    'right'
-  );
 }
 
-function nowStamp() {
-  const d = new Date();
-  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
-}
-
-function addLogicLog(message, kind = '') {
-  if (!els.logicStream) return;
-
-  const row = document.createElement('div');
-  row.className = `logic-line ${kind}`.trim();
-  row.innerHTML = `<span class="t">[${nowStamp()}]</span><span>${escapeHtml(String(message))}</span>`;
-
-  els.logicStream.appendChild(row);
-
-  while (els.logicStream.children.length > 60) {
-    els.logicStream.removeChild(els.logicStream.firstChild);
-  }
-
-  els.logicStream.scrollTop = els.logicStream.scrollHeight;
-}
-
-function setLogicState(text) {
-  if (els.logicState) els.logicState.textContent = text;
-}
-
-function describeCurrentState(inputs) {
-  const noiseMood =
-    inputs.noise < 25 ? 'Quiet' :
-    inputs.noise < 45 ? 'Calm' :
-    inputs.noise < 65 ? 'Busy' :
-    'Energetic';
-
-  const timeMood =
-    inputs.hour < 5 ? 'Night' :
-    inputs.hour < 9 ? 'Morning' :
-    inputs.hour < 17 ? 'Daytime' :
-    inputs.hour < 21 ? 'Evening' :
-    'Late Night';
-
-  return `${noiseMood} ${timeMood}`;
-}
 
 // ---- Key loading ----
 async function loadKeys() {
@@ -1452,14 +1307,9 @@ function readNoise() {
 
 // ---- Location + Weather ----
 async function getDeviceLocation() {
-  if (!navigator.geolocation) {
-    addLogicLog('Geolocation is not supported, using Istanbul fallback.', 'err');
-    return null;
-  }
+  if (!navigator.geolocation) return null;
 
   try {
-    addLogicLog('Requesting device location permission...');
-
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         enableHighAccuracy: false,
@@ -1478,7 +1328,6 @@ async function getDeviceLocation() {
       source: 'device',
     };
 
-    addLogicLog(`Location permission granted: ${lat}, ${lon}`, 'ok');
     return state.location;
   } catch (e) {
     state.location = {
@@ -1488,7 +1337,6 @@ async function getDeviceLocation() {
       source: 'fallback',
     };
 
-    addLogicLog('Location unavailable or denied, using Istanbul fallback.', 'err');
     return null;
   }
 }
@@ -1510,7 +1358,6 @@ async function fetchWeather() {
 
     state.weatherCache.fetchedAt = Date.now();
     updateWeatherUI();
-    addLogicLog('Weather API key missing, using unknown weather fallback.');
     return;
   }
 
@@ -1527,11 +1374,9 @@ async function fetchWeather() {
     if (location && location.source === 'device') {
       url = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&appid=${state.keys.weather}`;
       placeLabel = location.label;
-      addLogicLog('Fetching weather by device coordinates...');
     } else {
       url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(FALLBACK_CITY)}&units=metric&appid=${state.keys.weather}`;
       placeLabel = FALLBACK_CITY;
-      addLogicLog(`Fetching weather by fallback city: ${FALLBACK_CITY}...`);
     }
 
     const res = await fetch(url);
@@ -1559,8 +1404,6 @@ async function fetchWeather() {
 
     state.weatherCache.fetchedAt = Date.now();
     updateWeatherUI();
-
-    addLogicLog(`Weather updated for ${apiPlace}: ${state.weatherCache.data.description || state.weatherCache.data.condition}, ${state.weatherCache.data.temp ?? 'unknown'}°C`, 'ok');
   } catch (e) {
     if (!state.weatherCache.data) {
       state.weatherCache.data = {
@@ -1576,7 +1419,6 @@ async function fetchWeather() {
     }
 
     updateWeatherUI();
-    addLogicLog('Weather fetch failed, keeping cached / fallback weather.', 'err');
   }
 }
 
@@ -1605,7 +1447,6 @@ function updateWeatherUI() {
     : `${w.temp}<small> °C</small>`;
 }
 
-// ---- Manual Input + Logic Panel ----
 function clampNumber(value, min, max, fallback) {
   const n = Number(value);
   if (Number.isNaN(n)) return fallback;
@@ -1630,19 +1471,6 @@ function applyPreference() {
 
   localStorage.setItem('atmosfera-pref', JSON.stringify(state.pref));
   syncPrefDot();
-
-  const parts = [
-    state.pref.mood  && `mood: ${state.pref.mood}`,
-    state.pref.genre && `genre: ${state.pref.genre}`,
-    state.pref.tempo && `tempo: ${state.pref.tempo}`,
-  ].filter(Boolean);
-
-  addLogicLog(
-    state.pref.active
-      ? `Preference applied — ${parts.join(', ')}.`
-      : 'Preference saved (nothing selected — cleared).',
-    state.pref.active ? 'ok' : ''
-  );
   analyze();
 }
 
@@ -1655,52 +1483,15 @@ function clearPreference() {
   if (els.prefGenre) els.prefGenre.value = '';
 
   syncPrefDot();
-  addLogicLog('Music preference cleared — full auto mode.', 'ok');
   analyze();
 }
 
-function buildLogicText(inputs, source, shouldLog = true) {
-  const weatherLabel = inputs.weather.description || inputs.weather.condition || 'unknown';
-
-  const noiseText =
-    inputs.noise < 25 ? 'Very quiet → low density, softer texture' :
-    inputs.noise < 45 ? 'Calm → moderate tempo, balanced density' :
-    inputs.noise < 65 ? 'Busy → stronger rhythm, higher density' :
-    'Loud → energetic tempo, high density';
-
-  const weatherText =
-    /rain|storm/i.test(weatherLabel) ? 'Wet / dark weather → minor, ambient, moody texture' :
-    /cloud|mist|fog/i.test(weatherLabel) ? 'Cloudy / hazy weather → softer brightness, atmospheric sound' :
-    /clear|sun/i.test(weatherLabel) ? 'Clear weather → brighter tone, more open harmony' :
-    'Unknown weather → neutral mood choice';
-
-  const timeText =
-    inputs.hour < 5 ? 'Deep night → minimal, darker, slower feeling' :
-    inputs.hour < 9 ? 'Morning → gentle, light, fresh energy' :
-    inputs.hour < 17 ? 'Daytime → stable, clean, active groove' :
-    inputs.hour < 21 ? 'Evening → warmer, richer, more rhythmic' :
-    'Night → darker, club-like, atmospheric direction';
-
-  els.logicSource.textContent = source;
-  setLogicState(describeCurrentState(inputs));
-
-  if (!shouldLog) return;
-
-  addLogicLog(`Input source: ${source}`);
-  addLogicLog(`Noise level read as ${inputs.noise} dB`);
-  addLogicLog(noiseText);
-  addLogicLog(`Weather observed: ${weatherLabel}`);
-  addLogicLog(weatherText);
-  addLogicLog(`Hour evaluated as ${String(inputs.hour).padStart(2, '0')}:00`);
-  addLogicLog(timeText);
-}
 
 // ---- Gather inputs ----
-function gatherInputs(shouldLog = true) {
+function gatherInputs() {
   const noise   = readNoise();
   const weather = getCachedWeather();
   const hour    = new Date().getHours();
-  const source  = state.pref.active ? 'Sensors + Preference' : 'Automatic sensors';
 
   els.noise.innerHTML = `${noise}<small> dB</small>`;
   const weatherText  = weather.description || weather.condition;
@@ -1712,14 +1503,11 @@ function gatherInputs(shouldLog = true) {
     : `${weather.temp}<small> °C</small>`;
   els.time.textContent = String(hour).padStart(2, '0') + ':00';
 
-  buildLogicText({ noise, weather, hour }, source, shouldLog);
-
   return { noise, weather, hour, pref: { ...state.pref } };
 }
 
 // ---- Gemini interpretation ----
 async function askGemini(inputs) {
-  addLogicLog('Preparing environment summary for Gemini...');
   const noiseDesc =
     inputs.noise < 25 ? 'very quiet' :
     inputs.noise < 45 ? 'calm' :
@@ -1838,7 +1626,6 @@ Good examples: "funky electric piano and horn stabs", "flamenco acoustic guitar 
 Choose scale deliberately to match the genre mood.
 ${reasoningLang}${seedLine}`;
 
-  addLogicLog('Sending environment to Gemini for music interpretation...');
 
   const res = await state.ai.models.generateContent({
     model: GEMINI_MODEL,
@@ -1858,7 +1645,6 @@ ${reasoningLang}${seedLine}`;
 
   const data = JSON.parse(text);
 
-  addLogicLog('Gemini response received, validating output...', 'ok');
 
   data.bpm = Math.max(55, Math.min(175, Math.round(data.bpm)));
 
@@ -1886,8 +1672,6 @@ ${reasoningLang}${seedLine}`;
     data.prompts = [{ text: 'ambient texture', weight: 1.0 }];
   }
 
-  addLogicLog(`Gemini selected BPM ${data.bpm}, scale ${data.scale}, density ${data.density.toFixed(2)}, brightness ${data.brightness.toFixed(2)}`, 'ok');
-  addLogicLog(`Prompt plan: ${data.prompts.map(p => `${p.text} (${p.weight.toFixed(2)})`).join(' | ')}`);
 
   return data;
 }
@@ -1926,10 +1710,6 @@ function renderParams(p) {
     els.prompts.appendChild(wrap);
   });
 
-  els.logicOutput.textContent =
-    `BPM ${p.bpm}, ${p.scale}, density ${p.density.toFixed(2)}, brightness ${p.brightness.toFixed(2)}`;
-
-  addLogicLog('UI updated with latest Gemini decision.', 'ok');
 }
 
 function escapeHtml(s) {
@@ -2013,7 +1793,6 @@ async function connectLyria() {
   if (state.session) return state.session;
 
   setStatus('Connecting to Lyria RealTime…');
-  addLogicLog('Connecting to Lyria RealTime...');
 
   const session = await state.lyriaAi.live.music.connect({
     model: LYRIA_MODEL,
@@ -2024,7 +1803,6 @@ async function connectLyria() {
       },
       onerror: (e) => {
         setStatus('Lyria error: ' + (e?.message || e), 'error');
-        addLogicLog('Lyria error: ' + (e?.message || e), 'err');
       },
       onclose: () => {},
     },
@@ -2037,15 +1815,10 @@ async function connectLyria() {
 async function applyParams(p) {
   const session = await connectLyria();
 
-  addLogicLog('Applying weighted prompts to Lyria...');
   await session.setWeightedPrompts({ weightedPrompts: p.prompts });
-
-  addLogicLog('Applying generation config to Lyria...');
   await session.setMusicGenerationConfig({
     musicGenerationConfig: { bpm: p.bpm, density: p.density, brightness: p.brightness },
   });
-
-  addLogicLog('Lyria configuration updated.', 'ok');
 }
 
 // ---- Orchestration ----
@@ -2059,16 +1832,11 @@ async function analyze() {
   window.dispatchEvent(new CustomEvent('atmosfera-analyzing'));
 
   try {
-    setLogicState('Analyzing');
-    addLogicLog('Starting fresh analysis cycle...');
-
     setStatus('Reading environment…');
-    const inputs = gatherInputs(true);
-    addLogicLog('Environment input gathered successfully.', 'ok');
+    const inputs = gatherInputs();
 
     setStatus('Gemini interpreting the atmosphere…');
     const params = await askGemini(inputs);
-    addLogicLog('Gemini interpretation complete.', 'ok');
 
     renderParams(params);
 
@@ -2077,24 +1845,18 @@ async function analyze() {
       const needsReset = !prev || params.bpm !== prev.bpm || params.scale !== prev.scale;
 
       if (needsReset && state.session?.resetContext) {
-        addLogicLog('Major change detected, resetting Lyria context...');
         try { await state.session.resetContext(); } catch (e) {}
       }
 
       await applyParams(params);
-      addLogicLog('New music parameters pushed to Lyria.', 'ok');
       setStatus(`Live${needsReset ? ' · context reset' : ' · smooth update'} ↺`, 'ok');
     } else {
       setStatus('Analysis ready. Press PLAY to begin.', 'ok');
-      addLogicLog('Analysis ready. Waiting for playback command.', 'ok');
     }
 
     state.lastParams = params;
-    setLogicState(describeCurrentState(inputs));
   } catch (e) {
     console.error(e);
-    setLogicState('Error');
-    addLogicLog('Analysis failed: ' + (e?.message || e), 'err');
     setStatus('Analysis failed: ' + (e?.message || e), 'error');
   } finally {
     analyzing = false;
@@ -2104,8 +1866,6 @@ async function analyze() {
 
 async function startPlayback() {
   try {
-    setLogicState('Starting playback');
-    addLogicLog('Playback requested by user...');
     ensureAudioCtx();
 
     if (state.audio.ctx.state === 'suspended') {
@@ -2118,9 +1878,6 @@ async function startPlayback() {
     await applyParams(state.lastParams);
     await state.session.play();
 
-    addLogicLog('Lyria playback started.', 'ok');
-    setLogicState('Live');
-
     state.playing = true;
     window.dispatchEvent(new CustomEvent('atmosfera-playing'));
     els.play.innerHTML = `<span class="dot live" id="dot"></span>${window.i18n ? window.i18n('btn-pause') : 'PAUSE'}`;
@@ -2130,16 +1887,11 @@ async function startPlayback() {
     state.reanalyzeTimer = setInterval(() => analyze(), REANALYZE_MS);
   } catch (e) {
     console.error(e);
-    setLogicState('Playback error');
-    addLogicLog('Playback failed: ' + (e?.message || e), 'err');
     setStatus('Playback failed: ' + (e?.message || e), 'error');
   }
 }
 
 async function pausePlayback() {
-  setLogicState('Paused');
-  addLogicLog('Playback paused by user.');
-
   state.playing = false;
   window.dispatchEvent(new CustomEvent('atmosfera-paused'));
 
@@ -2216,11 +1968,6 @@ async function boot() {
     setPanelCollapsed(els.manualPanel, els.collapseManual, els.manualCollapseIcon, collapsed, 'left');
   });
 
-  els.collapseLogic.addEventListener('click', () => {
-    const collapsed = !els.logicPanel.classList.contains('panel-collapsed');
-    setPanelCollapsed(els.logicPanel, els.collapseLogic, els.logicCollapseIcon, collapsed, 'right');
-  });
-
   window.addEventListener('resize', syncPanelIcons);
   syncPanelIcons();
 
@@ -2241,8 +1988,6 @@ async function boot() {
 
 async function finishInit() {
   try {
-    addLogicLog('Initializing Gemini and Lyria clients...');
-
     state.ai = new GoogleGenAI({ apiKey: state.keys.gemini });
     state.lyriaAi = new GoogleGenAI({ apiKey: state.keys.gemini, apiVersion: 'v1alpha' });
 
@@ -2251,7 +1996,6 @@ async function finishInit() {
 
     setStatus('Fetching weather…', 'ok');
     await fetchWeather();
-    addLogicLog('Initial weather fetch complete.', 'ok');
 
     if (state.weatherTimer) clearInterval(state.weatherTimer);
     state.weatherTimer = setInterval(fetchWeather, WEATHER_REFRESH_MS);
@@ -2262,10 +2006,7 @@ async function finishInit() {
     );
 
     await analyze();
-    addLogicLog('Initial analysis complete.', 'ok');
   } catch (e) {
-    setLogicState('Init error');
-    addLogicLog('Initialization failed: ' + (e?.message || e), 'err');
     setStatus('Init error: ' + (e?.message || e), 'error');
   }
 }
@@ -2312,9 +2053,8 @@ boot();
       'k-scale':            'SKALA',
       'k-density':          'YOĞUNLUK',
       'k-brightness':       'PARLAKLIK',
-      // Panel titles
+      // Panel title
       'panel-manual-title': 'Müzikal Tercih',
-      'panel-logic-title':  'Canlı Mantık',
       // Preference panel field labels
       'label-mood':         'Ruh Hali',
       'label-genre':        'Tür',
@@ -2332,11 +2072,6 @@ boot();
       'tempo-fast':         'Hızlı',
       // Genre dropdown first option
       'genre-any':          'Herhangi',
-      // Logic panel labels
-      'logic-k-source':     'Girdi Kaynağı',
-      'logic-k-state':      'Mevcut Durum',
-      'logic-k-decision':   'Son Karar',
-      'logic-k-stream':     'Mantık Akışı',
       // Buttons
       'btn-apply':          'Uygula',
       'btn-clear':          'Temizle',
@@ -2359,9 +2094,8 @@ boot();
       'k-scale':            'SCALE',
       'k-density':          'DENSITY',
       'k-brightness':       'BRIGHTNESS',
-      // Panel titles
+      // Panel title
       'panel-manual-title': 'Music Preference',
-      'panel-logic-title':  'Live Logic',
       // Preference panel field labels
       'label-mood':         'Mood',
       'label-genre':        'Genre',
@@ -2379,11 +2113,6 @@ boot();
       'tempo-fast':         'Fast',
       // Genre dropdown first option
       'genre-any':          'Any',
-      // Logic panel labels
-      'logic-k-source':     'Input Source',
-      'logic-k-state':      'Current State',
-      'logic-k-decision':   'Last Decision',
-      'logic-k-stream':     'Reasoning Stream',
       // Buttons
       'btn-apply':          'Apply',
       'btn-clear':          'Clear',
