@@ -963,7 +963,7 @@
   <div class="app-header">
     <div class="app-header-title">
       <h1>ATMOSFERA</h1>
-      <div class="sub" id="location-sub">AUTONOMOUS DJ AGENT · DETECTING LOCATION</div>
+      <div class="sub">AUTONOMOUS DJ AGENT</div>
     </div>
     <button id="btn-lang" type="button" aria-label="Dil değiştir / Change language">TR</button>
   </div>
@@ -1169,8 +1169,6 @@ const els = {
   weatherAge: $('in-weather-age'),
   temp: $('in-temp'),
   time: $('in-time'),
-  locationSub: $('location-sub'),
-
   reasoning: $('reasoning'),
   prompts: $('prompts'),
 
@@ -1355,10 +1353,6 @@ async function getDeviceLocation() {
       source: 'device',
     };
 
-    // Show city name in header right away — don't wait for weather fetch
-    if (els.locationSub) {
-      els.locationSub.textContent = `AUTONOMOUS DJ AGENT · ${cityName.toUpperCase()}`;
-    }
 
     return state.location;
   } catch (e) {
@@ -1433,9 +1427,6 @@ async function fetchWeather() {
 
     state.location.label = resolvedPlace;
 
-    if (els.locationSub) {
-      els.locationSub.textContent = `AUTONOMOUS DJ AGENT · ${String(resolvedPlace).toUpperCase()}`;
-    }
 
     state.weatherCache.fetchedAt = Date.now();
     updateWeatherUI();
