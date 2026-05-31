@@ -813,6 +813,33 @@
   }
   .char-arms-open { animation: char-catch 0.44s ease-out forwards; }
 
+  /* ── Fixed panel characters (ELEGY, PULSE sit on top of panels) ── */
+  .char-fixed {
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+    pointer-events: none;   /* don't block panel interactions */
+  }
+
+  /* Raise bottom-bar clusters above any overlapping z-index */
+  .char-cluster {
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+  }
+  .char-wrap {
+    overflow: visible;
+  }
+
+  /* Spacer mirrors the left cluster width so bottom-bar controls stay centered */
+  .char-spacer {
+    width: 166px;   /* 2 × 80px char-wrap + 6px gap */
+    flex-shrink: 0;
+  }
+
   /* ── Traveling orb ── */
   #char-orb {
     position: fixed;
@@ -926,6 +953,88 @@
 
   <!-- Orb (fixed, position calculated from char bounding rects) -->
   <div id="char-orb"></div>
+
+  <!-- ELEGY · fixed on top-right corner of Machine Thoughts panel -->
+  <div class="char-fixed" id="char-elegy-fixed" aria-hidden="true">
+    <svg class="robot-svg" viewBox="0 0 120 200" overflow="visible" aria-label="ELEGY · The Poet">
+      <g>
+        <ellipse cx="58" cy="196" rx="34" ry="4" class="fillgold" opacity=".18"/>
+        <path class="ln-thin" d="M30 196 H86 M34 176 H82 L86 196 M34 176 L30 196"/>
+        <path class="ln-thin" d="M40 176 V196 M76 176 V196" opacity=".4"/>
+        <path class="ln" d="M46 150 Q40 160 44 168 L40 176 M70 150 Q78 160 74 168 L78 176"/>
+        <path class="ln" d="M36 178 H46 M74 178 H84"/>
+        <path class="ln" d="M46 148 H70"/>
+        <g transform="rotate(-4 58 120)">
+          <path class="ln" d="M48 96 Q44 122 50 150 H70 Q76 122 72 96 Q60 88 48 96 Z"/>
+          <circle cx="60" cy="116" r="4" class="panel"/>
+          <circle cx="60" cy="116" r="1.5" class="fillgold r-glow-p"/>
+          <path class="ln-thin r-circuit" d="M53 128 H67"/>
+          <path class="ln" d="M50 100 Q40 108 44 124 L56 132 M70 100 Q80 108 76 124 L64 132"/>
+          <path class="ln" d="M55 90 V86 M65 90 V86"/>
+          <path class="ln" d="M48 66 Q48 54 60 54 Q72 54 72 66 V76 Q72 86 60 88 Q48 86 48 76 Z"/>
+          <path class="ln-thin" d="M60 54 V47"/>
+          <circle cx="60" cy="45" r="2" class="fillgold r-glow-p"/>
+          <path class="ln-thin" d="M51 70 H69"/>
+          <g class="r-eye-scan">
+            <rect class="eye" x="54" y="66" width="5" height="4" rx="2"/>
+            <rect class="eye" x="61" y="66" width="5" height="4" rx="2"/>
+          </g>
+        </g>
+        <g class="r-holo">
+          <path d="M44 140 L78 132 L82 150 L48 158 Z" fill="rgba(201,168,76,.10)" stroke="#F0D27A" stroke-width="1.2" style="filter:drop-shadow(0 0 8px rgba(201,168,76,.6))"/>
+          <path class="ln-thin" d="M49 143 L70 138 M50 148 L73 142 M51 153 L68 149" opacity=".85"/>
+          <circle r="1.6" cx="50" cy="146" fill="#F0D27A" class="r-write-dot"/>
+          <path class="ln-thin" d="M56 132 L58 124 M70 130 L70 122" opacity=".4"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- PULSE · fixed on right edge of Generation Parameters panel -->
+  <div class="char-fixed" id="char-female-wrap" aria-hidden="true">
+    <div class="emotion-bubble" id="female-bubble"></div>
+    <div class="char-robot" id="char-female">
+      <svg class="robot-svg" viewBox="0 0 120 200" overflow="visible" aria-label="PULSE · The Musician">
+        <circle cx="30" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-1" style="transform-origin:30px 118px"/>
+        <circle cx="30" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-2" style="transform-origin:30px 118px"/>
+        <circle cx="90" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-3" style="transform-origin:90px 118px"/>
+        <circle cx="90" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-4" style="transform-origin:90px 118px"/>
+        <g class="r-bob-anim">
+          <ellipse cx="60" cy="194" rx="30" ry="4" class="fillgold" opacity=".18"/>
+          <path class="ln" d="M52 152 L50 188 M68 152 L70 188"/>
+          <path class="ln" d="M44 190 H56 M64 190 H76"/>
+          <path class="ln" d="M48 150 H72"/>
+          <path class="ln" d="M48 94 Q44 122 50 150 H70 Q76 122 72 94 Q60 86 48 94 Z"/>
+          <rect class="panel" x="51" y="106" width="18" height="14" rx="2"/>
+          <rect x="54" y="113" width="2.4" height="5" class="fillgold r-eq-1"/>
+          <rect x="58" y="110" width="2.4" height="8" class="fillgold r-eq-2"/>
+          <rect x="62" y="112" width="2.4" height="6" class="fillgold r-eq-3"/>
+          <rect x="66" y="109" width="2.4" height="9" class="fillgold r-eq-4"/>
+          <g style="transform-origin:48px 98px" class="r-hand-l">
+            <path class="ln" d="M48 98 Q36 104 34 120 L32 132"/>
+            <circle cx="32" cy="133" r="3" class="ln-thin"/>
+          </g>
+          <g style="transform-origin:72px 98px" class="r-hand-r">
+            <path class="ln" d="M72 98 Q84 104 86 120 L88 132"/>
+            <circle cx="88" cy="133" r="3" class="ln-thin"/>
+          </g>
+          <path class="ln" d="M56 88 V82 M64 88 V82"/>
+          <path class="ln" d="M48 64 Q48 52 60 52 Q72 52 72 64 V74 Q72 84 60 84 Q48 84 48 74 Z"/>
+          <path class="ln" d="M44 64 Q44 44 60 44 Q76 44 76 64" stroke-width="2.4"/>
+          <rect class="panel" x="40" y="60" width="9" height="16" rx="3"/>
+          <rect class="panel" x="71" y="60" width="9" height="16" rx="3"/>
+          <circle cx="44.5" cy="68" r="2" class="fillgold r-glow-p"/>
+          <circle cx="75.5" cy="68" r="2" class="fillgold r-glow-p"/>
+          <path class="ln-thin" d="M51 68 H69"/>
+          <g class="r-eye-blink">
+            <rect class="eye" x="53" y="63" width="6" height="5" rx="2"/>
+            <rect class="eye" x="61" y="63" width="6" height="5" rx="2"/>
+          </g>
+          <path class="ln-thin r-flick" d="M55 78 H65 M57 78 V81 M60 78 V81 M63 78 V81"/>
+        </g>
+      </svg>
+    </div>
+  </div>
 
   <div class="app-header">
     <div class="app-header-title">
@@ -1082,93 +1191,8 @@
       <button id="btn-snapshot" class="snapshot-toggle" type="button">📷 SAVE</button>
     </div>
 
-    <!-- Right cluster: ELEGY (static poet) + PULSE (active musician / receives orb, dances) -->
-    <div class="char-cluster">
-
-      <!-- ELEGY · UNIT-03 · The Poet (static, reads holographic notebook) -->
-      <div class="char-wrap" aria-hidden="true">
-        <svg class="robot-svg" viewBox="0 0 120 200" overflow="visible" aria-label="ELEGY · The Poet">
-          <g>
-            <ellipse cx="58" cy="196" rx="34" ry="4" class="fillgold" opacity=".18"/>
-            <path class="ln-thin" d="M30 196 H86 M34 176 H82 L86 196 M34 176 L30 196"/>
-            <path class="ln-thin" d="M40 176 V196 M76 176 V196" opacity=".4"/>
-            <path class="ln" d="M46 150 Q40 160 44 168 L40 176 M70 150 Q78 160 74 168 L78 176"/>
-            <path class="ln" d="M36 178 H46 M74 178 H84"/>
-            <path class="ln" d="M46 148 H70"/>
-            <g transform="rotate(-4 58 120)">
-              <path class="ln" d="M48 96 Q44 122 50 150 H70 Q76 122 72 96 Q60 88 48 96 Z"/>
-              <circle cx="60" cy="116" r="4" class="panel"/>
-              <circle cx="60" cy="116" r="1.5" class="fillgold r-glow-p"/>
-              <path class="ln-thin r-circuit" d="M53 128 H67"/>
-              <path class="ln" d="M50 100 Q40 108 44 124 L56 132 M70 100 Q80 108 76 124 L64 132"/>
-              <path class="ln" d="M55 90 V86 M65 90 V86"/>
-              <path class="ln" d="M48 66 Q48 54 60 54 Q72 54 72 66 V76 Q72 86 60 88 Q48 86 48 76 Z"/>
-              <path class="ln-thin" d="M60 54 V47"/>
-              <circle cx="60" cy="45" r="2" class="fillgold r-glow-p"/>
-              <path class="ln-thin" d="M51 70 H69"/>
-              <g class="r-eye-scan">
-                <rect class="eye" x="54" y="66" width="5" height="4" rx="2"/>
-                <rect class="eye" x="61" y="66" width="5" height="4" rx="2"/>
-              </g>
-            </g>
-            <g class="r-holo">
-              <path d="M44 140 L78 132 L82 150 L48 158 Z" fill="rgba(201,168,76,.10)" stroke="#F0D27A" stroke-width="1.2" style="filter:drop-shadow(0 0 8px rgba(201,168,76,.6))"/>
-              <path class="ln-thin" d="M49 143 L70 138 M50 148 L73 142 M51 153 L68 149" opacity=".85"/>
-              <circle r="1.6" cx="50" cy="146" fill="#F0D27A" class="r-write-dot"/>
-              <path class="ln-thin" d="M56 132 L58 124 M70 130 L70 122" opacity=".4"/>
-            </g>
-          </g>
-        </svg>
-      </div>
-
-      <!-- PULSE · UNIT-04 · The Musician (active: receives orb, dances to music) -->
-      <div class="char-wrap" id="char-female-wrap" aria-hidden="true">
-        <div class="emotion-bubble" id="female-bubble"></div>
-        <div class="char-robot" id="char-female">
-          <svg class="robot-svg" viewBox="0 0 120 200" overflow="visible" aria-label="PULSE · The Musician">
-            <!-- sound waves (fixed, behind the bobbing body) -->
-            <circle cx="30" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-1" style="transform-origin:30px 118px"/>
-            <circle cx="30" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-2" style="transform-origin:30px 118px"/>
-            <circle cx="90" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-3" style="transform-origin:90px 118px"/>
-            <circle cx="90" cy="118" r="8" fill="none" stroke="#C9A84C" stroke-width="1.5" class="r-wave-4" style="transform-origin:90px 118px"/>
-            <g class="r-bob-anim">
-              <ellipse cx="60" cy="194" rx="30" ry="4" class="fillgold" opacity=".18"/>
-              <path class="ln" d="M52 152 L50 188 M68 152 L70 188"/>
-              <path class="ln" d="M44 190 H56 M64 190 H76"/>
-              <path class="ln" d="M48 150 H72"/>
-              <path class="ln" d="M48 94 Q44 122 50 150 H70 Q76 122 72 94 Q60 86 48 94 Z"/>
-              <rect class="panel" x="51" y="106" width="18" height="14" rx="2"/>
-              <rect x="54" y="113" width="2.4" height="5" class="fillgold r-eq-1"/>
-              <rect x="58" y="110" width="2.4" height="8" class="fillgold r-eq-2"/>
-              <rect x="62" y="112" width="2.4" height="6" class="fillgold r-eq-3"/>
-              <rect x="66" y="109" width="2.4" height="9" class="fillgold r-eq-4"/>
-              <g style="transform-origin:48px 98px" class="r-hand-l">
-                <path class="ln" d="M48 98 Q36 104 34 120 L32 132"/>
-                <circle cx="32" cy="133" r="3" class="ln-thin"/>
-              </g>
-              <g style="transform-origin:72px 98px" class="r-hand-r">
-                <path class="ln" d="M72 98 Q84 104 86 120 L88 132"/>
-                <circle cx="88" cy="133" r="3" class="ln-thin"/>
-              </g>
-              <path class="ln" d="M56 88 V82 M64 88 V82"/>
-              <path class="ln" d="M48 64 Q48 52 60 52 Q72 52 72 64 V74 Q72 84 60 84 Q48 84 48 74 Z"/>
-              <path class="ln" d="M44 64 Q44 44 60 44 Q76 44 76 64" stroke-width="2.4"/>
-              <rect class="panel" x="40" y="60" width="9" height="16" rx="3"/>
-              <rect class="panel" x="71" y="60" width="9" height="16" rx="3"/>
-              <circle cx="44.5" cy="68" r="2" class="fillgold r-glow-p"/>
-              <circle cx="75.5" cy="68" r="2" class="fillgold r-glow-p"/>
-              <path class="ln-thin" d="M51 68 H69"/>
-              <g class="r-eye-blink">
-                <rect class="eye" x="53" y="63" width="6" height="5" rx="2"/>
-                <rect class="eye" x="61" y="63" width="6" height="5" rx="2"/>
-              </g>
-              <path class="ln-thin r-flick" d="M55 78 H65 M57 78 V81 M60 78 V81 M63 78 V81"/>
-            </g>
-          </svg>
-        </div>
-      </div>
-
-    </div><!-- /char-cluster right -->
+    <!-- Spacer balances flex so controls stay centered (ELEGY + PULSE are now fixed on panels) -->
+    <div class="char-spacer" aria-hidden="true"></div>
 
   </div>
 
@@ -2788,6 +2812,40 @@ boot();
     });
 
     goIdle();
+  })();
+
+  // ── POSITION FIXED PANEL CHARACTERS ──────────────────
+  // ELEGY sits on the top-right corner of the Machine Thoughts panel.
+  // PULSE sits on the right edge of the Generation Parameters panel.
+  // Positions are recalculated after layout settles and on every resize.
+  (function positionPanelChars() {
+    const elegyCont = document.getElementById('char-elegy-fixed');
+    const pulseCont = document.getElementById('char-female-wrap');
+    const ROB_H = 120;   // robot-svg height in px
+    const ROB_W = 72;    // robot-svg width at 120px height (120 × 120/200)
+
+    function place() {
+      const thoughtsEl = document.getElementById('thoughts-panel');
+      const paramsEl   = document.querySelector('.section-params');
+
+      if (thoughtsEl && elegyCont) {
+        const r = thoughtsEl.getBoundingClientRect();
+        // Straddle the top-right corner: centre robot on right edge, feet ~20 px into panel
+        elegyCont.style.left = (r.right - ROB_W / 2) + 'px';
+        elegyCont.style.top  = (r.top  - ROB_H + 24) + 'px';
+      }
+
+      if (paramsEl && pulseCont) {
+        const r = paramsEl.getBoundingClientRect();
+        // Straddle the right edge of the params panel, vertically centred on it
+        pulseCont.style.left = (r.right - ROB_W / 2) + 'px';
+        pulseCont.style.top  = (r.top   + r.height / 2 - ROB_H / 2) + 'px';
+      }
+    }
+
+    // Wait two animation frames so the grid has fully laid out
+    requestAnimationFrame(() => requestAnimationFrame(place));
+    window.addEventListener('resize', place);
   })();
 
   resizeCanvas();
